@@ -56,14 +56,36 @@ tdl.textures.textureDB = {};
  *        urls makes a cubemap, passing an img or canvas makes a 2d texture with
  *        that image.
  * @param {boolean} opt_flipY Flip the texture in Y?
+ * @param {function} opt_callback Function to execute when texture is loaded.
  */
-tdl.textures.loadTexture = function(arg, opt_flipY) {
-  var texture = tdl.textures.textureDB[arg.toString()];
+tdl.textures.loadTexture = function(arg, opt_flipY, opt_callback) {
+  var id;
+  if (typeof arg == 'string') {
+    td = arg;
+  } else if (arg.length == 4 && typeof arg[0] == 'number') {
+    id = arg.toString();
+  } else if ((arg.length == 1 || arg.length == 6) &&
+             typeof arg[0] == 'string') {
+    id = arg.toString();
+  } else if (arg.tagName == 'CANVAS') {
+    id = undefined;
+  } else if (arg.tagName == 'IMG') {
+    id = arg.src;
+  } else if (arg.width) {
+    id = undefined;
+  } else {
+    throw "bad args";
+  }
+
+  var texture;
+  if (id !== undefined) {
+    texture = tdl.textures.textureDB[id];
+  }
   if (texture) {
     return texture;
   }
   if (typeof arg == 'string') {
-    texture = new tdl.textures.Texture2D(arg, opt_flipY);
+    texture = new tdl.textures.Texture2D(arg, opt_flipY, opt_callback);
   } else if (arg.length == 4 && typeof arg[0] == 'number') {
     texture = new tdl.textures.SolidTexture(arg);
   } else if ((arg.length == 1 || arg.length == 6) &&
@@ -139,7 +161,7 @@ tdl.textures.SolidTexture.prototype.bindToUnit = function(unit) {
 tdl.textures.ColorTexture = function(data, opt_format, opt_type) {
   tdl.textures.Texture.call(this, gl.TEXTURE_2D);
   this.format = opt_format || gl.RGBA;
-  this.type   = opt.type || gl.UNSIGNED_BYTE;
+  this.type   = opt_type || gl.UNSIGNED_BYTE;
   if (data.pixels instanceof Array) {
     data.pixels = new Uint8Array(data.pixels);
   }
@@ -170,20 +192,31 @@ tdl.textures.ColorTexture.prototype.bindToUnit = function(unit) {
 /**
  * @constructor
  * @param {{string|!Element}} url URL of image to load into texture.
+ * @param {function} opt_callback Function to execute when texture is loaded.
  */
-tdl.textures.Texture2D = function(url, opt_flipY) {
+tdl.textures.Texture2D = function(url, opt_flipY, opt_callback) {
   tdl.textures.Texture.call(this, gl.TEXTURE_2D);
   this.flipY = opt_flipY || false;
   var that = this;
-  var img
+  var img;
   if (typeof url !== 'string') {
     img = url;
     this.loaded = true;
+    if (opt_callback) {
+      opt_callback();
+    }
   } else {
     img = document.createElement('img');
     img.onload = function() {
+      //tdl.log("loaded image: ", url);
       that.updateTexture();
-    }
+      if (opt_callback) {
+        opt_callback();
+      }
+    };
+    img.onerror = function() {
+      tdl.log("could not load image: ", url);
+    };
   }
   this.img = img;
   this.uploadTexture();
@@ -201,24 +234,30 @@ tdl.textures.isPowerOf2 = function(value) {
 
 tdl.textures.Texture2D.prototype.uploadTexture = function() {
   gl.bindTexture(gl.TEXTURE_2D, this.texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   if (this.loaded) {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, this.flipY);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.img);
-    if (tdl.textures.isPowerOf2(this.img.width) &&
-        tdl.textures.isPowerOf2(this.img.height)) {
+    this.setTexture(this.img);
+  } else {
+    var pixel = new Uint8Array([255, 255, 255, 255]);
+    gl.texImage2D(
+        gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+  }
+};
+
+tdl.textures.Texture2D.prototype.setTexture = function(element) {
+  // TODO(gman): use texSubImage2D if the size is the same.
+  gl.bindTexture(gl.TEXTURE_2D, this.texture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
+  if (tdl.textures.isPowerOf2(element.width) &&
+      tdl.textures.isPowerOf2(element.height)) {
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
       gl.generateMipmap(gl.TEXTURE_2D);
     } else {
       this.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       this.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       this.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     }
-  } else {
-    var pixel = new Uint8Array([255, 255, 255, 255]);
-    gl.texImage2D(
-        gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-  }
 };
 
 tdl.textures.Texture2D.prototype.updateTexture = function() {
@@ -320,9 +359,15 @@ tdl.textures.CubeMap = function(urls) {
       face.img = img;
       img.onload = function(faceIndex) {
         return function() {
+          //tdl.log("loaded image: ", urls[faceIndex]);
           that.updateTexture(faceIndex);
         }
       } (ff);
+      img.onerror = function(url) {
+        return function() {
+          tdl.log("could not load image: ", url);
+        }
+      }(urls[ff]);
       img.src = urls[ff];
     }
   }

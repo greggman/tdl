@@ -42,6 +42,12 @@ tdl.require('tdl.math');
 tdl.require('tdl.shader');
 
 /**
+ * A Module with various io functions and classes.
+ * @namespace
+ */
+tdl.particles = tdl.particles || {};
+
+/**
  * Enum for pre-made particle states.
  * @enum
  */
@@ -1312,3 +1318,22 @@ tdl.particles.Trail.prototype.birthParticles = function(position) {
                         this.perParticleParamSetter);
   this.birthIndex_ += numParticles;
 };
+
+tdl.particles.OneShotManager = function(emitter, numOneshots) {
+  this.numOneshots = numOneshots;
+  this.oneshotIndex = 0;
+  this.oneshots = [];
+  for (var ii = 0; ii < numOneshots; ++ii) {
+     this.oneshots.push(emitter.createOneShot());
+  }
+};
+
+tdl.particles.OneShotManager.prototype.startOneShot = function(worldMatrix) {
+  this.oneshots[this.oneshotIndex].trigger(worldMatrix);
+  this.oneshotIndex = (this.oneshotIndex + 1) % this.numOneshots;
+};
+
+tdl.particles.createOneShotManager = function(emitter, numOneshots) {
+  return new tdl.particles.OneShotManager(emitter, numOneshots);
+};
+

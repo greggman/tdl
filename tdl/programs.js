@@ -58,6 +58,35 @@ tdl.programs.programDB = {};
  */
 tdl.programs.shaderDB = {};
 
+/**
+ * Loads a program from script tags.
+ * @param {string} vertexShaderId The id of the script tag that contains the
+ *     vertex shader source.
+ * @param {string} fragmentShaderId The id of the script tag that contains the
+ *     fragment shader source.
+ * @return {tdl.programs.Program} The created program.
+ */
+tdl.programs.loadProgramFromScriptTags = function(
+    vertexShaderId, fragmentShaderId) {
+  var vertElem = document.getElementById(vertexShaderId);
+  var fragElem = document.getElementById(fragmentShaderId);
+  if (!vertElem) {
+    throw("Can't find vertex program tag: " + vertexShaderId);
+  }
+  if (!fragElem ) {
+    throw("Can't find fragment program tag: " + fragmentShaderId);
+  }
+  return tdl.programs.loadProgram(
+      document.getElementById(vertexShaderId).text,
+      document.getElementById(fragmentShaderId).text);
+};
+
+/**
+ * Loads a program.
+ * @param {string} vertexShader The vertex shader source.
+ * @param {string} fragmentShader The fragment shader source.
+ * @return {tdl.programs.Program} The created program.
+ */
 tdl.programs.loadProgram = function(vertexShader, fragmentShader) {
   var id = vertexShader + fragmentShader;
   var program = tdl.programs.programDB[id];
@@ -67,14 +96,20 @@ tdl.programs.loadProgram = function(vertexShader, fragmentShader) {
   try {
     program = new tdl.programs.Program(vertexShader, fragmentShader);
   } catch (e) {
+    tdl.error(e);
     return null;
   }
   tdl.programs.programDB[id] = program;
   return program;
 };
 
+/**
+ * A object to manage a WebGLProgram.
+ * @constructor
+ * @param {string} vertexShader The vertex shader source.
+ * @param {string} fragmentShader The fragment shader source.
+ */
 tdl.programs.Program = function(vertexShader, fragmentShader) {
-
   /**
    * Loads a shader.
    * @param {!WebGLContext} gl The WebGLContext to use.
@@ -83,11 +118,17 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
    * @return {!WebGLShader} The created shader.
    */
   var loadShader = function(gl, shaderSource, shaderType) {
+    var id = shaderSource + shaderType;
+// TODO(gman): Uncomment after ANGLE bug is fixed
+//    var shader = tdl.programs.shaderDB[id];
+//    if (shader) {
+//      return shader;
+//    }
+
     // Create the shader object
     var shader = gl.createShader(shaderType);
     if (shader == null) {
-      tdl.error("*** Error: unable to create shader '"+shaderSource+"'");
-      return null;
+      throw("*** Error: unable to create shader '"+shaderSource+"'");
     }
 
     // Load the shader source
@@ -100,12 +141,12 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
     var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
       // Something went wrong during compilation; get the error
-      lastError = gl.getShaderInfoLog(shader);
-      tdl.error("*** Error compiling shader '" + shader + "':" + lastError);
+      tdl.programs.lastError = gl.getShaderInfoLog(shader);
       gl.deleteShader(shader);
-      return null;
+      throw("*** Error compiling shader :" + tdl.programs.lastError);
     }
 
+    tdl.programs.shaderDB[id] = shader;
     return shader;
   }
 
@@ -118,14 +159,22 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
    * @return {!WebGLProgram} The created program.
    */
   var loadProgram = function(gl, vertexShader, fragmentShader) {
-    var program = gl.createProgram();
-    gl.attachShader(
-        program,
-        loadShader(gl, vertexShader, gl.VERTEX_SHADER));
-    gl.attachShader(
-        program,
-        loadShader(gl, fragmentShader,  gl.FRAGMENT_SHADER));
+    var vs;
+    var fs;
+    var program;
+    try {
+      vs = loadShader(gl, vertexShader, gl.VERTEX_SHADER);
+      fs = loadShader(gl, fragmentShader, gl.FRAGMENT_SHADER);
+      program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
     linkProgram(gl, program);
+    } catch (e) {
+      if (vs) { gl.deleteShader(vs) }
+      if (fs) { gl.deleteShader(fs) }
+      if (program) { gl.deleteShader(program) }
+      throw(e);
+    }
     return program;
   };
 
@@ -134,7 +183,6 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
    * Links a WebGL program, throws if there are errors.
    * @param {!WebGLContext} gl The WebGLContext to use.
    * @param {!WebGLProgram} program The WebGLProgram to link.
-   * @return {boolean} True if link was successful.
    */
   var linkProgram = function(gl, program) {
     // Link the program
@@ -144,11 +192,9 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
     var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
     if (!linked) {
       // something went wrong with the link
-      var error = gl.getProgramInfoLog (program);
-      throw("Error in program linking:" + error);
-      return false;
+      tdl.programs.lastError = gl.getProgramInfoLog (program);
+      throw("*** Error in program linking:" + tdl.programs.lastError);
     }
-    return true;
   };
 
   // Compile shaders
@@ -189,7 +235,7 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
   var numAttribs = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
   for (var ii = 0; ii < numAttribs; ++ii) {
     var info = gl.getActiveAttrib(program, ii);
-    name = info.name;
+    var name = info.name;
     if (tdl.string.endsWith(name, "[0]")) {
       name = name.substr(0, name.length - 3);
     }
@@ -202,6 +248,7 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
   var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
   var uniforms = {
   };
+  var textureUnit = 0;
 
   function createUniformSetter(info) {
     var loc = gl.getUniformLocation(program, info.name);
@@ -238,10 +285,18 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
         return function(v) { gl.uniformMatrix3fv(loc, false, v); };
       if (type == gl.FLOAT_MAT4)
         return function(v) { gl.uniformMatrix4fv(loc, false, v); };
-      if (type == gl.SAMPLER_2D)
-        return function(v) { gl.uniform1iv(loc, v); };
-      if (type == gl.SAMPLER_CUBE_MAP)
-        return function(v) { gl.uniform1iv(loc, v); };
+      if (type == gl.SAMPLER_2D || type == gl.SAMPLER_CUBE) {
+        var units = [];
+        for (var ii = 0; ii < info.size; ++ii) {
+          units.push(textureUnit++);
+        }
+        return function(units) {
+          return function(v) {
+            gl.uniform1iv(loc, units);
+            v.bindToUnit(units);
+          };
+        }(units);
+      }
       throw ("unknown type: 0x" + type.toString(16));
     } else {
       if (type == gl.FLOAT)
@@ -274,13 +329,19 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
         return function(v) { gl.uniformMatrix3fv(loc, false, v); };
       if (type == gl.FLOAT_MAT4)
         return function(v) { gl.uniformMatrix4fv(loc, false, v); };
-      if (type == gl.SAMPLER_2D)
-        return function(v) { gl.uniform1i(loc, v); };
-      if (type == gl.SAMPLER_CUBE)
-        return function(v) { gl.uniform1i(loc, v); };
+      if (type == gl.SAMPLER_2D || type == gl.SAMPLER_CUBE) {
+        return function(unit) {
+          return function(v) {
+            gl.uniform1i(loc, unit);
+            v.bindToUnit(unit);
+          };
+        }(textureUnit++);
+      }
       throw ("unknown type: 0x" + type.toString(16));
     }
   }
+
+  var textures = {};
 
   for (var ii = 0; ii < numUniforms; ++ii) {
     var info = gl.getActiveUniform(program, ii);
@@ -288,9 +349,14 @@ tdl.programs.Program = function(vertexShader, fragmentShader) {
     if (tdl.string.endsWith(name, "[0]")) {
       name = name.substr(0, name.length - 3);
     }
-    uniforms[name] = createUniformSetter(info);
+    var setter = createUniformSetter(info);
+    uniforms[name] = setter;
+    if (info.type == gl.SAMPLER_2D || info.type == gl.SAMPLER_CUBE) {
+      textures[name] = setter;
+    }
   }
 
+  this.textures = textures;
   this.program = program;
   this.attrib = attribs;
   this.attribLoc = attribLocs;

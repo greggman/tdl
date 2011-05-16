@@ -67,14 +67,14 @@ if (Object.prototype.__defineSetter__) {
 tdl.framebuffers.BackBuffer.prototype.__defineGetter__(
     'width',
     function () {
-      return gl.canvas.width;
+      return gl.drawingBufferWidth || gl.canvas.width;
     }
 );
 
 tdl.framebuffers.BackBuffer.prototype.__defineGetter__(
     'height',
     function () {
-      return gl.canvas.height;
+      return gl.drawingBufferHeight || gl.canvas.height;
     }
 );
 }
@@ -83,7 +83,7 @@ tdl.framebuffers.BackBuffer.prototype.__defineGetter__(
 // mean the backbuffer, so that binding it works as expected.
 tdl.framebuffers.getBackBuffer = function(canvas) {
   return new tdl.framebuffers.BackBuffer(canvas)
-}
+};
 
 tdl.framebuffers.Framebuffer = function(width, height, opt_depth) {
   this.width = width;
@@ -99,8 +99,11 @@ tdl.framebuffers.Framebuffer.prototype.bind = function() {
 
 tdl.framebuffers.Framebuffer.unbind = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-}
+  gl.viewport(
+      0, 0,
+      gl.drawingBufferWidth || gl.canvas.width,
+      gl.drawingBufferHeight || gl.canvas.height);
+};
 
 tdl.framebuffers.Framebuffer.prototype.unbind = function() {
   tdl.framebuffers.Framebuffer.unbind();
@@ -108,22 +111,10 @@ tdl.framebuffers.Framebuffer.prototype.unbind = function() {
 
 tdl.framebuffers.Framebuffer.prototype.recoverFromLostContext = function() {
   var tex = new tdl.textures.SolidTexture([0,0,0,0]);
-  gl.bindTexture(gl.TEXTURE_2D, tex.texture);
-  tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  tex.setParameter(gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  tex.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  tex.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texImage2D(gl.TEXTURE_2D,
-                0,                 // level
-                gl.RGBA,           // internalFormat
-                this.width,        // width
-                this.height,       // height
-                0,                 // border
-                gl.RGBA,           // format
-                gl.UNSIGNED_BYTE,  // type
-                null);             // data
+  this.initializeTexture(tex);
+  var db = null;
   if (this.depth) {
-    var db = gl.createRenderbuffer();
+    db = gl.createRenderbuffer();
     gl.bindRenderbuffer(gl.RENDERBUFFER, db);
     gl.renderbufferStorage(
         gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
@@ -151,7 +142,25 @@ tdl.framebuffers.Framebuffer.prototype.recoverFromLostContext = function() {
   }
   this.framebuffer = fb;
   this.texture = tex;
-}
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+};
+
+tdl.framebuffers.Framebuffer.prototype.initializeTexture = function(tex) {
+  gl.bindTexture(gl.TEXTURE_2D, tex.texture);
+  tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  tex.setParameter(gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  tex.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  tex.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texImage2D(gl.TEXTURE_2D,
+                0,                 // level
+                gl.RGBA,           // internalFormat
+                this.width,        // width
+                this.height,       // height
+                0,                 // border
+                gl.RGBA,           // format
+                gl.UNSIGNED_BYTE,  // type
+                null);             // data
+};
 
 tdl.framebuffers.CubeFramebuffer = function(size, opt_depth) {
   this.size = size;
@@ -166,8 +175,11 @@ tdl.framebuffers.CubeFramebuffer.prototype.bind = function(face) {
 
 tdl.framebuffers.CubeFramebuffer.unbind = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-}
+  gl.viewport(
+      0, 0,
+      gl.drawingBufferWidth || gl.canvas.width,
+      gl.drawingBufferHeight || gl.canvas.height);
+};
 
 tdl.framebuffers.CubeFramebuffer.prototype.unbind = function() {
   tdl.framebuffers.CubeFramebuffer.unbind();
@@ -222,6 +234,30 @@ tdl.framebuffers.CubeFramebuffer.prototype.recoverFromLostContext = function() {
   }
   gl.bindRenderbuffer(gl.RENDERBUFFER, null);
   this.texture = tex;
-}
+};
 
+tdl.framebuffers.Float32Framebuffer = function(width, height, opt_depth) {
+  if (!gl.getExtension("OES_texture_float")) {
+    throw("Requires OES_texture_float extension");
+  }
+  tdl.framebuffers.Framebuffer.call(this, width, height, opt_depth);
+};
 
+tdl.base.inherit(tdl.framebuffers.Float32Framebuffer, tdl.framebuffers.Framebuffer);
+
+tdl.framebuffers.Float32Framebuffer.prototype.initializeTexture = function(tex) {
+  gl.bindTexture(gl.TEXTURE_2D, tex.texture);
+  tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  tex.setParameter(gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  tex.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  tex.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texImage2D(gl.TEXTURE_2D,
+                0,                 // level
+                gl.RGBA,           // internalFormat
+                this.width,        // width
+                this.height,       // height
+                0,                 // border
+                gl.RGBA,           // format
+                gl.FLOAT,          // type
+                null);             // data
+};
