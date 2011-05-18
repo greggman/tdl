@@ -116,19 +116,13 @@ function LogGLCall(functionName, args) {
   }
 }
 
-function createProgramFromTags(vertexTagId, fragmentTagId) {
-  return tdl.programs.loadProgram(
-      document.getElementById(vertexTagId).text,
-      document.getElementById(fragmentTagId).text);
-}
-
 /**
- * Sets up Planet.
+ * Sets up sphere.
  */
 function setupSphere() {
   var textures = {
     diffuseSampler: tdl.textures.loadTexture('assets/sometexture.png')};
-  var program = createProgramFromTags(
+  var program = tdl.programs.loadProgramFromScriptTags(
       'sphereVertexShader',
       'sphereFragmentShader');
   var arrays = tdl.primitives.createSphere(0.4, 10, 12);
