@@ -779,6 +779,35 @@ tdl.fast.identity4 = function(dst) {
  * @return {!tdl.fast.Matrix} The transpose of m.
  */
 tdl.fast.transpose4 = function(dst, m) {
+  if (dst === m) {
+    var m01 = m[0 * 4 + 1];
+    var m02 = m[0 * 4 + 2];
+    var m03 = m[0 * 4 + 3];
+    var m10 = m[1 * 4 + 0];
+    var m12 = m[1 * 4 + 2];
+    var m13 = m[1 * 4 + 3];
+    var m20 = m[2 * 4 + 0];
+    var m21 = m[2 * 4 + 1];
+    var m23 = m[2 * 4 + 3];
+    var m30 = m[3 * 4 + 0];
+    var m31 = m[3 * 4 + 1];
+    var m32 = m[3 * 4 + 2];
+
+    dst[ 1] = m10;
+    dst[ 2] = m20;
+    dst[ 3] = m30;
+    dst[ 4] = m01;
+    dst[ 6] = m21;
+    dst[ 7] = m31;
+    dst[ 8] = m02;
+    dst[ 9] = m12;
+    dst[11] = m32;
+    dst[12] = m03;
+    dst[13] = m13;
+    dst[14] = m23;
+    return dst;
+  }
+
   var m00 = m[0 * 4 + 0];
   var m01 = m[0 * 4 + 1];
   var m02 = m[0 * 4 + 2];
