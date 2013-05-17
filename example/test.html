@@ -1,0 +1,79 @@
+<!--
+ * Copyright 2009, Google Inc.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>WebGL TDL Example</title>
+<script type="text/javascript" src="../tdl/base.js"></script>
+<script type="text/javascript">
+tdl.require('tdl.math');
+window.onload = initialize;
+
+
+function log(msg) {
+    var div = document.createElement('pre');
+    div.appendChild(document.createTextNode(msg));
+    document.body.appendChild(div);
+}
+
+function initialize() {
+  math = tdl.math;
+  mat4 = math.matrix4;
+
+  log('--start--');
+  near = 11;
+  far = 33;
+  v = [1, 2, 3];
+  m = mat4.perspective(Math.PI / 4, 1, near, far);
+  m2 = mat4.perspective2(Math.PI / 4, 1, near, far);
+  log(v);
+  log(m);
+  log(m2);
+
+  v = [0, 0, -near];
+  cv = mat4.transformPoint(m, v);
+  log(cv);
+  cv = mat4.transformPoint(m2, v);
+  log(cv);
+  v = [0, 0, -far];
+  cv = mat4.transformPoint(m, v);
+  log(cv);
+  cv = mat4.transformPoint(m2, v);
+  log(cv);
+}
+</script>
+</head>
+<body>
+</body>
+</html>
+
+
