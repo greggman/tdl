@@ -79,7 +79,7 @@ In WebGL you'd do this
 In TDL that would be shortened to
 
     // At init time.
-    var program = tdl.programs.loadProgramFromScriptTags(...);
+    var program = tdl.programs.loadProgramFromScriptTags("vshader", "fshader");
     var arrays = {
       position: new tdl.primitives.AttribBuffer(3, positionData),
       texcoord: new tdl.primitives.AttribBuffer(2, texcoordData),
