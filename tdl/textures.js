@@ -55,9 +55,6 @@ tdl.textures = tdl.textures || {};
  * @param {function} opt_callback Function to execute when texture is loaded.
  */
 tdl.textures.loadTexture = function(arg, opt_flipY, opt_callback) {
-  if (opt_callback) {
-    alert('callback!');
-  }
   var id;
   if (typeof arg == 'string') {
     td = arg;
@@ -271,9 +268,6 @@ tdl.textures.ColorTexture.prototype.bindToUnit = function(unit) {
  * @param {function} opt_callback Function to execute when texture is loaded.
  */
 tdl.textures.Texture2D = function(url, opt_flipY, opt_callback) {
-  if (opt_callback) {
-    alert('callback');
-  }
   tdl.textures.Texture.call(this, gl.TEXTURE_2D);
   this.flipY = opt_flipY || false;
   var that = this;
