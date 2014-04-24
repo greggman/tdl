@@ -101,7 +101,7 @@ Your rendering loop should look something like this
       var time = tdl.webgl.animationTime();
       model.drawPrep({...});
       model.draw({...});
-      tdl.webgl.requestAnimationFrame(canvas, render);
+      tdl.webgl.requestAnimationFrame(render, canvas);
     }
     render();  // call the first render manually to start it off.  
 
