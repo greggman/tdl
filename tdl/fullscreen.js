@@ -34,13 +34,13 @@
  * @fileoverview This file contains misc functions to deal with
  *               fullscreen.
  */
-
-tdl.provide('tdl.fullscreen');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A module for misc.
  * @namespace
  */
+tdl.provide('tdl.fullscreen');
 tdl.fullscreen = tdl.fullscreen || {};
 
 tdl.fullscreen.requestFullScreen = function(element) {
@@ -84,4 +84,5 @@ tdl.fullscreen.onFullScreenChange = function(element, callback) {
     });
 };
 
-
+return tdl.fullscreen;
+});

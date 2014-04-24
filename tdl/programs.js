@@ -34,17 +34,22 @@
  * @fileoverview This file contains objects to deal with WebGL
  *               programs.
  */
-
-tdl.provide('tdl.programs');
-
-tdl.require('tdl.log');
-tdl.require('tdl.string');
-tdl.require('tdl.webgl');
+define(
+    [ './base-rs',
+      './log',
+      './string',
+      './webgl',
+    ], function(
+      BaseRS,
+      Log,
+      Strings,
+      WebGL) {
 
 /**
  * A module for programs.
  * @namespace
  */
+tdl.provide('tdl.programs');
 tdl.programs = tdl.programs || {};
 
 /**
@@ -488,4 +493,6 @@ tdl.programs.Program.prototype.setUniform = function(uniform, value) {
   }
 };
 
+return tdl.programs;
+});
 

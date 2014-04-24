@@ -33,15 +33,14 @@
 /**
  * @fileoverview This file contains matrix/vector math functions.
  */
-
-tdl.provide('tdl.fast');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A module for math for tdl.fast.
  * @namespace
  */
+tdl.provide('tdl.fast');
 tdl.fast = tdl.fast || {};
-
 
 if (!window.Float32Array) {
   // This just makes some errors go away when there is no WebGL.
@@ -1667,3 +1666,6 @@ tdl.fast.installColumnMajorFunctions = function() {
 
 // By default, install the row-major functions.
 tdl.fast.installRowMajorFunctions();
+
+return tdl.fast;
+});

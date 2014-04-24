@@ -43,13 +43,14 @@
  *
  */
 
-tdl.provide('tdl.quaternions');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A Module for quaternion math.
  * @namespace
  */
-tdl.quaternions = tdl.quaternions || {};
+tdl.provide('tdl.quaternions');
+tdl.quaterions = tdl.quaternions || {};
 
 /**
  * A Quaternion.
@@ -484,4 +485,7 @@ tdl.quaternions.rotationToQuaternion = function(m) {
 
   return q;
 };
+
+return tdl.quaternions;
+});
 

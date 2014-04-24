@@ -99,12 +99,13 @@
  *
  */
 
-tdl.provide('tdl.math');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A module for math for tdl.math.
  * @namespace
  */
+tdl.provide('tdl.math');
 tdl.math = tdl.math || {};
 
 /**
@@ -2460,3 +2461,6 @@ tdl.math.installRowMajorFunctions();
 
 // By default, install prechecking.
 tdl.math.installErrorCheckFunctions();
+
+return tdl.math;
+});

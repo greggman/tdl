@@ -34,17 +34,22 @@
  * @fileoverview This file contains objects to sync app settings across
  * browsers.
  */
-
-tdl.provide('tdl.sync');
-
-tdl.require('tdl.log');
-tdl.require('tdl.io');
-tdl.require('tdl.misc');
+define(
+    [ './base-rs',
+      './log',
+      './io',
+      './misc',
+    ], function(
+      BaseRS,
+      Log,
+      IO,
+      Misc) {
 
 /**
  * A module for sync.
  * @namespace
  */
+tdl.provide('tdl.sync');
 tdl.sync = tdl.sync || {};
 
 /**
@@ -136,4 +141,6 @@ tdl.sync.SyncManager.prototype.setSettings = function(settings) {
   }
 };
 
+return tdl.sync;
+});
 

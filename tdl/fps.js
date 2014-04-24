@@ -34,13 +34,13 @@
  * @fileoverview This file contains objects to measure frames
  *               per second.
  */
-
-tdl.provide('tdl.fps');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A module for fps.
  * @namespace
  */
+tdl.provide('tdl.fps');
 tdl.fps = tdl.fps || {};
 
 /**
@@ -94,5 +94,6 @@ tdl.fps.FPSTimer.prototype.update = function(elapsedTime) {
       (1.0 / (this.totalTime_ / tdl.fps.NUM_FRAMES_TO_AVERAGE)) + 0.5);
 };
 
-
+return tdl.fps;
+});
 

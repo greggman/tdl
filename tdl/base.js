@@ -566,3 +566,29 @@ tdl.base.IsMSIE = function() {
   return msie;
 };
 
+// Handle case where we are NOT using require.js
+function define() {
+  var args = [];
+  for (var ii = 0; ii < arguments.length; ++ii) {
+    args.push(arguments[ii]);
+  }
+  if (args.length == 1) {
+    args.unshift([]);
+  }
+  if (args.length == 2) {
+    args.unshift(undefined);
+  }
+
+  var id = args[0];
+  var deps = args[1];
+  var obj = args[2];
+
+  for (var ii = 0; ii < deps.length; ++ii) {
+    // assume format is './name'
+    var name = deps[ii].replace('./', 'tdl.');
+    tdl.require(name);
+  }
+  if (typeof obj == "function") {
+    obj();
+  }
+}

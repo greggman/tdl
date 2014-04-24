@@ -33,15 +33,13 @@
 /**
  * @fileoverview This file contains objects to manage textures.
  */
-
-tdl.provide('tdl.textures');
-
-tdl.require('tdl.webgl');
+define(['./base-rs', './webgl'], function(BaseRS, WebGL) {
 
 /**
  * A module for textures.
  * @namespace
  */
+tdl.provide('tdl.textures');
 tdl.textures = tdl.textures || {};
 
 /**
@@ -580,5 +578,6 @@ tdl.textures.CubeMap.prototype.bindToUnit = function(unit) {
   gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
 };
 
-
+return tdl.textures;
+});
 

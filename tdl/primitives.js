@@ -33,16 +33,13 @@
 /**
  * @fileoverview This file contains objects to make primitives.
  */
-
-tdl.provide('tdl.primitives');
-
-tdl.require('tdl.math');
-tdl.require('tdl.log');
+define(['./base-rs', './math', './log'], function(BaseRS, Maths, Log) {
 
 /**
  * A module for primitives.
  * @namespace
  */
+tdl.provide('tdl.primitives');
 tdl.primitives = tdl.primitives || {};
 
 /**
@@ -1341,3 +1338,7 @@ tdl.primitives.interleaveVertexData = function(vertexDataArray) {
   }
   return vertexData;
 };
+
+return tdl.primitives;
+});
+

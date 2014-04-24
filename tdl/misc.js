@@ -33,15 +33,13 @@
 /**
  * @fileoverview This file contains misc functions that don't fit elsewhere.
  */
-
-tdl.provide('tdl.misc');
-
-tdl.require('tdl.log');
+define(['./base-rs', './log'], function(BaseRS, Log) {
 
 /**
  * A module for misc.
  * @namespace
  */
+tdl.provide('tdl.misc');
 tdl.misc = tdl.misc || {};
 
 tdl.misc.parseUnquotedJSObjectString = function(str) {
@@ -116,4 +114,5 @@ tdl.misc.copyProperties = function(obj, dst) {
   }
 };
 
-
+return tdl.misc;
+});

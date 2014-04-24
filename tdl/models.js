@@ -33,15 +33,13 @@
 /**
  * @fileoverview This file contains objects to manage models.
  */
-
-tdl.provide('tdl.models');
-
-tdl.require('tdl.buffers');
+define(['./base-rs', './buffers'], function(BaseRS, Buffers) {
 
 /**
  * A module for models.
  * @namespace
  */
+tdl.provide('tdl.models');
 tdl.models = tdl.models || {};
 
 /**
@@ -187,3 +185,6 @@ tdl.models.Model.prototype.draw = function() {
 
   this.drawFunc(totalComponents, startOffset);
 };
+
+return tdl.models;
+});

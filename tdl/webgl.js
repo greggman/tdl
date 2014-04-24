@@ -33,15 +33,9 @@
 /**
  * @fileoverview This file contains objects to deal with basic webgl stuff.
  */
+define(['./base-rs', './log', './misc'], function(BaseRS, Log, Misc) {
+
 tdl.provide('tdl.webgl');
-
-tdl.require('tdl.log');
-tdl.require('tdl.misc');
-
-/**
- * A module for log.
- * @namespace
- */
 tdl.webgl = tdl.webgl || {};
 
 /**
@@ -603,5 +597,5 @@ tdl.webgl.cancelRequestAnimationFrame = function(requestId) {
   tdl.webgl.cancelRequestAnimationFrameImpl_(requestId);
 };
 
-
-
+return tdl.webgl;
+});

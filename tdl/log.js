@@ -33,17 +33,13 @@
 /**
  * @fileoverview This file contains objects to deal with logging.
  */
-
-tdl.provide('tdl.log');
-
-tdl.require('tdl.string');
+define(['./base-rs', './string'], function(BaseRS, Strings) {
 
 /**
  * A module for log.
  * @namespace
  */
-tdl.log = tdl.log || {};
-
+tdl.provide('tdl.log');
 
 /**
  * Wrapped logging function.
@@ -85,4 +81,5 @@ tdl.dumpObj = function(obj, opt_prefix) {
   tdl.log(tdl.string.objToString(obj, opt_prefix));
 };
 
-
+return tdl;
+});

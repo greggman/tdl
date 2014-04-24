@@ -33,13 +33,13 @@
 /**
  * @fileoverview This file contains various functions and class for io.
  */
-
-tdl.provide('tdl.io');
+define(['./base-rs'], function(BaseRS) {
 
 /**
  * A Module with various io functions and classes.
  * @namespace
  */
+tdl.provide('tdl.io');
 tdl.io = tdl.io || {};
 
 /**
@@ -437,4 +437,5 @@ tdl.io.sendJSON = function(url, jsonObject, callback) {
   return loadInfo;
 };
 
-
+return tdl.io;
+});

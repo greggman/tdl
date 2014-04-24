@@ -34,15 +34,13 @@
  * @fileoverview This file contains objects to manage
  *               framebuffers.
  */
-
-tdl.provide('tdl.framebuffers');
-
-tdl.require('tdl.textures');
+define(['./base-rs', './textures'], function(BaseRS, Textures) {
 
 /**
  * A module for textures.
  * @namespace
  */
+tdl.provide('tdl.framebuffers');
 tdl.framebuffers = tdl.framebuffers || {};
 
 tdl.framebuffers.createFramebuffer = function(width, height, opt_depth) {
@@ -273,3 +271,6 @@ tdl.framebuffers.Float32Framebuffer.prototype.initializeTexture = function(tex) 
                 gl.FLOAT,          // type
                 null);             // data
 };
+
+return tdl.framebuffers;
+});
