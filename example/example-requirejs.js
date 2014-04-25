@@ -1,14 +1,14 @@
 var main = function(
-   TDLbuffers,
-   TDLfast,
-   TDLfps,
-   TDLlog,
-   TDLmath,
-   TDLmodels,
-   TDLprimitives,
-   TDLprograms,
-   TDLtextures,
-   TDLwebgl) {
+   TDLBuffers,
+   TDLFast,
+   TDLFps,
+   TDLLog,
+   TDLMath,
+   TDLModels,
+   TDLPrimitives,
+   TDLPrograms,
+   TDLTextures,
+   TDLWebGL) {
   // globals
   var gl;                   // the gl context.
   var canvas;               // the canvas
@@ -29,28 +29,28 @@ var main = function(
   function ValidateNoneOfTheArgsAreUndefined(functionName, args) {
     for (var ii = 0; ii < args.length; ++ii) {
       if (args[ii] === undefined) {
-        tdl.error("undefined passed to gl." + functionName + "(" +
-                  tdl.webgl.glFunctionArgsToString(functionName, args) + ")");
+        TDLLog.error("undefined passed to gl." + functionName + "(" +
+                     TDLWebGL.glFunctionArgsToString(functionName, args) + ")");
       }
     }
   }
 
   function Log(msg) {
     if (g_logGLCalls) {
-      tdl.log(msg);
+      TDLLog.log(msg);
     }
   }
 
   function LogGLCall(functionName, args) {
     if (g_logGLCalls) {
       ValidateNoneOfTheArgsAreUndefined(functionName, args)
-      tdl.log("gl." + functionName + "(" +
-                  tdl.webgl.glFunctionArgsToString(functionName, args) + ")");
+      TDLLog.log("gl." + functionName + "(" +
+                  TDLWebGL.glFunctionArgsToString(functionName, args) + ")");
     }
   }
 
   function createProgramFromTags(vertexTagId, fragmentTagId) {
-    return tdl.programs.loadProgram(
+    return TDLPrograms.loadProgram(
         document.getElementById(vertexTagId).text,
         document.getElementById(fragmentTagId).text);
   }
@@ -60,27 +60,27 @@ var main = function(
    */
   function setupSphere() {
     var textures = {
-      diffuseSampler: tdl.textures.loadTexture('assets/sometexture.png')};
+      diffuseSampler: TDLTextures.loadTexture('assets/sometexture.png')};
     var program = createProgramFromTags(
         'sphereVertexShader',
         'sphereFragmentShader');
-    var arrays = tdl.primitives.createSphere(0.4, 10, 12);
+    var arrays = TDLPrimitives.createSphere(0.4, 10, 12);
 
-    return new tdl.models.Model(program, arrays, textures);
+    return new TDLModels.Model(program, arrays, textures);
   }
 
   function initialize() {
-    math = tdl.math;
-    fast = tdl.fast;
+    math = TDLMath;
+    fast = TDLFast;
     canvas = document.getElementById("canvas");
-    g_fpsTimer = new tdl.fps.FPSTimer();
+    g_fpsTimer = new TDLFps.FPSTimer();
 
-    gl = tdl.webgl.setupWebGL(canvas);
+    gl = TDLWebGL.setupWebGL(canvas);
     if (!gl) {
       return false;
     }
     if (g_debug) {
-      gl = tdl.webgl.makeDebugContext(gl, undefined, LogGLCall);
+      gl = TDLWebGL.makeDebugContext(gl, undefined, LogGLCall);
     }
 
     Log("--Setup Sphere---------------------------------------");
@@ -133,7 +133,7 @@ var main = function(
     function render() {
       ++frameCount;
       if (!g_drawOnce) {
-        tdl.webgl.requestAnimationFrame(render, canvas);
+        TDLWebGL.requestAnimationFrame(render, canvas);
       }
       var now = (new Date()).getTime() * 0.001;
       var elapsedTime;
