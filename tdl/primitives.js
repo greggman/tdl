@@ -758,6 +758,50 @@ tdl.primitives.createCresent = function(
 };
 
 /**
+ * Creates line vertices.
+ * The created line has position and normal.
+ *
+ * @param {Array.<number>} coords coords of the line.
+ * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ *         created line vertices.
+ */
+tdl.primitives.createLine = function(coords) {
+  var cL = coords.length;
+  var numVertices =  cL / 3;
+  if (numVertices <= 1) {
+    throw Error('line coords length must be > 3');
+  }
+  if (coords.length % 3 != 0) {
+    throw Error('line coords length must be the multiple of 3');
+  }
+  var math = tdl.math;
+  
+  var positions = new tdl.primitives.AttribBuffer(3, numVertices);
+  var normals = new tdl.primitives.AttribBuffer(3, numVertices);
+    for (var i = 0; i < cL; i+=3) {
+      positions.push([
+          coords[i],
+          coords[i+1],
+          coords[i+2]
+        ]);
+      normals.push([0, 1, 0]);
+    }
+
+  var indices = new tdl.primitives.AttribBuffer(
+      2, numVertices - 1, 'Uint16Array');
+  for (var i = 0; i < numVertices -1; i++) {
+    indices.push([
+      i,
+      i+1]); 
+  }
+  
+  return {
+    position: positions,
+    normal: normals,
+    indices: indices};
+};
+
+/**
  * Creates XZ plane vertices.
  * The created plane has position, normal and uv streams.
  *
