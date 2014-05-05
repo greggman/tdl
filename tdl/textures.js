@@ -140,6 +140,10 @@ tdl.textures.Texture = function(target) {
   this.params = { };
 };
 
+tdl.textures.Texture.prototype.destroy = function() {
+  gl.deleteTexture(this.texture);
+};
+
 tdl.textures.Texture.prototype.setParameter = function(pname, value) {
   this.params[pname] = value;
   gl.bindTexture(this.target, this.texture);
@@ -341,7 +345,7 @@ tdl.textures.Texture2D.prototype.setTexture = function(element) {
   // TODO(gman): use texSubImage2D if the size is the same.
   gl.bindTexture(gl.TEXTURE_2D, this.texture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, element);
-  this.setFilteringBasedOnDimensions(element, element.height);
+  this.setFilteringBasedOnDimensions(element.width, element.height);
 };
 
 tdl.textures.Texture2D.prototype.updateTexture = function() {
