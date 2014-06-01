@@ -77,7 +77,7 @@ tdl.webgl.GET_A_WEBGL_BROWSER = '' +
  * @type {string}
  */
 tdl.webgl.OTHER_PROBLEM = '' +
-  "Your browser apparently supports WebGL but is disabled for some reason.<br/>" +
+  "It does not appear your browser or computer supports WebGL.<br/>" +
   '<a href="http://get.webgl.org/troubleshooting/">Click here for more information.</a>';
 
 /**
