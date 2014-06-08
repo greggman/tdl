@@ -1,6 +1,6 @@
 {
   "name": "tdl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "authors": [
     "Gregg Tavares <github@greggman.com>"
   ],
@@ -11,7 +11,7 @@
   ],
   "keywords": [
     "webgl",
-    "tdl",
+    "tdl"
   ],
   "license": "MIT",
   "homepage": "https://github.com/greggman/tdl",
