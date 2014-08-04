@@ -47,7 +47,8 @@ tdl.primitives = tdl.primitives || {};
  *
  * @param {number} numComponents Number of components per
  *     vector.
- * @param {number|!Array.<number>} numElements Number of vectors or the data.
+ * @param {(number|!Array.<number>)} numElements Number of
+ *        vectors or the data.
  * @param {string} opt_type The type of the TypedArray to
  *     create. Default = 'Float32Array'.
  * @param {!Array.<number>} opt_data The data for the array.
@@ -1360,7 +1361,7 @@ tdl.primitives.createDisc = function(
 
 /**
  * Interleaves vertex information into one large buffer
- * @param {Array of <string, tdl.primitives.AttribBuffer>}
+ * @param {Array.<string, tdl.primitives.AttribBuffer>}
  * @param {Object.<string, tdl.primitives.AttribBuffer>}
  */
 tdl.primitives.interleaveVertexData = function(vertexDataArray) {

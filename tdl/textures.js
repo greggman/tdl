@@ -44,13 +44,14 @@ tdl.textures = tdl.textures || {};
 
 /**
  * Loads a texture
- * @param {{!tdl.math.Vector4|string|!Array.<string>|!img|!canvas}} Passing a
- *        color makes a solid 1pixel 2d texture, passing a URL
- *        makes a 2d texture with that url, passing an array of
- *        urls makes a cubemap, passing an img or canvas makes a 2d texture with
- *        that image.
+ * @param {(!tdl.math.Vector4|string|!Array.<string>|!img|!canvas)}
+ *        Passing a color makes a solid 1pixel 2d texture,
+ *        passing a URL makes a 2d texture with that url,
+ *        passing an array of urls makes a cubemap, passing an
+ *        img or canvas makes a 2d texture with that image.
  * @param {boolean} opt_flipY Flip the texture in Y?
- * @param {function} opt_callback Function to execute when texture is loaded.
+ * @param {function()} opt_callback Function to execute when
+ *        texture is loaded.
  */
 tdl.textures.loadTexture = function(arg, opt_flipY, opt_callback) {
   var id;
@@ -285,8 +286,10 @@ tdl.textures.ColorTexture.prototype.bindToUnit = function(unit) {
 
 /**
  * @constructor
- * @param {{string|!Element}} url URL of image to load into texture.
- * @param {function} opt_callback Function to execute when texture is loaded.
+ * @param {(string|!Element)} url URL of image to load into
+ *        texture.
+ * @param {function()} opt_callback Function to execute when
+ *        texture is loaded.
  */
 tdl.textures.Texture2D = function(url, opt_flipY, opt_callback) {
   tdl.textures.Texture.call(this, gl.TEXTURE_2D);

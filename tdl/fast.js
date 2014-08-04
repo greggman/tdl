@@ -1148,12 +1148,12 @@ tdl.fast.matrix4.frustum = function(dst, left, right, bottom, top, near, far) {
  * vector pointing from the eye to the target to a vector pointing in the
  * negative z direction, and also sends the up vector into the upper half of
  * the yz plane.
- * @return {!tdl.fast.Matrix4} dst matrix.
- * @param {(!tdl.fast.Vector3} eye The
+ * @param {!tdl.fast.Matrix4} dst matrix.
+ * @param {!tdl.fast.Vector3} eye The
  *     position of the eye.
- * @param {(!tdl.fast.Vector3} target The
+ * @param {!tdl.fast.Vector3} target The
  *     position meant to be viewed.
- * @param {(!tdl.fast.Vector3} up A vector
+ * @param {!tdl.fast.Vector3} up A vector
  *     pointing up.
  * @return {!tdl.fast.Matrix4} The look-at matrix.
  */

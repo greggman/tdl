@@ -82,11 +82,11 @@ tdl.webgl.OTHER_PROBLEM = '' +
 
 /**
  * Creates a webgl context.
- * @param {Element} canvas. The canvas element to create a
+ * @param {Element} canvas The canvas element to create a
  *     context from.
  * @param {WebGLContextCreationAttirbutes} opt_attribs Any
  *     creation attributes you want to pass in.
- * @param {function:(msg)} opt_onError An function to call
+ * @param {function(msg)} opt_onError An function to call
  *     if there is an error during creation.
  * @return {!WebGLRenderingContext} The created context.
  */

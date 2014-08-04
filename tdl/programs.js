@@ -323,7 +323,9 @@ tdl.programs.Program = function(vertexShader, fragmentShader, opt_asyncCallback)
           return function(units) {
             return function(v) {
               gl.uniform1iv(loc, units);
-              v.bindToUnit(units);
+              v.forEach(function(t, index) {
+                t.bindToUnit(units[index]);
+              });
             };
           }(units);
         }
