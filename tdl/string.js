@@ -35,18 +35,18 @@
  */
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.string');
 /**
  * A module for string.
  * @namespace
  */
-tdl.provide('tdl.string');
 tdl.string = tdl.string || {};
 
 /**
  * Whether a haystack ends with a needle.
  * @param {string} haystack String to search
  * @param {string} needle String to search for.
- * @param {boolean} True if haystack ends with needle.
+ * @return {boolean} True if haystack ends with needle.
  */
 tdl.string.endsWith = function(haystack, needle) {
   return haystack.substr(haystack.length - needle.length) === needle;
@@ -56,7 +56,7 @@ tdl.string.endsWith = function(haystack, needle) {
  * Whether a haystack starts with a needle.
  * @param {string} haystack String to search
  * @param {string} needle String to search for.
- * @param {boolean} True if haystack starts with needle.
+ * @return {boolean} True if haystack starts with needle.
  */
 tdl.string.startsWith = function(haystack, needle) {
   return haystack.substr(0, needle.length) === needle;
@@ -64,7 +64,8 @@ tdl.string.startsWith = function(haystack, needle) {
 
 /**
  * Converts a non-homogenious array into a string.
- * @param {!Array.<*>} args Args to turn into a string
+ * @param {Array.<*>} args Args to turn into a string
+ * @return {string} string representing args
  */
 tdl.string.argsToString = function(args) {
   var lastArgWasNumber = false;
@@ -98,6 +99,9 @@ tdl.string.argsToString = function(args) {
 /**
  * Converts an object into a string. Similar to JSON.stringify but just used
  * for debugging.
+ * @param {*} obj object to stringify.
+ * @param {string?} opt_prefix optional prefix
+ * @return {string} stringified object
  */
 tdl.string.objToString = function(obj, opt_prefix) {
   var strs = [];

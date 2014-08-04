@@ -36,11 +36,11 @@
  */
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.shader');
 /**
  * A module for shaders.
  * @namespace
  */
-tdl.provide('tdl.shader');
 tdl.shader = tdl.shader || {};
 
 /**
@@ -49,23 +49,23 @@ tdl.shader = tdl.shader || {};
  * "script" nodes in the HTML page. This provides a convenient
  * mechanism for writing GLSL snippets without the burden of
  * additional syntax like per-line quotation marks.
- * @param {!WebGLRenderingContext} gl The WebGLRenderingContext
+ * @param {WebGLRenderingContext} gl The WebGLRenderingContext
  *     into which the shader will be loaded.
- * @param {!string} vertexScriptName The name of the HTML Script node
+ * @param {string} vertexScriptName The name of the HTML Script node
  *     containing the vertex program.
- * @param {!string} fragmentScriptName The name of the HTML Script node
+ * @param {string} fragmentScriptName The name of the HTML Script node
  *     containing the fragment program.
  */
 tdl.shader.loadFromScriptNodes = function(gl,
-                                            vertexScriptName,
-                                            fragmentScriptName) {
+                                          vertexScriptName,
+                                          fragmentScriptName) {
   var vertexScript = document.getElementById(vertexScriptName);
   var fragmentScript = document.getElementById(fragmentScriptName);
   if (!vertexScript || !fragmentScript)
     return null;
   return new tdl.shader.Shader(gl,
-                                 vertexScript.text,
-                                 fragmentScript.text);
+                               vertexScript.text,
+                               fragmentScript.text);
 }
 
 /**
@@ -79,10 +79,10 @@ tdl.shader.glslNameToJs_ = function(name) {
 /**
  * Creates a new Shader object, loading and linking the given vertex
  * and fragment shaders into a program.
- * @param {!WebGLRenderingContext} gl The WebGLRenderingContext
+ * @param {WebGLRenderingContext} gl The WebGLRenderingContext
  *     into which the shader will be loaded.
- * @param {!string} vertex The vertex shader.
- * @param {!string} fragment The fragment shader.
+ * @param {string} vertex The vertex shader.
+ * @param {string} fragment The fragment shader.
  */
 tdl.shader.Shader = function(gl, vertex, fragment) {
   this.program = gl.createProgram();

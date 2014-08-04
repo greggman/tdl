@@ -45,11 +45,11 @@ define(
       IO,
       Misc) {
 
+tdl.provide('tdl.sync');
 /**
  * A module for sync.
  * @namespace
  */
-tdl.provide('tdl.sync');
 tdl.sync = tdl.sync || {};
 
 /**
@@ -73,8 +73,7 @@ tdl.sync.SyncManager = function(settings, opt_callback) {
 
 /**
  * Initialize the sync manager to start syncing settings with a server.
- * @param {string} server domain name of server.
- * @param {number} port port of server.
+ * @param {string} url Url of server.
  * @param {boolean} slave true if this page is a slave. Slaves only receive
  *     settings from the server. Non slaves send settings the server.
  */

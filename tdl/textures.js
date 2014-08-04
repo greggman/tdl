@@ -35,41 +35,43 @@
  */
 define(['./base-rs', './webgl'], function(BaseRS, WebGL) {
 
+tdl.provide('tdl.textures');
 /**
  * A module for textures.
  * @namespace
  */
-tdl.provide('tdl.textures');
 tdl.textures = tdl.textures || {};
 
 /**
  * Loads a texture
- * @param {(!tdl.math.Vector4|string|!Array.<string>|!img|!canvas)}
- *        Passing a color makes a solid 1pixel 2d texture,
+ * @param
+ *        {(tdl.math.Vector4|string|string[]|HTMLImageElement|HTMLCanvasElement)}
+ *        src Passing a color makes a solid 1pixel 2d texture,
  *        passing a URL makes a 2d texture with that url,
  *        passing an array of urls makes a cubemap, passing an
  *        img or canvas makes a 2d texture with that image.
  * @param {boolean} opt_flipY Flip the texture in Y?
  * @param {function()} opt_callback Function to execute when
  *        texture is loaded.
+ * @return {tdl.textures.Texture} the created texture.
  */
-tdl.textures.loadTexture = function(arg, opt_flipY, opt_callback) {
+tdl.textures.loadTexture = function(src, opt_flipY, opt_callback) {
   var id;
-  if (typeof arg == 'string') {
-    td = arg;
-  } else if (arg.length == 4 && typeof arg[0] == 'number') {
-    id = arg.toString();
-  } else if ((arg.length == 1 || arg.length == 6) &&
-             typeof arg[0] == 'string') {
-    id = arg.toString();
-  } else if (arg.tagName == 'CANVAS') {
+  if (typeof src == 'string') {
+    td = src;
+  } else if (src.length == 4 && typeof src[0] == 'number') {
+    id = src.toString();
+  } else if ((src.length == 1 || src.length == 6) &&
+             typeof src[0] == 'string') {
+    id = src.toString();
+  } else if (src.tagName == 'CANVAS') {
     id = undefined;
-  } else if (arg.tagName == 'IMG') {
-    id = arg.src;
-  } else if (arg.width) {
+  } else if (src.tagName == 'IMG') {
+    id = src.src;
+  } else if (src.width) {
     id = undefined;
   } else {
-    throw "bad args";
+    throw "bad srcs";
   }
 
   var texture;
@@ -80,21 +82,21 @@ tdl.textures.loadTexture = function(arg, opt_flipY, opt_callback) {
   if (texture) {
     return texture;
   }
-  if (typeof arg == 'string') {
-    texture = new tdl.textures.Texture2D(arg, opt_flipY, opt_callback);
-  } else if (arg.length == 4 && typeof arg[0] == 'number') {
-    texture = new tdl.textures.SolidTexture(arg);
-  } else if ((arg.length == 1 || arg.length == 6) &&
-             typeof arg[0] == 'string') {
-    texture = new tdl.textures.CubeMap(arg);
-  } else if (arg.tagName == 'CANVAS' || arg.tagName == 'IMG') {
-    texture = new tdl.textures.Texture2D(arg, opt_flipY);
-  } else if (arg.width) {
-    texture = new tdl.textures.ColorTexture2D(arg);
+  if (typeof src == 'string') {
+    texture = new tdl.textures.Texture2D(src, opt_flipY, opt_callback);
+  } else if (src.length == 4 && typeof src[0] == 'number') {
+    texture = new tdl.textures.SolidTexture(src);
+  } else if ((src.length == 1 || src.length == 6) &&
+             typeof src[0] == 'string') {
+    texture = new tdl.textures.CubeMap(src);
+  } else if (src.tagName == 'CANVAS' || src.tagName == 'IMG') {
+    texture = new tdl.textures.Texture2D(src, opt_flipY);
+  } else if (src.width) {
+    texture = new tdl.textures.ColorTexture2D(src);
   } else {
-    throw "bad args";
+    throw "bad srcs";
   }
-  gl.tdl.textures.db[arg.toString()] = texture;
+  gl.tdl.textures.db[src.toString()] = texture;
   return texture;
 };
 
@@ -135,16 +137,31 @@ tdl.textures.handleContextLost_ = function() {
   }
 };
 
+/**
+ * Base class for all textures.
+ * @constructor
+ * @private
+ * @param {number} target GL target like `gl.TEXTURE_2D`
+ */
 tdl.textures.Texture = function(target) {
   this.target = target;
   this.texture = gl.createTexture();
   this.params = { };
 };
 
+/**
+ * Deletes a texture
+ */
 tdl.textures.Texture.prototype.destroy = function() {
   gl.deleteTexture(this.texture);
 };
 
+/**
+ * Set a texture parameter
+ * @param {number} pname eg. `gl.TEXTURE_MAG_FILTER`,
+ *        `gl.TEXTURE_WRAP_S`
+ * @param {number} value eg. `gl.LINEAR`
+ */
 tdl.textures.Texture.prototype.setParameter = function(pname, value) {
   this.params[pname] = value;
   gl.bindTexture(this.target, this.texture);
@@ -180,7 +197,7 @@ tdl.textures.Texture.prototype.setFilteringBasedOnDimensions = function(width, h
 /**
  * A solid color texture.
  * @constructor
- * @param {!tdl.math.vector4} color.
+ * @param {tdl.math.vector4} color color for texture.
  */
 tdl.textures.SolidTexture = function(color) {
   tdl.textures.Texture.call(this, gl.TEXTURE_2D);
@@ -247,10 +264,19 @@ tdl.textures.DepthTexture.prototype.bindToUnit = function(unit) {
 };
 
 /**
+ * @typedef {Object} ColorTextureData
+ * @memberOf tdl.textures
+ * @property {number} width width in pixels
+ * @property {number} height height in pixels
+ * @property {number[]|ArrayBufferView} data pixels
+ */
+
+/**
  * A color from an array of values texture.
  * @constructor
- * @param {!{width: number, height: number: pixels:
- *        !Array.<number>} data.
+ * @param {tdl.primitives.ColorTextureData} data pixels
+ * @param {number} opt_format Default `gl.RGBA`
+ * @param {number} opt_type Default `gl.UNSIGNED_BYTE`
  */
 tdl.textures.ColorTexture = function(data, opt_format, opt_type) {
   tdl.textures.Texture.call(this, gl.TEXTURE_2D);
@@ -285,10 +311,12 @@ tdl.textures.ColorTexture.prototype.bindToUnit = function(unit) {
 };
 
 /**
+ * A 2D texture from an image
  * @constructor
- * @param {(string|!Element)} url URL of image to load into
- *        texture.
- * @param {function()} opt_callback Function to execute when
+ * @param {(string|HTMLElement)} url URL of image to load into
+ *        texture or exiting image/canvas/video element.
+ * @param {boolean?} opt_flipY true to flip image vertically
+ * @param {function()?} opt_callback Function to execute when
  *        texture is loaded.
  */
 tdl.textures.Texture2D = function(url, opt_flipY, opt_callback) {
@@ -328,6 +356,11 @@ tdl.textures.Texture2D = function(url, opt_flipY, opt_callback) {
 
 tdl.base.inherit(tdl.textures.Texture2D, tdl.textures.Texture);
 
+/**
+ * Check if a number if a power of 2
+ * @param {number} value value to check.
+ * @returns {boolean} true if value is power of 2.
+ */
 tdl.textures.isPowerOf2 = function(value) {
   return (value & (value - 1)) == 0;
 };
@@ -344,6 +377,11 @@ tdl.textures.Texture2D.prototype.uploadTexture = function() {
   }
 };
 
+/**
+ * Set a texture to a new image
+ * @param {HTMLCanvasElement|HTMLImageElement|HTMLVideoElement}
+ *        element image element to set texture.
+ */
 tdl.textures.Texture2D.prototype.setTexture = function(element) {
   // TODO(gman): use texSubImage2D if the size is the same.
   gl.bindTexture(gl.TEXTURE_2D, this.texture);
@@ -369,7 +407,8 @@ tdl.textures.Texture2D.prototype.bindToUnit = function(unit) {
 /**
  * Create a texture to be managed externally.
  * @constructor
- * @param {string} type GL enum for texture type.
+ * @param {number} type GL enum for texture type, eg
+ *        `gl.TEXTURE_2D`.
  */
 tdl.textures.ExternalTexture = function(type) {
   tdl.textures.Texture.call(this, type);
@@ -399,18 +438,18 @@ tdl.base.inherit(tdl.textures.ExternalTexture2D, tdl.textures.ExternalTexture);
 /**
  * Create and load a CubeMap.
  * @constructor
- * @param {!Array.<string>} urls The urls of the 6 faces, which
+ * @param {string[]} urls The urls of the 6 faces, which
  *     must be in the order positive_x, negative_x positive_y,
  *     negative_y, positive_z, negative_z OR an array with a single url
  *     where the images are arranged as a cross in this order.
  *
- *     +--+--+--+--+
- *     |  |PY|  |  |
- *     +--+--+--+--+
- *     |NX|PZ|PX|NZ|
- *     +--+--+--+--+
- *     |  |NY|  |  |
- *     +--+--+--+--+
+ *         +--+--+--+--+
+ *         |  |PY|  |  |
+ *         +--+--+--+--+
+ *         |NX|PZ|PX|NZ|
+ *         +--+--+--+--+
+ *         |  |NY|  |  |
+ *         +--+--+--+--+
  */
 tdl.textures.CubeMap = function(urls) {
   tdl.textures.init_(gl);

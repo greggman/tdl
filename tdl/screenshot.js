@@ -36,6 +36,10 @@
 define(['./base-rs', './io'], function(BaseRS, IO) {
 
 tdl.provide('tdl.screenshot');
+
+/**
+ * @namespace
+ */
 tdl.screenshot = tdl.screenshot || {};
 
 /**
