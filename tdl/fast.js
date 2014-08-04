@@ -35,11 +35,12 @@
  */
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.fast');
+
 /**
  * A module for math for tdl.fast.
  * @namespace
  */
-tdl.provide('tdl.fast');
 tdl.fast = tdl.fast || {};
 
 if (!window.Float32Array) {
@@ -80,57 +81,49 @@ tdl.fast.columnMajor = tdl.fast.columnMajor || {};
 
 /**
  * An Array of 2 floats
- * @type {!Float32Array}
+ * @typedef {Float32Array} tdl.fast.Vector2
  */
-tdl.fast.Vector2 = goog.typedef;
 
 /**
  * An Array of 3 floats
- * @type {!Float32Array}
+ * @typedef {Float32Array} tdl.fast.Vector3
  */
-tdl.fast.Vector3 = goog.typedef;
 
 /**
  * An Array of 4 floats
- * @type {!Float32Array}
+ * @typedef {Float32Array} tdl.fast.Vector4
  */
-tdl.fast.Vector4 = goog.typedef;
 
 /**
  * An Array of floats.
- * @type {!Float32Array}
+ * @typedef {Float32Array} tdl.fast.Vector
  */
-tdl.fast.Vector = goog.typedef;
 
 /**
  * A 2x2 Matrix of floats
- * @type {!Float32Array}
+ * @typedef {Float32Array} tdl.fast.Matrix2
  */
-tdl.fast.Matrix2 = goog.typedef;
 
 /**
  * A 3x3 Matrix of floats
- * @type {!Float32Array}
+ * @typedef {Float32Array} tdl.fast.Matrix3
  */
-tdl.fast.Matrix3 = goog.typedef;
 
 /**
  * A 4x4 Matrix of floats
- * @type {!Float32Array}
+ * @typedef {Float32Array} tdl.fast.Matrix4
  */
-tdl.fast.Matrix4 = goog.typedef;
 
 /**
  * A arbitrary size Matrix of floats
- * @type {!Array.<!Array.<number>>}
+ * @typedef {Array<Number[]>} tdl.fast.Matrix
  */
-tdl.fast.Matrix = goog.typedef;
 
 /**
  * Adds two vectors; assumes a and b have the same dimension.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} a Operand vector.
- * @param {!tdl.fast.Vector} b Operand vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} a Operand vector.
+ * @param {tdl.fast.Vector} b Operand vector.
  */
 tdl.fast.addVector = function(dst, a, b) {
   var aLength = a.length;
@@ -141,9 +134,9 @@ tdl.fast.addVector = function(dst, a, b) {
 
 /**
  * Subtracts two vectors.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} a Operand vector.
- * @param {!tdl.fast.Vector} b Operand vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} a Operand vector.
+ * @param {tdl.fast.Vector} b Operand vector.
  */
 tdl.fast.subVector = function(dst, a, b) {
   var aLength = a.length;
@@ -156,9 +149,9 @@ tdl.fast.subVector = function(dst, a, b) {
  * Performs linear interpolation on two vectors.
  * Given vectors a and b and interpolation coefficient t, returns
  * (1 - t) * a + t * b.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} a Operand vector.
- * @param {!tdl.fast.Vector} b Operand vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} a Operand vector.
+ * @param {tdl.fast.Vector} b Operand vector.
  * @param {number} t Interpolation coefficient.
  */
 tdl.fast.lerpVector = function(dst, a, b, t) {
@@ -170,10 +163,10 @@ tdl.fast.lerpVector = function(dst, a, b, t) {
 
 /**
  * Divides a vector by a scalar.
- * @param {!tdl.fast.Vector} dst The vector.
- * @param {!tdl.fast.Vector} v The vector.
+ * @param {tdl.fast.Vector} dst The vector.
+ * @param {tdl.fast.Vector} v The vector.
  * @param {number} k The scalar.
- * @return {!tdl.fast.Vector} dst.
+ * @return {tdl.fast.Vector} dst.
  */
 tdl.fast.divVectorScalar = function(dst, v, k) {
   var vLength = v.length;
@@ -185,10 +178,10 @@ tdl.fast.divVectorScalar = function(dst, v, k) {
 /**
  * Computes the cross product of two vectors; assumes both vectors have
  * three entries.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} a Operand vector.
- * @param {!tdl.fast.Vector} b Operand vector.
- * @return {!tdl.fast.Vector} The vector a cross b.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} a Operand vector.
+ * @param {tdl.fast.Vector} b Operand vector.
+ * @return {tdl.fast.Vector} The vector a cross b.
  */
 tdl.fast.cross = function(dst, a, b) {
   dst[0] = a[1] * b[2] - a[2] * b[1];
@@ -200,8 +193,8 @@ tdl.fast.cross = function(dst, a, b) {
 /**
  * Computes the dot product of two vectors; assumes both vectors have
  * three entries.
- * @param {!tdl.fast.Vector} a Operand vector.
- * @param {!tdl.fast.Vector} b Operand vector.
+ * @param {tdl.fast.Vector} a Operand vector.
+ * @param {tdl.fast.Vector} b Operand vector.
  * @return {number} dot product
  */
 tdl.fast.dot = function(a, b) {
@@ -210,9 +203,9 @@ tdl.fast.dot = function(a, b) {
 
 /**
  * Divides a vector by its Euclidean length and returns the quotient.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} a The vector.
- * @return {!tdl.fast.Vector} The normalized vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} a The vector.
+ * @return {tdl.fast.Vector} The normalized vector.
  */
 tdl.fast.normalize = function(dst, a) {
   var n = 0.0;
@@ -232,9 +225,9 @@ tdl.fast.normalize = function(dst, a) {
 
 /**
  * Negates a vector.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} v The vector.
- * @return {!tdl.fast.Vector} -v.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} v The vector.
+ * @return {tdl.fast.Vector} -v.
  */
 tdl.fast.negativeVector = function(dst, v) {
  var vLength = v.length;
@@ -246,9 +239,9 @@ tdl.fast.negativeVector = function(dst, v) {
 
 /**
  * Negates a matrix.
- * @param {!tdl.fast.Matrix} dst matrix.
- * @param {!tdl.fast.Matrix} v The matrix.
- * @return {!tdl.fast.Matrix} -v.
+ * @param {tdl.fast.Matrix} dst matrix.
+ * @param {tdl.fast.Matrix} v The matrix.
+ * @return {tdl.fast.Matrix} -v.
  */
 tdl.fast.negativeMatrix = function(dst, v) {
   var vLength = v.length;
@@ -260,8 +253,8 @@ tdl.fast.negativeMatrix = function(dst, v) {
 
 /**
  * Copies a vector.
- * @param {!tdl.fast.Vector} v The vector.
- * @return {!tdl.fast.Vector} A copy of v.
+ * @param {tdl.fast.Vector} v The vector.
+ * @return {tdl.fast.Vector} A copy of v.
  */
 tdl.fast.copyVector = function(dst, v) {
   dst.set(v);
@@ -270,8 +263,8 @@ tdl.fast.copyVector = function(dst, v) {
 
 /**
  * Copies a matrix.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @return {!tdl.fast.Matrix} A copy of m.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @return {tdl.fast.Matrix} A copy of m.
  */
 tdl.fast.copyMatrix = function(dst, m) {
   dst.set(m);
@@ -280,10 +273,10 @@ tdl.fast.copyMatrix = function(dst, m) {
 
 /**
  * Multiplies a scalar by a vector.
- * @param {!tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} dst vector.
  * @param {number} k The scalar.
- * @param {!tdl.fast.Vector} v The vector.
- * @return {!tdl.fast.Vector} The product of k and v.
+ * @param {tdl.fast.Vector} v The vector.
+ * @return {tdl.fast.Vector} The product of k and v.
  */
 tdl.fast.mulScalarVector = function(dst, k, v) {
   var vLength = v.length;
@@ -295,10 +288,10 @@ tdl.fast.mulScalarVector = function(dst, k, v) {
 
 /**
  * Multiplies a vector by a scalar.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} v The vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} v The vector.
  * @param {number} k The scalar.
- * @return {!tdl.fast.Vector} The product of k and v.
+ * @return {tdl.fast.Vector} The product of k and v.
  */
 tdl.fast.mulVectorScalar = function(dst, v, k) {
   return tdl.fast.mulScalarVector(dst, k, v);
@@ -306,10 +299,10 @@ tdl.fast.mulVectorScalar = function(dst, v, k) {
 
 /**
  * Multiplies a scalar by a matrix.
- * @param {!tdl.fast.Matrix} dst matrix.
+ * @param {tdl.fast.Matrix} dst matrix.
  * @param {number} k The scalar.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @return {!tdl.fast.Matrix} The product of m and k.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @return {tdl.fast.Matrix} The product of m and k.
  */
 tdl.fast.mulScalarMatrix = function(dst, k, m) {
   var mLength = m.length;
@@ -321,10 +314,10 @@ tdl.fast.mulScalarMatrix = function(dst, k, m) {
 
 /**
  * Multiplies a matrix by a scalar.
- * @param {!tdl.fast.Matrix} dst matrix.
- * @param {!tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Matrix} dst matrix.
+ * @param {tdl.fast.Matrix} m The matrix.
  * @param {number} k The scalar.
- * @return {!tdl.fast.Matrix} The product of m and k.
+ * @return {tdl.fast.Matrix} The product of m and k.
  */
 tdl.fast.mulMatrixScalar = function(dst, m, k) {
   return tdl.fast.mulScalarMatrix(dst, k, m);
@@ -333,10 +326,10 @@ tdl.fast.mulMatrixScalar = function(dst, m, k) {
 /**
  * Multiplies a vector by another vector (component-wise); assumes a and
  * b have the same length.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} a Operand vector.
- * @param {!tdl.fast.Vector} b Operand vector.
- * @return {!tdl.fast.Vector} The vector of products of entries of a and
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} a Operand vector.
+ * @param {tdl.fast.Vector} b Operand vector.
+ * @return {tdl.fast.Vector} The vector of products of entries of a and
  *     b.
  */
 tdl.fast.mulVectorVector = function(dst, a, b) {
@@ -349,10 +342,10 @@ tdl.fast.mulVectorVector = function(dst, a, b) {
 /**
  * Divides a vector by another vector (component-wise); assumes a and
  * b have the same length.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} a Operand vector.
- * @param {!tdl.fast.Vector} b Operand vector.
- * @return {!tdl.fast.Vector} The vector of quotients of entries of a and
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} a Operand vector.
+ * @param {tdl.fast.Vector} b Operand vector.
+ * @return {tdl.fast.Vector} The vector of quotients of entries of a and
  *     b.
  */
 tdl.fast.divVectorVector = function(dst, a, b) {
@@ -365,10 +358,10 @@ tdl.fast.divVectorVector = function(dst, a, b) {
 /**
  * Multiplies a vector by a matrix; treats the vector as a row vector; assumes
  * matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} v The vector.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @return {!tdl.fast.Vector} The product of v and m as a row vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} v The vector.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @return {tdl.fast.Vector} The product of v and m as a row vector.
  */
 tdl.fast.rowMajor.mulVectorMatrix4 = function(dst, v, m) {
   for (var i = 0; i < 4; ++i) {
@@ -382,10 +375,10 @@ tdl.fast.rowMajor.mulVectorMatrix4 = function(dst, v, m) {
 /**
  * Multiplies a vector by a matrix; treats the vector as a row vector; assumes
  * matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Vector} v The vector.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @return {!tdl.fast.Vector} The product of v and m as a row vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Vector} v The vector.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @return {tdl.fast.Vector} The product of v and m as a row vector.
  */
 tdl.fast.columnMajor.mulVectorMatrix4 = function(dst, v, m) {
   var mLength = m.length;
@@ -401,19 +394,19 @@ tdl.fast.columnMajor.mulVectorMatrix4 = function(dst, v, m) {
 
 /**
  * Multiplies a vector by a matrix; treats the vector as a row vector.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @param {!tdl.fast.Vector} v The vector.
- * @return {!tdl.fast.Vector} The product of m and v as a row vector.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} v The vector.
+ * @return {tdl.fast.Vector} The product of m and v as a row vector.
  */
 tdl.fast.mulVectorMatrix4 = null;
 
 /**
  * Multiplies a matrix by a vector; treats the vector as a column vector.
  * assumes matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @param {!tdl.fast.Vector} v The vector.
- * @return {!tdl.fast.Vector} The product of m and v as a column vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} v The vector.
+ * @return {tdl.fast.Vector} The product of m and v as a column vector.
  */
 tdl.fast.rowMajor.mulMatrix4Vector = function(dst, m, v) {
   for (var i = 0; i < 4; ++i) {
@@ -428,10 +421,10 @@ tdl.fast.rowMajor.mulMatrix4Vector = function(dst, m, v) {
 /**
  * Multiplies a matrix by a vector; treats the vector as a column vector;
  * assumes matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @param {!tdl.fast.Vector} v The vector.
- * @return {!tdl.fast.Vector} The product of m and v as a column vector.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} v The vector.
+ * @return {tdl.fast.Vector} The product of m and v as a column vector.
  */
 tdl.fast.columnMajor.mulMatrix4Vector = function(dst, m, v) {
   for (var i = 0; i < 4; ++i) {
@@ -444,19 +437,19 @@ tdl.fast.columnMajor.mulMatrix4Vector = function(dst, m, v) {
 
 /**
  * Multiplies a matrix by a vector; treats the vector as a column vector.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @param {!tdl.fast.Vector} v The vector.
- * @return {!tdl.fast.Vector} The product of m and v as a column vector.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} v The vector.
+ * @return {tdl.fast.Vector} The product of m and v as a column vector.
  */
 tdl.fast.mulMatrix4Vector = null;
 
 /**
  * Multiplies two 3-by-3 matrices; assumes that the given matrices are 3-by-3;
  * assumes matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.fast.Matrix3} dst matrix.
- * @param {!tdl.fast.Matrix3} a The matrix on the left.
- * @param {!tdl.fast.Matrix3} b The matrix on the right.
- * @return {!tdl.fast.Matrix3} The matrix product of a and b.
+ * @param {tdl.fast.Matrix3} dst matrix.
+ * @param {tdl.fast.Matrix3} a The matrix on the left.
+ * @param {tdl.fast.Matrix3} b The matrix on the right.
+ * @return {tdl.fast.Matrix3} The matrix product of a and b.
  */
 tdl.fast.rowMajor.mulMatrixMatrix3 = function(dst, a, b) {
   var a00 = a[0];
@@ -492,10 +485,10 @@ tdl.fast.rowMajor.mulMatrixMatrix3 = function(dst, a, b) {
 /**
  * Multiplies two 3-by-3 matrices; assumes that the given matrices are 3-by-3;
  * assumes matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.fast.Matrix3} dst matrix.
- * @param {!tdl.fast.Matrix3} a The matrix on the left.
- * @param {!tdl.fast.Matrix3} b The matrix on the right.
- * @return {!tdl.fast.Matrix3} The matrix product of a and b.
+ * @param {tdl.fast.Matrix3} dst matrix.
+ * @param {tdl.fast.Matrix3} a The matrix on the left.
+ * @param {tdl.fast.Matrix3} b The matrix on the right.
+ * @return {tdl.fast.Matrix3} The matrix product of a and b.
  */
 tdl.fast.columnMajor.mulMatrixMatrix3 = function(dst, a, b) {
   var a00 = a[0];
@@ -530,19 +523,19 @@ tdl.fast.columnMajor.mulMatrixMatrix3 = function(dst, a, b) {
 
 /**
  * Multiplies two 3-by-3 matrices; assumes that the given matrices are 3-by-3.
- * @param {!tdl.fast.Matrix3} a The matrix on the left.
- * @param {!tdl.fast.Matrix3} b The matrix on the right.
- * @return {!tdl.fast.Matrix3} The matrix product of a and b.
+ * @param {tdl.fast.Matrix3} a The matrix on the left.
+ * @param {tdl.fast.Matrix3} b The matrix on the right.
+ * @return {tdl.fast.Matrix3} The matrix product of a and b.
  */
 tdl.fast.mulMatrixMatrix3 = null;
 
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4;
  * assumes matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.fast.Matrix4} dst matrix.
- * @param {!tdl.fast.Matrix4} a The matrix on the left.
- * @param {!tdl.fast.Matrix4} b The matrix on the right.
- * @return {!tdl.fast.Matrix4} The matrix product of a and b.
+ * @param {tdl.fast.Matrix4} dst matrix.
+ * @param {tdl.fast.Matrix4} a The matrix on the left.
+ * @param {tdl.fast.Matrix4} b The matrix on the right.
+ * @return {tdl.fast.Matrix4} The matrix product of a and b.
  */
 tdl.fast.rowMajor.mulMatrixMatrix4 = function(dst, a, b) {
   var a00 = a[0];
@@ -599,10 +592,10 @@ tdl.fast.rowMajor.mulMatrixMatrix4 = function(dst, a, b) {
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4;
  * assumes matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.fast.Matrix4} dst matrix.
- * @param {!tdl.fast.Matrix4} a The matrix on the left.
- * @param {!tdl.fast.Matrix4} b The matrix on the right.
- * @return {!tdl.fast.Matrix4} The matrix product of a and b.
+ * @param {tdl.fast.Matrix4} dst matrix.
+ * @param {tdl.fast.Matrix4} a The matrix on the left.
+ * @param {tdl.fast.Matrix4} b The matrix on the right.
+ * @return {tdl.fast.Matrix4} The matrix product of a and b.
  */
 tdl.fast.columnMajor.mulMatrixMatrix4 = function(dst, a, b) {
   var a00 = a[0];
@@ -658,19 +651,19 @@ tdl.fast.columnMajor.mulMatrixMatrix4 = function(dst, a, b) {
 
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4.
- * @param {!tdl.fast.Matrix4} a The matrix on the left.
- * @param {!tdl.fast.Matrix4} b The matrix on the right.
- * @return {!tdl.fast.Matrix4} The matrix product of a and b.
+ * @param {tdl.fast.Matrix4} a The matrix on the left.
+ * @param {tdl.fast.Matrix4} b The matrix on the right.
+ * @return {tdl.fast.Matrix4} The matrix product of a and b.
  */
 tdl.fast.mulMatrixMatrix4 = null;
 
 /**
  * Gets the jth column of the given matrix m; assumes matrix entries are
  * accessed in [row][column] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Matrix} m The matrix.
  * @param {number} j The index of the desired column.
- * @return {!tdl.fast.Vector} The jth column of m as a vector.
+ * @return {tdl.fast.Vector} The jth column of m as a vector.
  */
 tdl.fast.rowMajor.column4 = function(dst, m, j) {
   for (var i = 0; i < 4; ++i) {
@@ -682,10 +675,10 @@ tdl.fast.rowMajor.column4 = function(dst, m, j) {
 /**
  * Gets the jth column of the given matrix m; assumes matrix entries are
  * accessed in [column][row] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Matrix} m The matrix.
  * @param {number} j The index of the desired column.
- * @return {!tdl.fast.Vector} The jth column of m as a vector.
+ * @return {tdl.fast.Vector} The jth column of m as a vector.
  */
 tdl.fast.columnMajor.column4 = function(dst, m, j) {
   var off = j * 4;
@@ -698,20 +691,20 @@ tdl.fast.columnMajor.column4 = function(dst, m, j) {
 
 /**
  * Gets the jth column of the given matrix m.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Matrix} m The matrix.
  * @param {number} j The index of the desired column.
- * @return {!tdl.fast.Vector} The jth column of m as a vector.
+ * @return {tdl.fast.Vector} The jth column of m as a vector.
  */
 tdl.fast.column4 = null;
 
 /**
  * Gets the ith row of the given matrix m; assumes matrix entries are
  * accessed in [row][column] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Matrix} m The matrix.
  * @param {number} i The index of the desired row.
- * @return {!tdl.fast.Vector} The ith row of m.
+ * @return {tdl.fast.Vector} The ith row of m.
  */
 tdl.fast.rowMajor.row4 = function(dst, m, i) {
   var off = i * 4;
@@ -725,10 +718,10 @@ tdl.fast.rowMajor.row4 = function(dst, m, i) {
 /**
  * Gets the ith row of the given matrix m; assumes matrix entries are
  * accessed in [column][row] fashion.
- * @param {!tdl.fast.Vector} dst vector.
- * @param {!tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Vector} dst vector.
+ * @param {tdl.fast.Matrix} m The matrix.
  * @param {number} i The index of the desired row.
- * @return {!tdl.fast.Vector} The ith row of m.
+ * @return {tdl.fast.Vector} The ith row of m.
  */
 tdl.fast.columnMajor.row4 = function(dst, m, i) {
   for (var j = 0; j < 4; ++j) {
@@ -739,17 +732,17 @@ tdl.fast.columnMajor.row4 = function(dst, m, i) {
 
 /**
  * Gets the ith row of the given matrix m.
- * @param {!tdl.fast.Matrix} m The matrix.
+ * @param {tdl.fast.Matrix} m The matrix.
  * @param {number} i The index of the desired row.
- * @return {!tdl.fast.Vector} The ith row of m.
+ * @return {tdl.fast.Vector} The ith row of m.
  */
 tdl.fast.row4 = null;
 
 /**
  * Creates an n-by-n identity matrix.
  *
- * @param {!tdl.fast.Matrix} dst matrix.
- * @return {!tdl.fast.Matrix} An n-by-n identity matrix.
+ * @param {tdl.fast.Matrix} dst matrix.
+ * @return {tdl.fast.Matrix} An n-by-n identity matrix.
  */
 tdl.fast.identity4 = function(dst) {
   dst[ 0] = 1;
@@ -773,9 +766,9 @@ tdl.fast.identity4 = function(dst) {
 
 /**
  * Takes the transpose of a matrix.
- * @param {!tdl.fast.Matrix} dst matrix.
- * @param {!tdl.fast.Matrix} m The matrix.
- * @return {!tdl.fast.Matrix} The transpose of m.
+ * @param {tdl.fast.Matrix} dst matrix.
+ * @param {tdl.fast.Matrix} m The matrix.
+ * @return {tdl.fast.Matrix} The transpose of m.
  */
 tdl.fast.transpose4 = function(dst, m) {
   if (dst === m) {
@@ -845,9 +838,9 @@ tdl.fast.transpose4 = function(dst, m) {
 
 /**
  * Computes the inverse of a 4-by-4 matrix.
- * @param {!tdl.fast.Matrix4} dst matrix.
- * @param {!tdl.fast.Matrix4} m The matrix.
- * @return {!tdl.fast.Matrix4} The inverse of m.
+ * @param {tdl.fast.Matrix4} dst matrix.
+ * @param {tdl.fast.Matrix4} m The matrix.
+ * @return {tdl.fast.Matrix4} The inverse of m.
  */
 tdl.fast.inverse4 = function(dst, m) {
   var m00 = m[0 * 4 + 0];
@@ -936,8 +929,8 @@ tdl.fast.inverse4 = function(dst, m) {
 /**
  * Computes the inverse of a 4-by-4 matrix.
  * Note: It is faster to call this than tdl.fast.inverse.
- * @param {!tdl.fast.Matrix4} m The matrix.
- * @return {!tdl.fast.Matrix4} The inverse of m.
+ * @param {tdl.fast.Matrix4} m The matrix.
+ * @return {tdl.fast.Matrix4} The inverse of m.
  */
 tdl.fast.matrix4.inverse = function(dst,m) {
   return tdl.fast.inverse4(dst,m);
@@ -946,9 +939,9 @@ tdl.fast.matrix4.inverse = function(dst,m) {
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4.
  * Note: It is faster to call this than tdl.fast.mul.
- * @param {!tdl.fast.Matrix4} a The matrix on the left.
- * @param {!tdl.fast.Matrix4} b The matrix on the right.
- * @return {!tdl.fast.Matrix4} The matrix product of a and b.
+ * @param {tdl.fast.Matrix4} a The matrix on the left.
+ * @param {tdl.fast.Matrix4} b The matrix on the right.
+ * @return {tdl.fast.Matrix4} The matrix product of a and b.
  */
 tdl.fast.matrix4.mul = function(dst, a, b) {
   return tdl.fast.mulMatrixMatrix4(dst, a, b);
@@ -957,8 +950,8 @@ tdl.fast.matrix4.mul = function(dst, a, b) {
 /**
  * Copies a Matrix4.
  * Note: It is faster to call this than tdl.fast.copy.
- * @param {!tdl.fast.Matrix4} m The matrix.
- * @return {!tdl.fast.Matrix4} A copy of m.
+ * @param {tdl.fast.Matrix4} m The matrix.
+ * @return {tdl.fast.Matrix4} A copy of m.
  */
 tdl.fast.matrix4.copy = function(dst, m) {
   return tdl.fast.copyMatrix(dst, m);
@@ -967,9 +960,9 @@ tdl.fast.matrix4.copy = function(dst, m) {
 /**
  * Sets the translation component of a 4-by-4 matrix to the given
  * vector.
- * @param {!tdl.fast.Matrix4} a The matrix.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} v The vector.
- * @return {!tdl.fast.Matrix4} a once modified.
+ * @param {tdl.fast.Matrix4} a The matrix.
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} v The vector.
+ * @return {tdl.fast.Matrix4} a once modified.
  */
 tdl.fast.matrix4.setTranslation = function(a, v) {
   a[12] = v[0];
@@ -982,9 +975,9 @@ tdl.fast.matrix4.setTranslation = function(a, v) {
 /**
  * Returns the translation component of a 4-by-4 matrix as a vector with 3
  * entries.
- * @return {!tdl.fast.Vector3} dst vector..
- * @param {!tdl.fast.Matrix4} m The matrix.
- * @return {!tdl.fast.Vector3} The translation component of m.
+ * @return {tdl.fast.Vector3} dst vector..
+ * @param {tdl.fast.Matrix4} m The matrix.
+ * @return {tdl.fast.Vector3} The translation component of m.
  */
 tdl.fast.matrix4.getTranslation = function(dst, m) {
   dst[0] = m[12];
@@ -995,8 +988,8 @@ tdl.fast.matrix4.getTranslation = function(dst, m) {
 
 /**
  * Creates a 4-by-4 identity matrix.
- * @param {!tdl.fast.Matrix4} dst matrix.
- * @return {!tdl.fast.Matrix4} The 4-by-4 identity.
+ * @param {tdl.fast.Matrix4} dst matrix.
+ * @return {tdl.fast.Matrix4} The 4-by-4 identity.
  */
 tdl.fast.matrix4.identity = function(dst) {
   return tdl.fast.identity4(dst);
@@ -1021,14 +1014,14 @@ tdl.fast.matrix4.getAxis = function(dst, m, axis) {
  * z-axis.  The matrix generated sends the viewing frustum to the unit box.
  * We assume a unit box extending from -1 to 1 in the x and y dimensions and
  * from 0 to 1 in the z dimension.
- * @param {!tdl.fast.Matrix4} dst matrix.
+ * @param {tdl.fast.Matrix4} dst matrix.
  * @param {number} angle The camera angle from top to bottom (in radians).
  * @param {number} aspect The aspect ratio width / height.
  * @param {number} zNear The depth (negative z coordinate)
  *     of the near clipping plane.
  * @param {number} zFar The depth (negative z coordinate)
  *     of the far clipping plane.
- * @return {!tdl.fast.Matrix4} The perspective matrix.
+ * @return {tdl.fast.Matrix4} The perspective matrix.
  */
 tdl.fast.matrix4.perspective = function(dst, angle, aspect, zNear, zFar) {
   var f = Math.tan(Math.PI * 0.5 - 0.5 * angle);
@@ -1062,7 +1055,7 @@ tdl.fast.matrix4.perspective = function(dst, angle, aspect, zNear, zFar) {
  * Computes a 4-by-4 othogonal transformation matrix given the left, right,
  * bottom, and top dimensions of the near clipping plane as well as the
  * near and far clipping plane distances.
- * @param {!tdl.fast.Matrix4} dst Output matrix.
+ * @param {tdl.fast.Matrix4} dst Output matrix.
  * @param {number} left Left side of the near clipping plane viewport.
  * @param {number} right Right side of the near clipping plane viewport.
  * @param {number} top Top of the near clipping plane viewport.
@@ -1071,7 +1064,7 @@ tdl.fast.matrix4.perspective = function(dst, angle, aspect, zNear, zFar) {
  *     of the near clipping plane.
  * @param {number} far The depth (negative z coordinate)
  *     of the far clipping plane.
- * @return {!tdl.fast.Matrix4} The perspective matrix.
+ * @return {tdl.fast.Matrix4} The perspective matrix.
  */
 tdl.fast.matrix4.ortho = function(dst, left, right, bottom, top, near, far) {
 
@@ -1114,7 +1107,7 @@ tdl.fast.matrix4.ortho = function(dst, left, right, bottom, top, near, far) {
  * @param {number} top The y coordinate of the right plane of the box.
  * @param {number} near The negative z coordinate of the near plane of the box.
  * @param {number} far The negative z coordinate of the far plane of the box.
- * @return {!tdl.fast.Matrix4} The perspective projection matrix.
+ * @return {tdl.fast.Matrix4} The perspective projection matrix.
  */
 tdl.fast.matrix4.frustum = function(dst, left, right, bottom, top, near, far) {
   var dx = (right - left);
@@ -1148,14 +1141,14 @@ tdl.fast.matrix4.frustum = function(dst, left, right, bottom, top, near, far) {
  * vector pointing from the eye to the target to a vector pointing in the
  * negative z direction, and also sends the up vector into the upper half of
  * the yz plane.
- * @param {!tdl.fast.Matrix4} dst matrix.
- * @param {!tdl.fast.Vector3} eye The
+ * @param {tdl.fast.Matrix4} dst matrix.
+ * @param {tdl.fast.Vector3} eye The
  *     position of the eye.
- * @param {!tdl.fast.Vector3} target The
+ * @param {tdl.fast.Vector3} target The
  *     position meant to be viewed.
- * @param {!tdl.fast.Vector3} up A vector
+ * @param {tdl.fast.Vector3} up A vector
  *     pointing up.
- * @return {!tdl.fast.Matrix4} The look-at matrix.
+ * @return {tdl.fast.Matrix4} The look-at matrix.
  */
 tdl.fast.matrix4.lookAt = function(dst, eye, target, up) {
   var t0 = tdl.fast.temp0v3_;
@@ -1190,13 +1183,13 @@ tdl.fast.matrix4.lookAt = function(dst, eye, target, up) {
  * Computes a 4-by-4 camera look-at transformation. This is the
  * inverse of lookAt The transformation generated is an
  * orthogonal rotation matrix with translation component.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} eye The position
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} eye The position
  *     of the eye.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} target The
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} target The
  *     position meant to be viewed.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} up A vector
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} up A vector
  *     pointing up.
- * @return {!tdl.fast.Matrix4} The camera look-at matrix.
+ * @return {tdl.fast.Matrix4} The camera look-at matrix.
  */
 tdl.fast.matrix4.cameraLookAt = function(dst, eye, target, up) {
   var t0 = tdl.fast.temp0v3_;
@@ -1229,9 +1222,9 @@ tdl.fast.matrix4.cameraLookAt = function(dst, eye, target, up) {
 
 /**
  * Creates a 4-by-4 matrix which translates by the given vector v.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} v The vector by
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} v The vector by
  *     which to translate.
- * @return {!tdl.fast.Matrix4} The translation matrix.
+ * @return {tdl.fast.Matrix4} The translation matrix.
  */
 tdl.fast.matrix4.translation = function(dst, v) {
   dst[ 0] = 1;
@@ -1255,10 +1248,10 @@ tdl.fast.matrix4.translation = function(dst, v) {
 
 /**
  * Modifies the given 4-by-4 matrix by translation by the given vector v.
- * @param {!tdl.fast.Matrix4} m The matrix.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} v The vector by
+ * @param {tdl.fast.Matrix4} m The matrix.
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} v The vector by
  *     which to translate.
- * @return {!tdl.fast.Matrix4} m once modified.
+ * @return {tdl.fast.Matrix4} m once modified.
  */
 tdl.fast.matrix4.translate = function(m, v) {
   var v0 = v[0];
@@ -1294,7 +1287,7 @@ tdl.fast.matrix4.transpose = tdl.fast.transpose4;
 /**
  * Creates a 4-by-4 matrix which rotates around the x-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} The rotation matrix.
+ * @return {tdl.fast.Matrix4} The rotation matrix.
  */
 tdl.fast.matrix4.rotationX = function(dst, angle) {
   var c = Math.cos(angle);
@@ -1323,9 +1316,9 @@ tdl.fast.matrix4.rotationX = function(dst, angle) {
 /**
  * Modifies the given 4-by-4 matrix by a rotation around the x-axis by the given
  * angle.
- * @param {!tdl.fast.Matrix4} m The matrix.
+ * @param {tdl.fast.Matrix4} m The matrix.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} m once modified.
+ * @return {tdl.fast.Matrix4} m once modified.
  */
 tdl.fast.matrix4.rotateX = function(m, angle) {
   var m10 = m[4];
@@ -1354,7 +1347,7 @@ tdl.fast.matrix4.rotateX = function(m, angle) {
 /**
  * Creates a 4-by-4 matrix which rotates around the y-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} The rotation matrix.
+ * @return {tdl.fast.Matrix4} The rotation matrix.
  */
 tdl.fast.matrix4.rotationY = function(dst, angle) {
   var c = Math.cos(angle);
@@ -1383,9 +1376,9 @@ tdl.fast.matrix4.rotationY = function(dst, angle) {
 /**
  * Modifies the given 4-by-4 matrix by a rotation around the y-axis by the given
  * angle.
- * @param {!tdl.fast.Matrix4} m The matrix.
+ * @param {tdl.fast.Matrix4} m The matrix.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} m once modified.
+ * @return {tdl.fast.Matrix4} m once modified.
  */
 tdl.fast.matrix4.rotateY = function(m, angle) {
   var m00 = m[0*4+0];
@@ -1414,7 +1407,7 @@ tdl.fast.matrix4.rotateY = function(m, angle) {
 /**
  * Creates a 4-by-4 matrix which rotates around the z-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} The rotation matrix.
+ * @return {tdl.fast.Matrix4} The rotation matrix.
  */
 tdl.fast.matrix4.rotationZ = function(dst, angle) {
   var c = Math.cos(angle);
@@ -1443,9 +1436,9 @@ tdl.fast.matrix4.rotationZ = function(dst, angle) {
 /**
  * Modifies the given 4-by-4 matrix by a rotation around the z-axis by the given
  * angle.
- * @param {!tdl.fast.Matrix4} m The matrix.
+ * @param {tdl.fast.Matrix4} m The matrix.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} m once modified.
+ * @return {tdl.fast.Matrix4} m once modified.
  */
 tdl.fast.matrix4.rotateZ = function(m, angle) {
   var m00 = m[0*4+0];
@@ -1474,10 +1467,10 @@ tdl.fast.matrix4.rotateZ = function(m, angle) {
 /**
  * Creates a 4-by-4 matrix which rotates around the given axis by the given
  * angle.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} axis The axis
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} axis The axis
  *     about which to rotate.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} A matrix which rotates angle radians
+ * @return {tdl.fast.Matrix4} A matrix which rotates angle radians
  *     around the axis.
  */
 tdl.fast.matrix4.axisRotation = function(dst, axis, angle) {
@@ -1518,11 +1511,11 @@ tdl.fast.matrix4.axisRotation = function(dst, axis, angle) {
 /**
  * Modifies the given 4-by-4 matrix by rotation around the given axis by the
  * given angle.
- * @param {!tdl.fast.Matrix4} m The matrix.
- * @param {(!tdl.fast.Vector3|!tdl.fast.Vector4)} axis The axis
+ * @param {tdl.fast.Matrix4} m The matrix.
+ * @param {(tdl.fast.Vector3|tdl.fast.Vector4)} axis The axis
  *     about which to rotate.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.fast.Matrix4} m once modified.
+ * @return {tdl.fast.Matrix4} m once modified.
  */
 tdl.fast.matrix4.axisRotate = function(m, axis, angle) {
   var x = axis[0];
@@ -1586,9 +1579,9 @@ tdl.fast.matrix4.axisRotate = function(m, axis, angle) {
  * Creates a 4-by-4 matrix which scales in each dimension by an amount given by
  * the corresponding entry in the given vector; assumes the vector has three
  * entries.
- * @param {!tdl.fast.Vector3} v A vector of
+ * @param {tdl.fast.Vector3} v A vector of
  *     three entries specifying the factor by which to scale in each dimension.
- * @return {!tdl.fast.Matrix4} The scaling matrix.
+ * @return {tdl.fast.Matrix4} The scaling matrix.
  */
 tdl.fast.matrix4.scaling = function(dst, v) {
   dst[ 0] = v[0];
@@ -1614,10 +1607,10 @@ tdl.fast.matrix4.scaling = function(dst, v) {
  * Modifies the given 4-by-4 matrix, scaling in each dimension by an amount
  * given by the corresponding entry in the given vector; assumes the vector has
  * three entries.
- * @param {!tdl.fast.Matrix4} m The matrix to be modified.
- * @param {!tdl.fast.Vector3} v A vector of three entries specifying the
+ * @param {tdl.fast.Matrix4} m The matrix to be modified.
+ * @param {tdl.fast.Vector3} v A vector of three entries specifying the
  *     factor by which to scale in each dimension.
- * @return {!tdl.fast.Matrix4} m once modified.
+ * @return {tdl.fast.Matrix4} m once modified.
  */
 tdl.fast.matrix4.scale = function(m, v) {
   var v0 = v[0];
