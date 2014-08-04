@@ -36,19 +36,22 @@
  */
 define(['./base-rs', './io'], function(BaseRS, IO) {
 
+tdl.provide('tdl.loader');
 /**
  * A Module with a loader class for helping to load muliple assets in an
  * asynchronous manner.
  * @namespace
  */
-tdl.provide('tdl.loader');
 tdl.loader = tdl.loader || {};
 
 /**
+ * @callback Loader~Finished
+ */
+/**
  * A simple Loader class to call some callback when everything has loaded.
  * @constructor
- * @param {!function(): void} onFinished Function to call when final item has
- *        loaded.
+ * @param {Loader~Finished} onFinished Function to call when
+ *        final item has loaded.
  */
 tdl.loader.Loader = function(onFinished)  {
   this.count_ = 1;
@@ -66,31 +69,37 @@ tdl.loader.Loader = function(onFinished)  {
  *
  * The way you use this is as follows.
  *
- * <pre>
+ * @example
  * var loader = tdl.loader.createLoader(myFinishedCallback);
  * loader.loadTextFile(text1Url, callbackForText);
  * loader.loadTextFile(text2Url, callbackForText);
  * loader.loadTextFile(text3Url, callbackForText);
  * loader.finish();
- * </pre>
  *
  * The loader guarantees that myFinishedCallback will be called after
  * all the items have been loaded.
  *
-* @param {!function(): void} onFinished Function to call when final item has
-*        loaded.
-* @return {!tdl.loader.Loader} A Loader Object.
+* @param {Loader~Finished} onFinished Function to call when
+*        final item has loaded.
+* @return {tdl.loader.Loader} A Loader Object.
  */
 tdl.loader.createLoader = function(onFinished) {
   return new tdl.loader.Loader(onFinished);
 };
 
 /**
+ * @callback Loader~Text
+ * @param {string?} str contents of file
+ * @param {error?} error or null of no error.
+ */
+
+/**
  * Loads a text file.
  * @param {string} url URL of scene to load.
- * @param {!function(string, *): void} onTextLoaded Function to call when
- *     the file is loaded. It will be passed the contents of the file as a
- *     string and an exception which is null on success.
+ * @param {Loader~Text} onTextLoaded
+ *     Function to call when the file is loaded. It will be
+ *     passed the contents of the file as a string and an
+ *     exception which is null on success.
  */
 tdl.loader.Loader.prototype.loadTextFile = function(url, onTextLoaded) {
   var that = this;  // so the function below can see "this".
@@ -105,9 +114,10 @@ tdl.loader.Loader.prototype.loadTextFile = function(url, onTextLoaded) {
 /**
  * Creates a loader that is tracked by this loader so that when the new loader
  * is finished it will be reported to this loader.
- * @param {!function(): void} onFinished Function to be called when everything
- *      loaded with this loader has finished.
- * @return {!tdl.loader.Loader} The new Loader.
+ * @param {Loader~Finished} onFinished Function
+ *      to be called when everything loaded with this loader has
+ *      finished.
+ * @return {tdl.loader.Loader} The new Loader.
  */
 tdl.loader.Loader.prototype.createLoader = function(onFinished) {
   var that = this;
@@ -134,6 +144,7 @@ tdl.loader.Loader.prototype.countDown_ = function() {
 /**
  * Finishes the loading process.
  * Actually this just calls countDown_ to account for the count starting at 1.
+ * @private
  */
 tdl.loader.Loader.prototype.finish = function() {
   this.countDown_();
