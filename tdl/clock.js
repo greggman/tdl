@@ -36,6 +36,10 @@
 define(['./base-rs', './io', './log'], function(BaseRS, IO, Log) {
 
 tdl.provide('tdl.clock');
+/**
+ * Clock related stuff
+ * @namespace
+ */
 tdl.clock = tdl.clock || {};
 
 /**
@@ -53,9 +57,9 @@ tdl.clock.createClock = function(opt_syncRate, opt_url) {
   }
 };
 
-
 /**
  * A clock that gets the local current time in seconds.
+ * @constructor
  * @private
  */
 tdl.clock.LocalClock = function() {
@@ -63,7 +67,7 @@ tdl.clock.LocalClock = function() {
 
 /**
  * Gets the current time in seconds.
- * @private
+ * @return {number} current time in seconds
  */
 tdl.clock.LocalClock.prototype.getTime = function() {
   return (new Date()).getTime() * 0.001;
@@ -72,6 +76,7 @@ tdl.clock.LocalClock.prototype.getTime = function() {
 /**
  * A clock that gets the current time in seconds attempting to eep the clock
  * synced to the server.
+ * @constructor
  * @private
  */
 tdl.clock.SyncedClock = function(opt_syncRate, opt_url) {
@@ -106,7 +111,7 @@ tdl.clock.SyncedClock.prototype.syncToServer = function() {
 
 /**
  * Gets the current time in seconds.
- * @private
+ * @return {number} current time in seconds
  */
 tdl.clock.SyncedClock.prototype.getTime = function() {
   return (new Date()).getTime() * 0.001 + this.timeOffset;
