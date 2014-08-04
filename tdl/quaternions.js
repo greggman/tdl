@@ -37,32 +37,31 @@
  * for doing operations on those.
  *
  * Operations are done assuming quaternions are of the form:
- * q[0] + q[1]i + q[2]j + q[3]k and using the hamiltonian rules for
- * multiplication as described on Brougham Bridge:
- * i^2 = j^2 = k^2 = ijk = -1.
+ * `q[0] + q[1]i + q[2]j + q[3]k` and using the hamiltonian
+ * rules for multiplication as described on Brougham Bridge:
+ * `i^2 = j^2 = k^2 = ijk = -1`.
  *
  */
 
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.quaternions');
 /**
  * A Module for quaternion math.
  * @namespace
  */
-tdl.provide('tdl.quaternions');
-tdl.quaterions = tdl.quaternions || {};
+tdl.quaternions = tdl.quaternions || {};
 
 /**
  * A Quaternion.
- * @type {!Array.<number>}
+ * @typedef {number[]} tdl.quaternions.Quaternion
  */
-tdl.quaternions.Quaternion = goog.typedef;
 
 /**
  * Quickly determines if the object a is a scalar or a quaternion;
  * assumes that the argument is either a number (scalar), or an array of
  * numbers.
- * @param {(number|!tdl.quaternions.Quaternion)} a A number or array the type
+ * @param {(number|tdl.quaternions.Quaternion)} a A number or array the type
  *     of which is in question.
  * @return {string} Either the string 'Scalar' or 'Quaternion'.
  */
@@ -74,7 +73,7 @@ tdl.quaternions.mathType = function(a) {
 
 /**
  * Creates an identity quaternion.
- * @return {!tdl.quaternions.Quaternion} The identity quaternion.
+ * @return {tdl.quaternions.Quaternion} The identity quaternion.
  */
 tdl.quaternions.identity = function() {
   return [ 0, 0, 0, 1 ];
@@ -82,8 +81,8 @@ tdl.quaternions.identity = function() {
 
 /**
  * Copies a quaternion.
- * @param {!tdl.quaternions.Quaternion} q The quaternion.
- * @return {!tdl.quaternions.Quaternion} A new quaternion identical to q.
+ * @param {tdl.quaternions.Quaternion} q The quaternion.
+ * @return {tdl.quaternions.Quaternion} A new quaternion identical to q.
  */
 tdl.quaternions.copy = function(q) {
   return q.slice();
@@ -91,8 +90,8 @@ tdl.quaternions.copy = function(q) {
 
 /**
  * Negates a quaternion.
- * @param {!tdl.quaternions.Quaternion} q The quaternion.
- * @return {!tdl.quaternions.Quaternion} -q.
+ * @param {tdl.quaternions.Quaternion} q The quaternion.
+ * @return {tdl.quaternions.Quaternion} -q.
  */
 tdl.quaternions.negative = function(q) {
   return [-q[0], -q[1], -q[2], -q[3]];
@@ -100,9 +99,9 @@ tdl.quaternions.negative = function(q) {
 
 /**
  * Adds two Quaternions.
- * @param {!tdl.quaternions.Quaternion} a Operand Quaternion.
- * @param {!tdl.quaternions.Quaternion} b Operand Quaternion.
- * @return {!tdl.quaternions.Quaternion} The sum of a and b.
+ * @param {tdl.quaternions.Quaternion} a Operand Quaternion.
+ * @param {tdl.quaternions.Quaternion} b Operand Quaternion.
+ * @return {tdl.quaternions.Quaternion} The sum of a and b.
  */
 tdl.quaternions.addQuaternionQuaternion = function(a, b) {
   return [a[0] + b[0],
@@ -113,9 +112,9 @@ tdl.quaternions.addQuaternionQuaternion = function(a, b) {
 
 /**
  * Adds a quaternion to a scalar.
- * @param {!tdl.quaternions.Quaternion} a Operand Quaternion.
+ * @param {tdl.quaternions.Quaternion} a Operand Quaternion.
  * @param {number} b Operand Scalar.
- * @return {!tdl.quaternions.Quaternion} The sum of a and b.
+ * @return {tdl.quaternions.Quaternion} The sum of a and b.
  */
 tdl.quaternions.addQuaternionScalar = function(a, b) {
   return a.slice(0, 3).concat(a[3] + b);
@@ -124,8 +123,8 @@ tdl.quaternions.addQuaternionScalar = function(a, b) {
 /**
  * Adds a scalar to a quaternion.
  * @param {number} a Operand scalar.
- * @param {!tdl.quaternions.Quaternion} b Operand quaternion.
- * @return {!tdl.quaternions.Quaternion} The sum of a and b.
+ * @param {tdl.quaternions.Quaternion} b Operand quaternion.
+ * @return {tdl.quaternions.Quaternion} The sum of a and b.
  */
 tdl.quaternions.addScalarQuaternion = function(a, b) {
   return b.slice(0, 3).concat(a + b[3]);
@@ -133,9 +132,9 @@ tdl.quaternions.addScalarQuaternion = function(a, b) {
 
 /**
  * Subtracts two quaternions.
- * @param {!tdl.quaternions.Quaternion} a Operand quaternion.
- * @param {!tdl.quaternions.Quaternion} b Operand quaternion.
- * @return {!tdl.quaternions.Quaternion} The difference a - b.
+ * @param {tdl.quaternions.Quaternion} a Operand quaternion.
+ * @param {tdl.quaternions.Quaternion} b Operand quaternion.
+ * @return {tdl.quaternions.Quaternion} The difference a - b.
  */
 tdl.quaternions.subQuaternionQuaternion = function(a, b) {
   return [a[0] - b[0],
@@ -146,9 +145,9 @@ tdl.quaternions.subQuaternionQuaternion = function(a, b) {
 
 /**
  * Subtracts a scalar from a quaternion.
- * @param {!tdl.quaternions.Quaternion} a Operand quaternion.
+ * @param {tdl.quaternions.Quaternion} a Operand quaternion.
  * @param {number} b Operand scalar.
- * @return {!tdl.quaternions.Quaternion} The difference a - b.
+ * @return {tdl.quaternions.Quaternion} The difference a - b.
  */
 tdl.quaternions.subQuaternionScalar = function(a, b) {
   return a.slice(0, 3).concat(a[3] - b);
@@ -157,8 +156,8 @@ tdl.quaternions.subQuaternionScalar = function(a, b) {
 /**
  * Subtracts a quaternion from a scalar.
  * @param {number} a Operand scalar.
- * @param {!tdl.quaternions.Quaternion} b Operand quaternion.
- * @return {!tdl.quaternions.Quaternion} The difference a - b.
+ * @param {tdl.quaternions.Quaternion} b Operand quaternion.
+ * @return {tdl.quaternions.Quaternion} The difference a - b.
  */
 tdl.quaternions.subScalarQuaternion = function(a, b) {
   return [-b[0], -b[1], -b[2], a - b[3]];
@@ -167,8 +166,8 @@ tdl.quaternions.subScalarQuaternion = function(a, b) {
 /**
  * Multiplies a scalar by a quaternion.
  * @param {number} k The scalar.
- * @param {!tdl.quaternions.Quaternion} q The quaternion.
- * @return {!tdl.quaternions.Quaternion} The product of k and q.
+ * @param {tdl.quaternions.Quaternion} q The quaternion.
+ * @return {tdl.quaternions.Quaternion} The product of k and q.
  */
 tdl.quaternions.mulScalarQuaternion = function(k, q) {
   return [k * q[0], k * q[1], k * q[2], k * q[3]];
@@ -176,9 +175,9 @@ tdl.quaternions.mulScalarQuaternion = function(k, q) {
 
 /**
  * Multiplies a quaternion by a scalar.
- * @param {!tdl.quaternions.Quaternion} q The Quaternion.
+ * @param {tdl.quaternions.Quaternion} q The Quaternion.
  * @param {number} k The scalar.
- * @return {!tdl.quaternions.Quaternion} The product of k and v.
+ * @return {tdl.quaternions.Quaternion} The product of k and v.
  */
 tdl.quaternions.mulQuaternionScalar = function(q, k) {
   return [k * q[0], k * q[1], k * q[2], k * q[3]];
@@ -186,9 +185,9 @@ tdl.quaternions.mulQuaternionScalar = function(q, k) {
 
 /**
  * Multiplies two quaternions.
- * @param {!tdl.quaternions.Quaternion} a Operand quaternion.
- * @param {!tdl.quaternions.Quaternion} b Operand quaternion.
- * @return {!tdl.quaternions.Quaternion} The quaternion product a * b.
+ * @param {tdl.quaternions.Quaternion} a Operand quaternion.
+ * @param {tdl.quaternions.Quaternion} b Operand quaternion.
+ * @return {tdl.quaternions.Quaternion} The quaternion product a * b.
  */
 tdl.quaternions.mulQuaternionQuaternion = function(a, b) {
   var aX = a[0];
@@ -209,9 +208,9 @@ tdl.quaternions.mulQuaternionQuaternion = function(a, b) {
 
 /**
  * Divides two quaternions; assumes the convention that a/b = a*(1/b).
- * @param {!tdl.quaternions.Quaternion} a Operand quaternion.
- * @param {!tdl.quaternions.Quaternion} b Operand quaternion.
- * @return {!tdl.quaternions.Quaternion} The quaternion quotient a / b.
+ * @param {tdl.quaternions.Quaternion} a Operand quaternion.
+ * @param {tdl.quaternions.Quaternion} b Operand quaternion.
+ * @return {tdl.quaternions.Quaternion} The quaternion quotient a / b.
  */
 tdl.quaternions.divQuaternionQuaternion = function(a, b) {
   var aX = a[0];
@@ -233,9 +232,9 @@ tdl.quaternions.divQuaternionQuaternion = function(a, b) {
 
 /**
  * Divides a Quaternion by a scalar.
- * @param {!tdl.quaternions.Quaternion} q The quaternion.
+ * @param {tdl.quaternions.Quaternion} q The quaternion.
  * @param {number} k The scalar.
- * @return {!tdl.quaternions.Quaternion} q The quaternion q divided by k.
+ * @return {tdl.quaternions.Quaternion} q The quaternion q divided by k.
  */
 tdl.quaternions.divQuaternionScalar = function(q, k) {
   return [q[0] / k, q[1] / k, q[2] / k, q[3] / k];
@@ -244,8 +243,8 @@ tdl.quaternions.divQuaternionScalar = function(q, k) {
 /**
  * Divides a scalar by a quaternion.
  * @param {number} a Operand scalar.
- * @param {!tdl.quaternions.Quaternion} b Operand quaternion.
- * @return {!tdl.quaternions.Quaternion} The quaternion product.
+ * @param {tdl.quaternions.Quaternion} b Operand quaternion.
+ * @return {tdl.quaternions.Quaternion} The quaternion product.
  */
 tdl.quaternions.divScalarQuaternion = function(a, b) {
   var b0 = b[0];
@@ -259,8 +258,8 @@ tdl.quaternions.divScalarQuaternion = function(a, b) {
 
 /**
  * Computes the multiplicative inverse of a quaternion.
- * @param {!tdl.quaternions.Quaternion} q The quaternion.
- * @return {!tdl.quaternions.Quaternion} The multiplicative inverse of q.
+ * @param {tdl.quaternions.Quaternion} q The quaternion.
+ * @return {tdl.quaternions.Quaternion} The multiplicative inverse of q.
  */
 tdl.quaternions.inverse = function(q) {
   var q0 = q[0];
@@ -274,9 +273,9 @@ tdl.quaternions.inverse = function(q) {
 
 /**
  * Multiplies two objects which are either scalars or quaternions.
- * @param {(!tdl.quaternions.Quaternion|number)} a Operand.
- * @param {(!tdl.quaternions.Quaternion|number)} b Operand.
- * @return {(!tdl.quaternions.Quaternion|number)} The product of a and b.
+ * @param {(tdl.quaternions.Quaternion|number)} a Operand.
+ * @param {(tdl.quaternions.Quaternion|number)} b Operand.
+ * @return {(tdl.quaternions.Quaternion|number)} The product of a and b.
  */
 tdl.quaternions.mul = function(a, b) {
   return tdl.quaternions['mul' + tdl.quaternions.mathType(a) +
@@ -285,9 +284,9 @@ tdl.quaternions.mul = function(a, b) {
 
 /**
  * Divides two objects which are either scalars or quaternions.
- * @param {(!tdl.quaternions.Quaternion|number)} a Operand.
- * @param {(!tdl.quaternions.Quaternion|number)} b Operand.
- * @return {(!tdl.quaternions.Quaternion|number)} The quotient of a and b.
+ * @param {(tdl.quaternions.Quaternion|number)} a Operand.
+ * @param {(tdl.quaternions.Quaternion|number)} b Operand.
+ * @return {(tdl.quaternions.Quaternion|number)} The quotient of a and b.
  */
 tdl.quaternions.div = function(a, b) {
   return tdl.quaternions['div' + tdl.quaternions.mathType(a) +
@@ -296,9 +295,9 @@ tdl.quaternions.div = function(a, b) {
 
 /**
  * Adds two objects which are either scalars or quaternions.
- * @param {(!tdl.quaternions.Quaternion|number)} a Operand.
- * @param {(!tdl.quaternions.Quaternion|number)} b Operand.
- * @return {(!tdl.quaternions.Quaternion|number)} The sum of a and b.
+ * @param {(tdl.quaternions.Quaternion|number)} a Operand.
+ * @param {(tdl.quaternions.Quaternion|number)} b Operand.
+ * @return {(tdl.quaternions.Quaternion|number)} The sum of a and b.
  */
 tdl.quaternions.add = function(a, b) {
   return tdl.quaternions['add' + tdl.quaternions.mathType(a) +
@@ -307,9 +306,9 @@ tdl.quaternions.add = function(a, b) {
 
 /**
  * Subtracts two objects which are either scalars or quaternions.
- * @param {(!tdl.quaternions.Quaternion|number)} a Operand.
- * @param {(!tdl.quaternions.Quaternion|number)} b Operand.
- * @return {(!tdl.quaternions.Quaternion|number)} The difference of a and b.
+ * @param {(tdl.quaternions.Quaternion|number)} a Operand.
+ * @param {(tdl.quaternions.Quaternion|number)} b Operand.
+ * @return {(tdl.quaternions.Quaternion|number)} The difference of a and b.
  */
 tdl.quaternions.sub = function(a, b) {
   return tdl.quaternions['sub' + tdl.quaternions.mathType(a) +
@@ -319,7 +318,7 @@ tdl.quaternions.sub = function(a, b) {
 /**
  * Computes the length of a Quaternion, i.e. the square root of the
  * sum of the squares of the coefficients.
- * @param {!tdl.quaternions.Quaternion} a The Quaternion.
+ * @param {tdl.quaternions.Quaternion} a The Quaternion.
  * @return {number} The length of a.
  */
 tdl.quaternions.length = function(a) {
@@ -329,7 +328,7 @@ tdl.quaternions.length = function(a) {
 /**
  * Computes the square of the length of a quaternion, i.e. the sum of the
  * squares of the coefficients.
- * @param {!tdl.quaternions.Quaternion} a The quaternion.
+ * @param {tdl.quaternions.Quaternion} a The quaternion.
  * @return {number} The square of the length of a.
  */
 tdl.quaternions.lengthSquared = function(a) {
@@ -338,8 +337,8 @@ tdl.quaternions.lengthSquared = function(a) {
 
 /**
  * Divides a Quaternion by its length and returns the quotient.
- * @param {!tdl.quaternions.Quaternion} a The Quaternion.
- * @return {!tdl.quaternions.Quaternion} A unit length quaternion pointing in
+ * @param {tdl.quaternions.Quaternion} a The Quaternion.
+ * @return {tdl.quaternions.Quaternion} A unit length quaternion pointing in
  *     the same direction as a.
  */
 tdl.quaternions.normalize = function(a) {
@@ -349,8 +348,8 @@ tdl.quaternions.normalize = function(a) {
 
 /**
  * Computes the conjugate of the given quaternion.
- * @param {!tdl.quaternions.Quaternion} q The quaternion.
- * @return {!tdl.quaternions.Quaternion} The conjugate of q.
+ * @param {tdl.quaternions.Quaternion} q The quaternion.
+ * @return {tdl.quaternions.Quaternion} The conjugate of q.
  */
 tdl.quaternions.conjugate = function(q) {
   return [-q[0], -q[1], -q[2], q[3]];
@@ -360,7 +359,7 @@ tdl.quaternions.conjugate = function(q) {
 /**
  * Creates a quaternion which rotates around the x-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.quaternions.Quaternion} The quaternion.
+ * @return {tdl.quaternions.Quaternion} The quaternion.
  */
 tdl.quaternions.rotationX = function(angle) {
   return [Math.sin(angle / 2), 0, 0, Math.cos(angle / 2)];
@@ -369,7 +368,7 @@ tdl.quaternions.rotationX = function(angle) {
 /**
  * Creates a quaternion which rotates around the y-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.quaternions.Quaternion} The quaternion.
+ * @return {tdl.quaternions.Quaternion} The quaternion.
  */
 tdl.quaternions.rotationY = function(angle) {
   return [0, Math.sin(angle / 2), 0, Math.cos(angle / 2)];
@@ -378,7 +377,7 @@ tdl.quaternions.rotationY = function(angle) {
 /**
  * Creates a quaternion which rotates around the z-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.quaternions.Quaternion} The quaternion.
+ * @return {tdl.quaternions.Quaternion} The quaternion.
  */
 tdl.quaternions.rotationZ = function(angle) {
   return [0, 0, Math.sin(angle / 2), Math.cos(angle / 2)];
@@ -387,9 +386,9 @@ tdl.quaternions.rotationZ = function(angle) {
 /**
  * Creates a quaternion which rotates around the given axis by the given
  * angle.
- * @param {!tdl.math.Vector3} axis The axis about which to rotate.
+ * @param {tdl.math.Vector3} axis The axis about which to rotate.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.quaternions.Quaternion} A quaternion which rotates angle
+ * @return {tdl.quaternions.Quaternion} A quaternion which rotates angle
  *     radians around the axis.
  */
 tdl.quaternions.axisRotation = function(axis, angle) {
@@ -405,10 +404,10 @@ tdl.quaternions.axisRotation = function(axis, angle) {
  * Computes a 4-by-4 rotation matrix (with trivial translation component)
  * given a quaternion.  We assume the convention that to rotate a vector v by
  * a quaternion r means to express that vector as a quaternion q by letting
- * q = [v[0], v[1], v[2], 0] and then obtain the rotated vector by evaluating
- * the expression (r * q) / r.
- * @param {!tdl.quaternions.Quaternion} q The quaternion.
- * @return {!tdl.math.Matrix4} A 4-by-4 rotation matrix.
+ * `q = [v[0], v[1], v[2], 0]` and then obtain the rotated
+ * vector by evaluating the expression `(r * q) / r`.
+ * @param {tdl.quaternions.Quaternion} q The quaternion.
+ * @return {tdl.math.Matrix4} A 4-by-4 rotation matrix.
  */
 tdl.quaternions.quaternionToRotation = function(q) {
   var qX = q[0];
@@ -450,9 +449,9 @@ tdl.quaternions.quaternionToRotation = function(q) {
 
 /**
  * Computes a quaternion whose rotation is equivalent to the given matrix.
- * @param {(!tdl.math.Matrix4|!tdl.math.Matrix3)} m A 3-by-3 or 4-by-4
+ * @param {(tdl.math.Matrix4|tdl.math.Matrix3)} m A 3-by-3 or 4-by-4
  *     rotation matrix.
- * @return {!tdl.quaternions.Quaternion} A quaternion q such that
+ * @return {tdl.quaternions.Quaternion} A quaternion q such that
  *     quaternions.quaternionToRotation(q) is m.
  */
 tdl.quaternions.rotationToQuaternion = function(m) {
