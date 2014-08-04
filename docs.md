@@ -1,14 +1,12 @@
-<html>
-<head>
-<title>TDL Docs</title>
-</head>
-<body>
-<pre>
+TDL Docs
+========
 I hope the code is pretty straight forward. There's some simple examples here
 
 <a href="http://greggman.github.com/tdl/example/example.html">http://greggman.github.com/tdl/example/example.html</a>
+
 <a href="http://greggman.github.com/tdl/example/example2.html">http://greggman.github.com/tdl/example/example2.html</a>
-<a href="http://greggman.github.com/tdl/example/example2.html">http://greggman.github.com/tdl/example/picking.html</a>
+
+<a href="http://greggman.github.com/tdl/example/picking.html">http://greggman.github.com/tdl/example/picking.html</a>
 
 More complex samples can be found at <a href="http://webglsamples.googlecode.com">http://webglsamples.googlecode.com</a>
 
@@ -116,6 +114,3 @@ and most functions take a destination object as the first argument.
 Theoretically this is faster because you can avoid a certain number of 
 allocations. It also means the numbers in the array do not have to be queried 
 and converted from `JavaScript` Number to floats before calling glUniform.
-</pre>
-</body>
-</html>

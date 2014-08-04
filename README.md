@@ -3,7 +3,7 @@ TDL
 
 TDL is a **low-level** library for WebGL apps. It currently focuses on speed of rendering rather than ease of use.
 
-Some terse docs can be found at http://greggman.github.com/tdl/docs/index.html
+Some [terse docs can be found at here](docs.md)
 
 Note: By **low-level** I mean TDL doesn't currently provide any 3D knowledge. 
 There are almost no built in shaders. There is no scene graph. There are just some objects for wrapping WebGL
