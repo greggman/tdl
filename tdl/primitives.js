@@ -35,11 +35,11 @@
  */
 define(['./base-rs', './math', './log'], function(BaseRS, Maths, Log) {
 
+tdl.provide('tdl.primitives');
 /**
  * A module for primitives.
  * @namespace
  */
-tdl.provide('tdl.primitives');
 tdl.primitives = tdl.primitives || {};
 
 /**

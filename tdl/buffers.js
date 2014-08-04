@@ -36,13 +36,20 @@
  */
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.buffers');
 /**
  * A module for buffers.
  * @namespace
  */
-tdl.provide('tdl.buffers');
 tdl.buffers = tdl.buffers || {};
 
+/**
+ * A Buffer represnets a WebGL buffer.
+ * @constructor
+ * @param {tdl.primitives.AttribBuffer} array AttribBuffer with
+ *        data.
+ * @param {number?} opt_target Assumes gl.ARRAY_BUFFER
+ */
 tdl.buffers.Buffer = function(array, opt_target) {
   var target = opt_target || gl.ARRAY_BUFFER;
   var buf = gl.createBuffer();
@@ -51,6 +58,14 @@ tdl.buffers.Buffer = function(array, opt_target) {
   this.set(array);
 };
 
+/**
+ * Sets the contents of this buffer from the contents of the
+ * given AttribBuffer.
+ * @param {tdl.primitives.AttribBuffer} array AttribBuffer with
+ *        data.
+ * @param {number?} opt_usage GL buffer usage. Defaults to
+ *        gl.STATIC_DRAW.
+ */
 tdl.buffers.Buffer.prototype.set = function(array, opt_usage) {
   this.numComponents_ = array.numComponents;
   this.numElements_ = array.numElements;
@@ -77,39 +92,78 @@ tdl.buffers.Buffer.prototype.set = function(array, opt_usage) {
   gl.bufferData(this.target, array.buffer, opt_usage || gl.STATIC_DRAW);
 }
 
+/**
+ * Sets part of a buffer.
+ * @param {ArrayBufferView} array some typed array buffer view
+ * @param {number} the offset in bytes into the buffer to copy
+ *        the array.
+ */
 tdl.buffers.Buffer.prototype.setRange = function(array, offset) {
   gl.bindBuffer(this.target, this.buf);
   gl.bufferSubData(this.target, offset, array);
-}
+};
 
+/**
+ * Gets the type of the buffer. Eg. `gl.FLOAT`
+ * @return {number}
+ */
 tdl.buffers.Buffer.prototype.type = function() {
   return this.type_;
 };
 
+/**
+ * Gets the number of components per element of buffer.
+ * @return {number} num components per element in buffer
+ */
 tdl.buffers.Buffer.prototype.numComponents = function() {
   return this.numComponents_;
 };
 
+/**
+ * Gets the number of elements in the buffer
+ * @return {number} num elements in buffer
+ */
 tdl.buffers.Buffer.prototype.numElements = function() {
   return this.numElements_;
 };
 
+/**
+ * Gets the total components in the buffer.
+ * @return {number} Basically this is numComponents *
+ *         numElements
+ */
 tdl.buffers.Buffer.prototype.totalComponents = function() {
   return this.totalComponents_;
 };
 
+/**
+ * Get the WebGLBuffer for this buffer.
+ * @return {WebGLBuffer} the WebGLBuffer for this buffer.
+ */
 tdl.buffers.Buffer.prototype.buffer = function() {
   return this.buf;
 };
 
+/**
+ * Get the stride?
+ * @return {number} stride.
+ */
 tdl.buffers.Buffer.prototype.stride = function() {
   return 0;
 };
 
+/**
+ * Gets whether the data in this buffer should be normalized.
+ * @return {boolean} normalizaiton.
+ */
 tdl.buffers.Buffer.prototype.normalize = function() {
   return this.normalize_;
 }
 
+/**
+ * Get the offset?
+ * @return {number} offset.
+ */
 tdl.buffers.Buffer.prototype.offset = function() {
   return 0;
 };
