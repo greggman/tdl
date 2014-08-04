@@ -36,11 +36,11 @@
  */
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.fps');
 /**
  * A module for fps.
  * @namespace
  */
-tdl.provide('tdl.fps');
 tdl.fps = tdl.fps || {};
 
 /**
@@ -67,6 +67,17 @@ tdl.fps.FPSTimer = function() {
   for (var tt = 0; tt < tdl.fps.NUM_FRAMES_TO_AVERAGE; ++tt) {
     this.timeTable_[tt] = 1.0;
   }
+
+  /**
+   * The instantaneous FPS
+   * @type {number}
+   */
+  this.instantaneousFPS = 0;
+  /**
+   * The average FPS
+   * @type {number}
+   */
+  this.averageFPS = 0;
 };
 
 /**
