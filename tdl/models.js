@@ -35,21 +35,21 @@
  */
 define(['./base-rs', './buffers'], function(BaseRS, Buffers) {
 
+tdl.provide('tdl.models');
 /**
  * A module for models.
  * @namespace
  */
-tdl.provide('tdl.models');
 tdl.models = tdl.models || {};
 
 /**
  * Manages a program, buffers and textures for easier drawing.
  * @constructor
- * @param {!tdl.programs.Program} program The program to render
+ * @param {tdl.programs.Program} program The program to render
  *     this model with
- * @param {!Object.<string, AttribBuffer>} arrays The
+ * @param {Object.<string, AttribBuffer>} arrays The
  *     AttribBuffers to bind to draw this model.
- * @param {!Object.<string, Texture>} textures The textures to
+ * @param {Object.<string, Texture>} textures The textures to
  *     bind to draw this model.
  * @param {number} opt_mode Mode to call drawElements with. Default =
  *        gl.TRIANGLES
@@ -70,10 +70,23 @@ tdl.models.Model = function(program, arrays, textures, opt_mode) {
   this.setProgram(program);
 }
 
+/**
+ * Sets the program for this model
+ * @param {tdl.programs.Program} program The new program for
+ *        this model.
+ */
 tdl.models.Model.prototype.setProgram = function(program) {
   this.program = program;
 }
 
+/**
+ * Sets a buffer on this model
+ * @param {string} name The name of the buffer to set.
+ * @param {tdl.primitives.AttribBuffer} array The AttribBuffer
+ *        to set on this model.
+ * @param {boolean?} true if a new WebGLBuffer should be
+ *        created.
+ */
 tdl.models.Model.prototype.setBuffer = function(name, array, opt_newBuffer) {
   var target = (name == 'indices') ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
   var b = this.buffers[name];
@@ -85,6 +98,12 @@ tdl.models.Model.prototype.setBuffer = function(name, array, opt_newBuffer) {
   this.buffers[name] = b;
 };
 
+/**
+ * Sets the buffers on this model
+ * @param {Object.<string, AttribBuffer>} arrays The
+ *     AttribBuffers to bind to draw this model.
+ * @param {boolean?} true if new WebGLBuffers should be created.
+ */
 tdl.models.Model.prototype.setBuffers = function(arrays, opt_newBuffers) {
   var that = this;
   for (var name in arrays) {
@@ -119,12 +138,10 @@ tdl.models.Model.prototype.applyUniforms_ = function(opt_uniforms) {
  * Sets up the shared parts of drawing this model. Uses the
  * program, binds the buffers, sets the textures.
  *
- * @param {!Object.<string, *>} opt_uniforms An object of names to
- *     values to set on this models uniforms.
- * @param {!Object.<string, *>} opt_textures An object of names to
- *     textures to set on this models uniforms.
+ * @param {...Object.<string, *>} opt_uniforms An object of
+ *     names to values to set on this models uniforms.
  */
-tdl.models.Model.prototype.drawPrep = function() {
+tdl.models.Model.prototype.drawPrep = function(opt_uniforms) {
   var program = this.program;
   var buffers = this.buffers;
   var textures = this.textures;
@@ -154,9 +171,9 @@ tdl.models.Model.prototype.drawPrep = function() {
  * After calling tdl.models.Model.drawPrep you can call this
  * function multiple times to draw this model.
  *
- * @param {!Object.<string, *>} opt_uniforms An object of names to
+ * @param {Object.<string, *>} opt_uniforms An object of names to
  *     values to set on this models uniforms.
- * @param {!Object.<string, *>} opt_textures An object of names to
+ * @param {Object.<string, *>} opt_textures An object of names to
  *     textures to set on this models uniforms.
  */
 tdl.models.Model.prototype.draw = function() {

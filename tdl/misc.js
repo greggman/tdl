@@ -35,19 +35,49 @@
  */
 define(['./base-rs', './log'], function(BaseRS, Log) {
 
+tdl.provide('tdl.misc');
 /**
  * A module for misc.
  * @namespace
  */
-tdl.provide('tdl.misc');
 tdl.misc = tdl.misc || {};
 
+/**
+ * Lets you parse JS object literal has JSON.
+ *
+ * JSON requires property names be quoted, js object literal
+ * does not.
+ *
+ * @example:
+ * var o = tdl.misc.parseUnquoteJSObjectString('{a:"b",c:123}');
+ * @param {string} str js object literal string.
+ */
 tdl.misc.parseUnquotedJSObjectString = function(str) {
   // NOTE: does not handle strings with : in them.
   var quoted = str.replace(/([a-zA-Z0-9_]+):/g,'"$1":')
   return JSON.parse(quoted);
 };
 
+/**
+ * Applies part of the query string to an object.
+ * @param {object} object to apply properties to
+ * @param {string?} name of query parameter that has settings.
+ *        Default = 'settings'
+ * @example
+ * // Assuming the current URL is
+ * // http://foo.com?settings={a:123,b:"hello",c:[1,2]}
+ * // then
+ * var o = {};
+ * tdl.misc.applyUrlSettings(o);
+ * console.log(JSON.stringify(o, undefined, "  "));
+ *
+ * // should print
+ * {
+ *   "a": 123,
+ *   "b": "hello",
+ *   "c": [1, 2]
+ * }
+ */
 tdl.misc.applyUrlSettings = function(obj, opt_argumentName) {
   var argumentName = opt_argumentName || 'settings';
   try {

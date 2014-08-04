@@ -35,11 +35,11 @@
  */
 define(['./base-rs', './string'], function(BaseRS, Strings) {
 
+tdl.provide('tdl.log');
 /**
  * A module for log.
  * @namespace
  */
-tdl.provide('tdl.log');
 
 /**
  * Wrapped logging function.
