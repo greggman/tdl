@@ -101,11 +101,12 @@
 
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.math');
+
 /**
  * A module for math for tdl.math.
  * @namespace
  */
-tdl.provide('tdl.math');
 tdl.math = tdl.math || {};
 
 /**
@@ -143,57 +144,48 @@ tdl.math.columnMajor = tdl.math.columnMajor || {};
 
 /**
  * An Array of 2 floats
- * @type {!Array.<number>}
+ * @typedef {number[]} tdl.math.Vector2
  */
-tdl.math.Vector2 = goog.typedef;
 
 /**
  * An Array of 3 floats
- * @type {!Array.<number>}
+ * @typedef {number[]} tdl.math.Vector3
  */
-tdl.math.Vector3 = goog.typedef;
 
 /**
  * An Array of 4 floats
- * @type {!Array.<number>}
+ * @typedef {number[]} tdl.math.Vector4
  */
-tdl.math.Vector4 = goog.typedef;
 
 /**
  * An Array of floats.
- * @type {!Array.<number>}
+ * @typedef {number[]} tdl.math.Vector
  */
-tdl.math.Vector = goog.typedef;
 
 /**
  * A 1x1 Matrix of floats
- * @type {!Array.<!Array.<number>>}
+ * @typedef {number[]} tdl.math.Matrix1
  */
-tdl.math.Matrix1 = goog.typedef;
 
 /**
  * A 2x2 Matrix of floats
- * @type {!Array.<!Array.<number>>}
+ * @typedef {number[]} tdl.math.Matrix2
  */
-tdl.math.Matrix2 = goog.typedef;
 
 /**
  * A 3x3 Matrix of floats
- * @type {!Array.<!Array.<number>>}
+ * @typedef {number[]} tdl.math.Matrix3
  */
-tdl.math.Matrix3 = goog.typedef;
 
 /**
  * A 4x4 Matrix of floats
- * @type {!Array.<!Array.<number>>}
+ * @typedef {number[]} tdl.math.Matrix4
  */
-tdl.math.Matrix4 = goog.typedef;
 
 /**
  * A arbitrary size Matrix of floats
- * @type {!Array.<!Array.<number>>}
+ * @typedef {Array.<number[]>} tdl.math.Matrix;
  */
-tdl.math.Matrix = goog.typedef;
 
 /**
  * Returns a deterministic pseudorandom number between 0 and 1
@@ -254,9 +246,9 @@ tdl.math.lerpScalar = function(a, b, t) {
 
 /**
  * Adds two vectors; assumes a and b have the same dimension.
- * @param {!tdl.math.Vector} a Operand vector.
- * @param {!tdl.math.Vector} b Operand vector.
- * @return {!tdl.math.Vector} The sum of a and b.
+ * @param {tdl.math.Vector} a Operand vector.
+ * @param {tdl.math.Vector} b Operand vector.
+ * @return {tdl.math.Vector} The sum of a and b.
  */
 tdl.math.addVector = function(a, b) {
   var r = [];
@@ -268,9 +260,9 @@ tdl.math.addVector = function(a, b) {
 
 /**
  * Subtracts two vectors.
- * @param {!tdl.math.Vector} a Operand vector.
- * @param {!tdl.math.Vector} b Operand vector.
- * @return {!tdl.math.Vector} The difference of a and b.
+ * @param {tdl.math.Vector} a Operand vector.
+ * @param {tdl.math.Vector} b Operand vector.
+ * @return {tdl.math.Vector} The difference of a and b.
  */
 tdl.math.subVector = function(a, b) {
   var r = [];
@@ -284,10 +276,10 @@ tdl.math.subVector = function(a, b) {
  * Performs linear interpolation on two vectors.
  * Given vectors a and b and interpolation coefficient t, returns
  * (1 - t) * a + t * b.
- * @param {!tdl.math.Vector} a Operand vector.
- * @param {!tdl.math.Vector} b Operand vector.
+ * @param {tdl.math.Vector} a Operand vector.
+ * @param {tdl.math.Vector} b Operand vector.
  * @param {number} t Interpolation coefficient.
- * @return {!tdl.math.Vector} The weighted sum of a and b.
+ * @return {tdl.math.Vector} The weighted sum of a and b.
  */
 tdl.math.lerpVector = function(a, b, t) {
   var r = [];
@@ -355,9 +347,9 @@ tdl.math.lerpRadian = function(a, b, t) {
 
 /**
  * Divides a vector by a scalar.
- * @param {!tdl.math.Vector} v The vector.
+ * @param {tdl.math.Vector} v The vector.
  * @param {number} k The scalar.
- * @return {!tdl.math.Vector} v The vector v divided by k.
+ * @return {tdl.math.Vector} v The vector v divided by k.
  */
 tdl.math.divVectorScalar = function(v, k) {
   var r = [];
@@ -370,8 +362,8 @@ tdl.math.divVectorScalar = function(v, k) {
 /**
  * Computes the dot product of two vectors; assumes that a and b have
  * the same dimension.
- * @param {!tdl.math.Vector} a Operand vector.
- * @param {!tdl.math.Vector} b Operand vector.
+ * @param {tdl.math.Vector} a Operand vector.
+ * @param {tdl.math.Vector} b Operand vector.
  * @return {number} The dot product of a and b.
  */
 tdl.math.dot = function(a, b) {
@@ -385,9 +377,9 @@ tdl.math.dot = function(a, b) {
 /**
  * Computes the cross product of two vectors; assumes both vectors have
  * three entries.
- * @param {!tdl.math.Vector} a Operand vector.
- * @param {!tdl.math.Vector} b Operand vector.
- * @return {!tdl.math.Vector} The vector a cross b.
+ * @param {tdl.math.Vector} a Operand vector.
+ * @param {tdl.math.Vector} b Operand vector.
+ * @return {tdl.math.Vector} The vector a cross b.
  */
 tdl.math.cross = function(a, b) {
   return [a[1] * b[2] - a[2] * b[1],
@@ -398,7 +390,7 @@ tdl.math.cross = function(a, b) {
 /**
  * Computes the Euclidean length of a vector, i.e. the square root of the
  * sum of the squares of the entries.
- * @param {!tdl.math.Vector} a The vector.
+ * @param {tdl.math.Vector} a The vector.
  * @return {number} The length of a.
  */
 tdl.math.length = function(a) {
@@ -412,7 +404,7 @@ tdl.math.length = function(a) {
 /**
  * Computes the square of the Euclidean length of a vector, i.e. the sum
  * of the squares of the entries.
- * @param {!tdl.math.Vector} a The vector.
+ * @param {tdl.math.Vector} a The vector.
  * @return {number} The square of the length of a.
  */
 tdl.math.lengthSquared = function(a) {
@@ -425,8 +417,8 @@ tdl.math.lengthSquared = function(a) {
 
 /**
  * Computes the Euclidean distance between two vectors.
- * @param {!tdl.math.Vector} a A vector.
- * @param {!tdl.math.Vector} b A vector.
+ * @param {tdl.math.Vector} a A vector.
+ * @param {tdl.math.Vector} b A vector.
  * @return {number} The distance between a and b.
  */
 tdl.math.distance = function(a, b) {
@@ -441,8 +433,8 @@ tdl.math.distance = function(a, b) {
 
 /**
  * Computes the square of the Euclidean distance between two vectors.
- * @param {!tdl.math.Vector} a A vector.
- * @param {!tdl.math.Vector} b A vector.
+ * @param {tdl.math.Vector} a A vector.
+ * @param {tdl.math.Vector} b A vector.
  * @return {number} The distance between a and b.
  */
 tdl.math.distanceSquared = function(a, b) {
@@ -457,8 +449,8 @@ tdl.math.distanceSquared = function(a, b) {
 
 /**
  * Divides a vector by its Euclidean length and returns the quotient.
- * @param {!tdl.math.Vector} a The vector.
- * @return {!tdl.math.Vector} The normalized vector.
+ * @param {tdl.math.Vector} a The vector.
+ * @return {tdl.math.Vector} The normalized vector.
  */
 tdl.math.normalize = function(a) {
   var r = [];
@@ -478,9 +470,9 @@ tdl.math.normalize = function(a) {
 
 /**
  * Adds two matrices; assumes a and b are the same size.
- * @param {!tdl.math.Matrix} a Operand matrix.
- * @param {!tdl.math.Matrix} b Operand matrix.
- * @return {!tdl.math.Matrix} The sum of a and b.
+ * @param {tdl.math.Matrix} a Operand matrix.
+ * @param {tdl.math.Matrix} b Operand matrix.
+ * @return {tdl.math.Matrix} The sum of a and b.
  */
 tdl.math.addMatrix = function(a, b) {
   var r = [];
@@ -499,9 +491,9 @@ tdl.math.addMatrix = function(a, b) {
 
 /**
  * Subtracts two matrices; assumes a and b are the same size.
- * @param {!tdl.math.Matrix} a Operand matrix.
- * @param {!tdl.math.Matrix} b Operand matrix.
- * @return {!tdl.math.Matrix} The sum of a and b.
+ * @param {tdl.math.Matrix} a Operand matrix.
+ * @param {tdl.math.Matrix} b Operand matrix.
+ * @return {tdl.math.Matrix} The sum of a and b.
  */
 tdl.math.subMatrix = function(a, b) {
   var r = [];
@@ -522,10 +514,10 @@ tdl.math.subMatrix = function(a, b) {
  * Performs linear interpolation on two matrices.
  * Given matrices a and b and interpolation coefficient t, returns
  * (1 - t) * a + t * b.
- * @param {!tdl.math.Matrix} a Operand matrix.
- * @param {!tdl.math.Matrix} b Operand matrix.
+ * @param {tdl.math.Matrix} a Operand matrix.
+ * @param {tdl.math.Matrix} b Operand matrix.
  * @param {number} t Interpolation coefficient.
- * @return {!tdl.math.Matrix} The weighted of a and b.
+ * @return {tdl.math.Matrix} The weighted of a and b.
  */
 tdl.math.lerpMatrix = function(a, b, t) {
   var r = [];
@@ -538,9 +530,9 @@ tdl.math.lerpMatrix = function(a, b, t) {
 
 /**
  * Divides a matrix by a scalar.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} k The scalar.
- * @return {!tdl.math.Matrix} The matrix m divided by k.
+ * @return {tdl.math.Matrix} The matrix m divided by k.
  */
 tdl.math.divMatrixScalar = function(m, k) {
   var r = [];
@@ -562,8 +554,8 @@ tdl.math.negativeScalar = function(a) {
 
 /**
  * Negates a vector.
- * @param {!tdl.math.Vector} v The vector.
- * @return {!tdl.math.Vector} -v.
+ * @param {tdl.math.Vector} v The vector.
+ * @return {tdl.math.Vector} -v.
  */
 tdl.math.negativeVector = function(v) {
  var r = [];
@@ -576,8 +568,8 @@ tdl.math.negativeVector = function(v) {
 
 /**
  * Negates a matrix.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Matrix} -m.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Matrix} -m.
  */
 tdl.math.negativeMatrix = function(m) {
  var r = [];
@@ -599,8 +591,8 @@ tdl.math.copyScalar = function(a) {
 
 /**
  * Copies a vector.
- * @param {!tdl.math.Vector} v The vector.
- * @return {!tdl.math.Vector} A copy of v.
+ * @param {tdl.math.Vector} v The vector.
+ * @return {tdl.math.Vector} A copy of v.
  */
 tdl.math.copyVector = function(v) {
   var r = [];
@@ -611,8 +603,8 @@ tdl.math.copyVector = function(v) {
 
 /**
  * Copies a matrix.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Matrix} A copy of m.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Matrix} A copy of m.
  */
 tdl.math.copyMatrix = function(m) {
   var r = [];
@@ -636,8 +628,8 @@ tdl.math.mulScalarScalar = function(a, b) {
 /**
  * Multiplies a scalar by a vector.
  * @param {number} k The scalar.
- * @param {!tdl.math.Vector} v The vector.
- * @return {!tdl.math.Vector} The product of k and v.
+ * @param {tdl.math.Vector} v The vector.
+ * @return {tdl.math.Vector} The product of k and v.
  */
 tdl.math.mulScalarVector = function(k, v) {
   var r = [];
@@ -650,9 +642,9 @@ tdl.math.mulScalarVector = function(k, v) {
 
 /**
  * Multiplies a vector by a scalar.
- * @param {!tdl.math.Vector} v The vector.
+ * @param {tdl.math.Vector} v The vector.
  * @param {number} k The scalar.
- * @return {!tdl.math.Vector} The product of k and v.
+ * @return {tdl.math.Vector} The product of k and v.
  */
 tdl.math.mulVectorScalar = function(v, k) {
   return tdl.math.mulScalarVector(k, v);
@@ -661,8 +653,8 @@ tdl.math.mulVectorScalar = function(v, k) {
 /**
  * Multiplies a scalar by a matrix.
  * @param {number} k The scalar.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Matrix} The product of m and k.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Matrix} The product of m and k.
  */
 tdl.math.mulScalarMatrix = function(k, m) {
   var r = [];
@@ -675,9 +667,9 @@ tdl.math.mulScalarMatrix = function(k, m) {
 
 /**
  * Multiplies a matrix by a scalar.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} k The scalar.
- * @return {!tdl.math.Matrix} The product of m and k.
+ * @return {tdl.math.Matrix} The product of m and k.
  */
 tdl.math.mulMatrixScalar = function(m, k) {
   return tdl.math.mulScalarMatrix(k, m);
@@ -686,9 +678,9 @@ tdl.math.mulMatrixScalar = function(m, k) {
 /**
  * Multiplies a vector by another vector (component-wise); assumes a and
  * b have the same length.
- * @param {!tdl.math.Vector} a Operand vector.
- * @param {!tdl.math.Vector} b Operand vector.
- * @return {!tdl.math.Vector} The vector of products of entries of a and
+ * @param {tdl.math.Vector} a Operand vector.
+ * @param {tdl.math.Vector} b Operand vector.
+ * @return {tdl.math.Vector} The vector of products of entries of a and
  *     b.
  */
 tdl.math.mulVectorVector = function(a, b) {
@@ -702,9 +694,9 @@ tdl.math.mulVectorVector = function(a, b) {
 /**
  * Divides a vector by another vector (component-wise); assumes a and
  * b have the same length.
- * @param {!tdl.math.Vector} a Operand vector.
- * @param {!tdl.math.Vector} b Operand vector.
- * @return {!tdl.math.Vector} The vector of quotients of entries of a and
+ * @param {tdl.math.Vector} a Operand vector.
+ * @param {tdl.math.Vector} b Operand vector.
+ * @return {tdl.math.Vector} The vector of quotients of entries of a and
  *     b.
  */
 tdl.math.divVectorVector = function(a, b) {
@@ -718,9 +710,9 @@ tdl.math.divVectorVector = function(a, b) {
 /**
  * Multiplies a vector by a matrix; treats the vector as a row vector; assumes
  * matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.math.Vector} v The vector.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Vector} The product of v and m as a row vector.
+ * @param {tdl.math.Vector} v The vector.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Vector} The product of v and m as a row vector.
  */
 tdl.math.rowMajor.mulVectorMatrix4 = function(v, m) {
   var r = [];
@@ -735,9 +727,9 @@ tdl.math.rowMajor.mulVectorMatrix4 = function(v, m) {
 /**
  * Multiplies a vector by a matrix; treats the vector as a row vector; assumes
  * matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.math.Vector} v The vector.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Vector} The product of v and m as a row vector.
+ * @param {tdl.math.Vector} v The vector.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Vector} The product of v and m as a row vector.
  */
 tdl.math.columnMajor.mulVectorMatrix = function(v, m) {
   var r = [];
@@ -751,18 +743,18 @@ tdl.math.columnMajor.mulVectorMatrix = function(v, m) {
 
 /**
  * Multiplies a vector by a matrix; treats the vector as a row vector.
- * @param {!tdl.math.Matrix} m The matrix.
- * @param {!tdl.math.Vector} v The vector.
- * @return {!tdl.math.Vector} The product of m and v as a row vector.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Vector} v The vector.
+ * @return {tdl.math.Vector} The product of m and v as a row vector.
  */
 tdl.math.mulVectorMatrix = null;
 
 /**
  * Multiplies a matrix by a vector; treats the vector as a column vector.
  * assumes matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.math.Matrix} m The matrix.
- * @param {!tdl.math.Vector} v The vector.
- * @return {!tdl.math.Vector} The product of m and v as a column vector.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Vector} v The vector.
+ * @return {tdl.math.Vector} The product of m and v as a column vector.
  */
 tdl.math.rowMajor.mulMatrixVector = function(m, v) {
   var r = [];
@@ -777,9 +769,9 @@ tdl.math.rowMajor.mulMatrixVector = function(m, v) {
 /**
  * Multiplies a matrix by a vector; treats the vector as a column vector;
  * assumes matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.math.Matrix} m The matrix.
- * @param {!tdl.math.Vector} v The vector.
- * @return {!tdl.math.Vector} The product of m and v as a column vector.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Vector} v The vector.
+ * @return {tdl.math.Vector} The product of m and v as a column vector.
  */
 tdl.math.columnMajor.mulMatrixVector = function(m, v) {
   var r = [];
@@ -793,18 +785,18 @@ tdl.math.columnMajor.mulMatrixVector = function(m, v) {
 
 /**
  * Multiplies a matrix by a vector; treats the vector as a column vector.
- * @param {!tdl.math.Matrix} m The matrix.
- * @param {!tdl.math.Vector} v The vector.
- * @return {!tdl.math.Vector} The product of m and v as a column vector.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Vector} v The vector.
+ * @return {tdl.math.Vector} The product of m and v as a column vector.
  */
 tdl.math.mulMatrixVector = null;
 
 /**
  * Multiplies two 2-by-2 matrices; assumes that the given matrices are 2-by-2;
  * assumes matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.math.Matrix2} a The matrix on the left.
- * @param {!tdl.math.Matrix2} b The matrix on the right.
- * @return {!tdl.math.Matrix2} The matrix product of a and b.
+ * @param {tdl.math.Matrix2} a The matrix on the left.
+ * @param {tdl.math.Matrix2} b The matrix on the right.
+ * @return {tdl.math.Matrix2} The matrix product of a and b.
  */
 tdl.math.rowMajor.mulMatrixMatrix2 = function(a, b) {
   var a00 = a[0*2+0];
@@ -822,9 +814,9 @@ tdl.math.rowMajor.mulMatrixMatrix2 = function(a, b) {
 /**
  * Multiplies two 2-by-2 matrices; assumes that the given matrices are 2-by-2;
  * assumes matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.math.Matrix2} a The matrix on the left.
- * @param {!tdl.math.Matrix2} b The matrix on the right.
- * @return {!tdl.math.Matrix2} The matrix product of a and b.
+ * @param {tdl.math.Matrix2} a The matrix on the left.
+ * @param {tdl.math.Matrix2} b The matrix on the right.
+ * @return {tdl.math.Matrix2} The matrix product of a and b.
  */
 tdl.math.columnMajor.mulMatrixMatrix2 = function(a, b) {
   var a00 = a[0*2+0];
@@ -841,9 +833,9 @@ tdl.math.columnMajor.mulMatrixMatrix2 = function(a, b) {
 
 /**
  * Multiplies two 2-by-2 matrices.
- * @param {!tdl.math.Matrix2} a The matrix on the left.
- * @param {!tdl.math.Matrix2} b The matrix on the right.
- * @return {!tdl.math.Matrix2} The matrix product of a and b.
+ * @param {tdl.math.Matrix2} a The matrix on the left.
+ * @param {tdl.math.Matrix2} b The matrix on the right.
+ * @return {tdl.math.Matrix2} The matrix product of a and b.
  */
 tdl.math.mulMatrixMatrix2 = null;
 
@@ -851,9 +843,9 @@ tdl.math.mulMatrixMatrix2 = null;
 /**
  * Multiplies two 3-by-3 matrices; assumes that the given matrices are 3-by-3;
  * assumes matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.math.Matrix3} a The matrix on the left.
- * @param {!tdl.math.Matrix3} b The matrix on the right.
- * @return {!tdl.math.Matrix3} The matrix product of a and b.
+ * @param {tdl.math.Matrix3} a The matrix on the left.
+ * @param {tdl.math.Matrix3} b The matrix on the right.
+ * @return {tdl.math.Matrix3} The matrix product of a and b.
  */
 tdl.math.rowMajor.mulMatrixMatrix3 = function(a, b) {
   var a00 = a[0*3+0];
@@ -888,9 +880,9 @@ tdl.math.rowMajor.mulMatrixMatrix3 = function(a, b) {
 /**
  * Multiplies two 3-by-3 matrices; assumes that the given matrices are 3-by-3;
  * assumes matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.math.Matrix3} a The matrix on the left.
- * @param {!tdl.math.Matrix3} b The matrix on the right.
- * @return {!tdl.math.Matrix3} The matrix product of a and b.
+ * @param {tdl.math.Matrix3} a The matrix on the left.
+ * @param {tdl.math.Matrix3} b The matrix on the right.
+ * @return {tdl.math.Matrix3} The matrix product of a and b.
  */
 tdl.math.columnMajor.mulMatrixMatrix3 = function(a, b) {
   var a00 = a[0*3+0];
@@ -924,18 +916,18 @@ tdl.math.columnMajor.mulMatrixMatrix3 = function(a, b) {
 
 /**
  * Multiplies two 3-by-3 matrices; assumes that the given matrices are 3-by-3.
- * @param {!tdl.math.Matrix3} a The matrix on the left.
- * @param {!tdl.math.Matrix3} b The matrix on the right.
- * @return {!tdl.math.Matrix3} The matrix product of a and b.
+ * @param {tdl.math.Matrix3} a The matrix on the left.
+ * @param {tdl.math.Matrix3} b The matrix on the right.
+ * @return {tdl.math.Matrix3} The matrix product of a and b.
  */
 tdl.math.mulMatrixMatrix3 = null;
 
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4;
  * assumes matrix entries are accessed in [row][column] fashion.
- * @param {!tdl.math.Matrix4} a The matrix on the left.
- * @param {!tdl.math.Matrix4} b The matrix on the right.
- * @return {!tdl.math.Matrix4} The matrix product of a and b.
+ * @param {tdl.math.Matrix4} a The matrix on the left.
+ * @param {tdl.math.Matrix4} b The matrix on the right.
+ * @return {tdl.math.Matrix4} The matrix product of a and b.
  */
 tdl.math.rowMajor.mulMatrixMatrix4 = function(a, b) {
   var a00 = a[0*4+0];
@@ -991,9 +983,9 @@ tdl.math.rowMajor.mulMatrixMatrix4 = function(a, b) {
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4;
  * assumes matrix entries are accessed in [column][row] fashion.
- * @param {!tdl.math.Matrix4} a The matrix on the left.
- * @param {!tdl.math.Matrix4} b The matrix on the right.
- * @return {!tdl.math.Matrix4} The matrix product of a and b.
+ * @param {tdl.math.Matrix4} a The matrix on the left.
+ * @param {tdl.math.Matrix4} b The matrix on the right.
+ * @return {tdl.math.Matrix4} The matrix product of a and b.
  */
 tdl.math.columnMajor.mulMatrixMatrix4 = function(a, b) {
   var a00 = a[0*4+0];
@@ -1048,9 +1040,9 @@ tdl.math.columnMajor.mulMatrixMatrix4 = function(a, b) {
 
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4.
- * @param {!tdl.math.Matrix4} a The matrix on the left.
- * @param {!tdl.math.Matrix4} b The matrix on the right.
- * @return {!tdl.math.Matrix4} The matrix product of a and b.
+ * @param {tdl.math.Matrix4} a The matrix on the left.
+ * @param {tdl.math.Matrix4} b The matrix on the right.
+ * @return {tdl.math.Matrix4} The matrix product of a and b.
  */
 tdl.math.mulMatrixMatrix4 = null;
 
@@ -1058,9 +1050,9 @@ tdl.math.mulMatrixMatrix4 = null;
  * Multiplies two matrices; assumes that the sizes of the matrices are
  * appropriately compatible; assumes matrix entries are accessed in
  * [row][column] fashion.
- * @param {!tdl.math.Matrix} a The matrix on the left.
- * @param {!tdl.math.Matrix} b The matrix on the right.
- * @return {!tdl.math.Matrix} The matrix product of a and b.
+ * @param {tdl.math.Matrix} a The matrix on the left.
+ * @param {tdl.math.Matrix} b The matrix on the right.
+ * @return {tdl.math.Matrix} The matrix product of a and b.
  */
 tdl.math.rowMajor.mulMatrixMatrix = function(a, b) {
   var r = [];
@@ -1078,9 +1070,9 @@ tdl.math.rowMajor.mulMatrixMatrix = function(a, b) {
  * Multiplies two matrices; assumes that the sizes of the matrices are
  * appropriately compatible; assumes matrix entries are accessed in
  * [row][column] fashion.
- * @param {!tdl.math.Matrix} a The matrix on the left.
- * @param {!tdl.math.Matrix} b The matrix on the right.
- * @return {!tdl.math.Matrix} The matrix product of a and b.
+ * @param {tdl.math.Matrix} a The matrix on the left.
+ * @param {tdl.math.Matrix} b The matrix on the right.
+ * @return {tdl.math.Matrix} The matrix product of a and b.
  */
 tdl.math.columnMajor.mulMatrixMatrix = function(a, b) {
   var r = [];
@@ -1097,18 +1089,18 @@ tdl.math.columnMajor.mulMatrixMatrix = function(a, b) {
 /**
  * Multiplies two matrices; assumes that the sizes of the matrices are
  * appropriately compatible.
- * @param {!tdl.math.Matrix} a The matrix on the left.
- * @param {!tdl.math.Matrix} b The matrix on the right.
- * @return {!tdl.math.Matrix} The matrix product of a and b.
+ * @param {tdl.math.Matrix} a The matrix on the left.
+ * @param {tdl.math.Matrix} b The matrix on the right.
+ * @return {tdl.math.Matrix} The matrix product of a and b.
  */
 tdl.math.mulMatrixMatrix = null;
 
 /**
  * Gets the jth column of the given matrix m; assumes matrix entries are
  * accessed in [row][column] fashion.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} j The index of the desired column.
- * @return {!tdl.math.Vector} The jth column of m as a vector.
+ * @return {tdl.math.Vector} The jth column of m as a vector.
  */
 tdl.math.rowMajor.column = function(m, j) {
   var r = [];
@@ -1121,9 +1113,9 @@ tdl.math.rowMajor.column = function(m, j) {
 /**
  * Gets the jth column of the given matrix m; assumes matrix entries are
  * accessed in [column][row] fashion.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} j The index of the desired column.
- * @return {!tdl.math.Vector} The jth column of m as a vector.
+ * @return {tdl.math.Vector} The jth column of m as a vector.
  */
 tdl.math.columnMajor.column = function(m, j) {
   var r = [];
@@ -1135,18 +1127,18 @@ tdl.math.columnMajor.column = function(m, j) {
 
 /**
  * Gets the jth column of the given matrix m.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} j The index of the desired column.
- * @return {!tdl.math.Vector} The jth column of m as a vector.
+ * @return {tdl.math.Vector} The jth column of m as a vector.
  */
 tdl.math.column = null;
 
 /**
  * Gets the ith row of the given matrix m; assumes matrix entries are
  * accessed in [row][column] fashion.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} i The index of the desired row.
- * @return {!tdl.math.Vector} The ith row of m.
+ * @return {tdl.math.Vector} The ith row of m.
  */
 tdl.math.rowMajor.row = function(m, i) {
   var r = [];
@@ -1159,10 +1151,10 @@ tdl.math.rowMajor.row = function(m, i) {
 /**
  * Gets the ith row of the given matrix m; assumes matrix entries are
  * accessed in [column][row] fashion.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} i The index of the desired row.
  * @param {number} opt_size Unknown (to dkogan)
- * @return {!tdl.math.Vector} The ith row of m.
+ * @return {tdl.math.Vector} The ith row of m.
  */
 tdl.math.columnMajor.row = function(m, i, opt_size) {
   opt_size = opt_size || 4;
@@ -1175,16 +1167,16 @@ tdl.math.columnMajor.row = function(m, i, opt_size) {
 
 /**
  * Gets the ith row of the given matrix m.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @param {number} i The index of the desired row.
- * @return {!tdl.math.Vector} The ith row of m.
+ * @return {tdl.math.Vector} The ith row of m.
  */
 tdl.math.row = null;
 
 /**
  * Takes the transpose of a matrix.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Matrix} The transpose of m.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Matrix} The transpose of m.
  */
 tdl.math.transpose = function(m) {
   var r = [];
@@ -1227,7 +1219,7 @@ tdl.math.transpose = function(m) {
 /**
  * Computes the trace (sum of the diagonal entries) of a square matrix;
  * assumes m is square.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @return {number} The trace of m.
  */
 tdl.math.trace = function(m) {
@@ -1239,7 +1231,7 @@ tdl.math.trace = function(m) {
 
 /**
  * Computes the determinant of a 1-by-1 matrix.
- * @param {!tdl.math.Matrix1} m The matrix.
+ * @param {tdl.math.Matrix1} m The matrix.
  * @return {number} The determinant of m.
  */
 tdl.math.det1 = function(m) {
@@ -1248,7 +1240,7 @@ tdl.math.det1 = function(m) {
 
 /**
  * Computes the determinant of a 2-by-2 matrix.
- * @param {!tdl.math.Matrix2} m The matrix.
+ * @param {tdl.math.Matrix2} m The matrix.
  * @return {number} The determinant of m.
  */
 tdl.math.det2 = function(m) {
@@ -1257,7 +1249,7 @@ tdl.math.det2 = function(m) {
 
 /**
  * Computes the determinant of a 3-by-3 matrix.
- * @param {!tdl.math.Matrix3} m The matrix.
+ * @param {tdl.math.Matrix3} m The matrix.
  * @return {number} The determinant of m.
  */
 tdl.math.det3 = function(m) {
@@ -1268,7 +1260,7 @@ tdl.math.det3 = function(m) {
 
 /**
  * Computes the determinant of a 4-by-4 matrix.
- * @param {!tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Matrix4} m The matrix.
  * @return {number} The determinant of m.
  */
 tdl.math.det4 = function(m) {
@@ -1286,8 +1278,8 @@ tdl.math.det4 = function(m) {
 
 /**
  * Computes the inverse of a 1-by-1 matrix.
- * @param {!tdl.math.Matrix1} m The matrix.
- * @return {!tdl.math.Matrix1} The inverse of m.
+ * @param {tdl.math.Matrix1} m The matrix.
+ * @return {tdl.math.Matrix1} The inverse of m.
  */
 tdl.math.inverse1 = function(m) {
   return [[1.0 / m[0]]];
@@ -1295,8 +1287,8 @@ tdl.math.inverse1 = function(m) {
 
 /**
  * Computes the inverse of a 2-by-2 matrix.
- * @param {!tdl.math.Matrix2} m The matrix.
- * @return {!tdl.math.Matrix2} The inverse of m.
+ * @param {tdl.math.Matrix2} m The matrix.
+ * @return {tdl.math.Matrix2} The inverse of m.
  */
 tdl.math.inverse2 = function(m) {
   var d = 1.0 / (m[0*2+0] * m[1*2+1] - m[0*2+1] * m[1*2+0]);
@@ -1305,8 +1297,8 @@ tdl.math.inverse2 = function(m) {
 
 /**
  * Computes the inverse of a 3-by-3 matrix.
- * @param {!tdl.math.Matrix3} m The matrix.
- * @return {!tdl.math.Matrix3} The inverse of m.
+ * @param {tdl.math.Matrix3} m The matrix.
+ * @return {tdl.math.Matrix3} The inverse of m.
  */
 tdl.math.inverse3 = function(m) {
   var t00 = m[1*3+1] * m[2*3+2] - m[1*3+2] * m[2*3+1];
@@ -1324,8 +1316,8 @@ tdl.math.inverse3 = function(m) {
 
 /**
  * Computes the inverse of a 4-by-4 matrix.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @return {!tdl.math.Matrix4} The inverse of m.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @return {tdl.math.Matrix4} The inverse of m.
  */
 tdl.math.inverse4 = function(m) {
   var tmp_0 = m[2*4+2] * m[3*4+3];
@@ -1395,7 +1387,7 @@ tdl.math.inverse4 = function(m) {
  * Computes the determinant of the cofactor matrix obtained by removal
  * of a specified row and column.  This is a helper function for the general
  * determinant and matrix inversion functions.
- * @param {!tdl.math.Matrix} a The original matrix.
+ * @param {tdl.math.Matrix} a The original matrix.
  * @param {number} x The row to be removed.
  * @param {number} y The column to be removed.
  * @return {number} The determinant of the matrix obtained by removing
@@ -1422,7 +1414,7 @@ tdl.math.codet = function(a, x, y) {
 
 /**
  * Computes the determinant of an arbitrary square matrix.
- * @param {!tdl.math.Matrix} m The matrix.
+ * @param {tdl.math.Matrix} m The matrix.
  * @return {number} the determinant of m.
  */
 tdl.math.det = function(m) {
@@ -1443,8 +1435,8 @@ tdl.math.det = function(m) {
 
 /**
  * Computes the inverse of an arbitrary square matrix.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Matrix} The inverse of m.
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Matrix} The inverse of m.
  */
 tdl.math.inverse = function(m) {
   var d = 4;
@@ -1467,8 +1459,8 @@ tdl.math.inverse = function(m) {
  * multiplying many orthogonal matrices together, errors can accumulate causing
  * the product to fail to be orthogonal.  This function can be used to correct
  * that.
- * @param {!tdl.math.Matrix} m The matrix.
- * @return {!tdl.math.Matrix} A matrix whose rows are obtained from the
+ * @param {tdl.math.Matrix} m The matrix.
+ * @return {tdl.math.Matrix} A matrix whose rows are obtained from the
  *     rows of m by the Graham-Schmidt process.
  */
 tdl.math.orthonormalize = function(m) {
@@ -1487,8 +1479,8 @@ tdl.math.orthonormalize = function(m) {
 /**
  * Computes the inverse of a 4-by-4 matrix.
  * Note: It is faster to call this than tdl.math.inverse.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @return {!tdl.math.Matrix4} The inverse of m.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @return {tdl.math.Matrix4} The inverse of m.
  */
 tdl.math.matrix4.inverse = function(m) {
   return tdl.math.inverse4(m);
@@ -1497,9 +1489,9 @@ tdl.math.matrix4.inverse = function(m) {
 /**
  * Multiplies two 4-by-4 matrices; assumes that the given matrices are 4-by-4.
  * Note: It is faster to call this than tdl.math.mul.
- * @param {!tdl.math.Matrix4} a The matrix on the left.
- * @param {!tdl.math.Matrix4} b The matrix on the right.
- * @return {!tdl.math.Matrix4} The matrix product of a and b.
+ * @param {tdl.math.Matrix4} a The matrix on the left.
+ * @param {tdl.math.Matrix4} b The matrix on the right.
+ * @return {tdl.math.Matrix4} The matrix product of a and b.
  */
 tdl.math.matrix4.mul = function(a, b) {
   return tdl.math.mulMatrixMatrix4(a, b);
@@ -1508,7 +1500,7 @@ tdl.math.matrix4.mul = function(a, b) {
 /**
  * Computes the determinant of a 4-by-4 matrix.
  * Note: It is faster to call this than tdl.math.det.
- * @param {!tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Matrix4} m The matrix.
  * @return {number} The determinant of m.
  */
 tdl.math.matrix4.det = function(m) {
@@ -1518,8 +1510,8 @@ tdl.math.matrix4.det = function(m) {
 /**
  * Copies a Matrix4.
  * Note: It is faster to call this than tdl.math.copy.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @return {!tdl.math.Matrix4} A copy of m.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @return {tdl.math.Matrix4} A copy of m.
  */
 tdl.math.matrix4.copy = function(m) {
   return tdl.math.copyMatrix(m);
@@ -1530,9 +1522,9 @@ tdl.math.matrix4.transpose = tdl.math.transpose;
 /**
  * Sets the upper 3-by-3 block of matrix a to the upper 3-by-3 block of matrix
  * b; assumes that a and b are big enough to contain an upper 3-by-3 block.
- * @param {!tdl.math.Matrix4} a A matrix.
- * @param {!tdl.math.Matrix3} b A 3-by-3 matrix.
- * @return {!tdl.math.Matrix4} a once modified.
+ * @param {tdl.math.Matrix4} a A matrix.
+ * @param {tdl.math.Matrix3} b A 3-by-3 matrix.
+ * @return {tdl.math.Matrix4} a once modified.
  */
 tdl.math.matrix4.setUpper3x3 = function(a, b) {
   a[0*4+0] = b[0*3+0];
@@ -1551,8 +1543,8 @@ tdl.math.matrix4.setUpper3x3 = function(a, b) {
 /**
  * Returns a 3-by-3 matrix mimicking the upper 3-by-3 block of m; assumes m
  * is big enough to contain an upper 3-by-3 block.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @return {!tdl.math.Matrix3} The upper 3-by-3 block of m.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @return {tdl.math.Matrix3} The upper 3-by-3 block of m.
  */
 tdl.math.matrix4.getUpper3x3 = function(m) {
   return [
@@ -1571,9 +1563,9 @@ tdl.math.matrix4.getUpper3x3 = function(m) {
 /**
  * Sets the translation component of a 4-by-4 matrix to the given
  * vector.
- * @param {!tdl.math.Matrix4} a The matrix.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} v The vector.
- * @return {!tdl.math.Matrix4} a once modified.
+ * @param {tdl.math.Matrix4} a The matrix.
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} v The vector.
+ * @return {tdl.math.Matrix4} a once modified.
  */
 tdl.math.matrix4.setTranslation = function(a, v) {
   a[12] = v[0];
@@ -1586,8 +1578,8 @@ tdl.math.matrix4.setTranslation = function(a, v) {
 /**
  * Returns the translation component of a 4-by-4 matrix as a vector with 3
  * entries.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @return {!tdl.math.Vector3} The translation component of m.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @return {tdl.math.Vector3} The translation component of m.
  */
 tdl.math.matrix4.getTranslation = function(m) {
   return [m[12], m[13], m[14], m[15]];
@@ -1597,9 +1589,9 @@ tdl.math.matrix4.getTranslation = function(m) {
  * Takes a 4-by-4 matrix and a vector with 3 entries,
  * interprets the vector as a point, transforms that point by the matrix, and
  * returns the result as a vector with 3 entries.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @param {!tdl.math.Vector3} v The point.
- * @return {!tdl.math.Vector3} The transformed point.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Vector3} v The point.
+ * @return {tdl.math.Vector3} The transformed point.
  */
 tdl.math.matrix4.transformPoint = function(m, v) {
   var v0 = v[0];
@@ -1614,9 +1606,9 @@ tdl.math.matrix4.transformPoint = function(m, v) {
 /**
  * Takes a 4-by-4 matrix and a vector with 4 entries, transforms that vector by
  * the matrix, and returns the result as a vector with 4 entries.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @param {!tdl.math.Vector4} v The point in homogenous coordinates.
- * @return {!tdl.math.Vector4} The transformed point in homogenous
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Vector4} v The point in homogenous coordinates.
+ * @return {tdl.math.Vector4} The transformed point in homogenous
  *     coordinates.
  */
 tdl.math.matrix4.transformVector4 = function(m, v) {
@@ -1638,9 +1630,9 @@ tdl.math.matrix4.transformVector4 = function(m, v) {
  * is parallel-preserving, i.e. any combination of rotation, scaling and
  * translation, but not a perspective distortion. Returns a vector with 3
  * entries.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @param {!tdl.math.Vector3} v The direction.
- * @return {!tdl.math.Vector3} The transformed direction.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Vector3} v The direction.
+ * @return {tdl.math.Vector3} The transformed direction.
  */
 tdl.math.matrix4.transformDirection = function(m, v) {
   var v0 = v[0];
@@ -1661,9 +1653,9 @@ tdl.math.matrix4.transformDirection = function(m, v) {
  * matrix is parallel-preserving, i.e. any combination of rotation, scaling and
  * translation, but not a perspective distortion.  Returns a vector with 3
  * entries.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @param {!tdl.math.Vector3} v The normal.
- * @return {!tdl.math.Vector3} The transformed normal.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Vector3} v The normal.
+ * @return {tdl.math.Vector3} The transformed normal.
  */
 tdl.math.matrix4.transformNormal = function(m, v) {
   var mi = tdl.math.inverse4(m);
@@ -1678,7 +1670,7 @@ tdl.math.matrix4.transformNormal = function(m, v) {
 
 /**
  * Creates a 4-by-4 identity matrix.
- * @return {!tdl.math.Matrix4} The 4-by-4 identity.
+ * @return {tdl.math.Matrix4} The 4-by-4 identity.
  */
 tdl.math.matrix4.identity = function() {
   return [
@@ -1691,8 +1683,8 @@ tdl.math.matrix4.identity = function() {
 
 /**
  * Sets the given 4-by-4 matrix to the identity matrix.
- * @param {!tdl.math.Matrix4} m The matrix to set to identity.
- * @return {!tdl.math.Matrix4} m once modified.
+ * @param {tdl.math.Matrix4} m The matrix to set to identity.
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.setIdentity = function(m) {
   for (var i = 0; i < 4; i++) {
@@ -1724,7 +1716,7 @@ tdl.math.matrix4.setIdentity = function(m) {
  *     of the near clipping plane.
  * @param {number} zFar The depth (negative z coordinate)
  *     of the far clipping plane.
- * @return {!tdl.math.Matrix4} The perspective matrix.
+ * @return {tdl.math.Matrix4} The perspective matrix.
  */
 tdl.math.matrix4.perspective = function(angle, aspect, zNear, zFar) {
   var f = Math.tan(Math.PI * 0.5 - 0.5 * angle);
@@ -1752,7 +1744,7 @@ tdl.math.matrix4.perspective = function(angle, aspect, zNear, zFar) {
  * @param {number} top The y coordinate of the right plane of the box.
  * @param {number} near The negative z coordinate of the near plane of the box.
  * @param {number} far The negative z coordinate of the far plane of the box.
- * @return {!tdl.math.Matrix4} The orthographic projection matrix.
+ * @return {tdl.math.Matrix4} The orthographic projection matrix.
  */
 tdl.math.matrix4.orthographic =
     function(left, right, bottom, top, near, far) {
@@ -1781,7 +1773,7 @@ tdl.math.matrix4.orthographic =
  * @param {number} top The y coordinate of the right plane of the box.
  * @param {number} near The negative z coordinate of the near plane of the box.
  * @param {number} far The negative z coordinate of the far plane of the box.
- * @return {!tdl.math.Matrix4} The perspective projection matrix.
+ * @return {tdl.math.Matrix4} The perspective projection matrix.
  */
 tdl.math.matrix4.frustum = function(left, right, bottom, top, near, far) {
   var dx = (right - left);
@@ -1801,13 +1793,13 @@ tdl.math.matrix4.frustum = function(left, right, bottom, top, near, far) {
  * vector pointing from the eye to the target to a vector pointing in the
  * negative z direction, and also sends the up vector into the upper half of
  * the yz plane.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} eye The position
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} eye The position
  *     of the eye.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} target The
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} target The
  *     position meant to be viewed.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} up A vector
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} up A vector
  *     pointing up.
- * @return {!tdl.math.Matrix4} The look-at matrix.
+ * @return {tdl.math.Matrix4} The look-at matrix.
  */
 tdl.math.matrix4.lookAt = function(eye, target, up) {
   return tdl.math.inverse(tdl.math.matrix4.cameraLookAt(
@@ -1818,13 +1810,13 @@ tdl.math.matrix4.lookAt = function(eye, target, up) {
  * Computes a 4-by-4 camera look-at transformation. This is the
  * inverse of lookAt The transformation generated is an
  * orthogonal rotation matrix with translation component.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} eye The position
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} eye The position
  *     of the eye.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} target The
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} target The
  *     position meant to be viewed.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} up A vector
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} up A vector
  *     pointing up.
- * @return {!tdl.math.Matrix4} The camera look-at matrix.
+ * @return {tdl.math.Matrix4} The camera look-at matrix.
  */
 tdl.math.matrix4.cameraLookAt = function(eye, target, up) {
   var vz = tdl.math.normalize(
@@ -1848,9 +1840,9 @@ tdl.math.matrix4.cameraLookAt = function(eye, target, up) {
  * transform by b first and then a.  Note this is subtly different from just
  * multiplying the matrices together.  For given a and b, this function returns
  * the same object in both row-major and column-major mode.
- * @param {!tdl.math.Matrix4} a A 4-by-4 matrix.
- * @param {!tdl.math.Matrix4} b A 4-by-4 matrix.
- * @return {!tdl.math.Matrix4} the composition of a and b, b first then a.
+ * @param {tdl.math.Matrix4} a A 4-by-4 matrix.
+ * @param {tdl.math.Matrix4} b A 4-by-4 matrix.
+ * @return {tdl.math.Matrix4} the composition of a and b, b first then a.
  */
 tdl.math.matrix4.composition = function(a, b) {
   var a00 = a[0*4+0];
@@ -1909,9 +1901,9 @@ tdl.math.matrix4.composition = function(a, b) {
  * transform by b first and then a.  Note this is subtly different from just
  * multiplying the matrices together.  For given a and b, a, upon modification,
  * will be the same object in both row-major and column-major mode.
- * @param {!tdl.math.Matrix4} a A 4-by-4 matrix.
- * @param {!tdl.math.Matrix4} b A 4-by-4 matrix.
- * @return {!tdl.math.Matrix4} a once modified.
+ * @param {tdl.math.Matrix4} a A 4-by-4 matrix.
+ * @param {tdl.math.Matrix4} b A 4-by-4 matrix.
+ * @return {tdl.math.Matrix4} a once modified.
  */
 tdl.math.matrix4.compose = function(a, b) {
   var a00 = a[0*4+0];
@@ -1967,9 +1959,9 @@ tdl.math.matrix4.compose = function(a, b) {
 
 /**
  * Creates a 4-by-4 matrix which translates by the given vector v.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} v The vector by
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} v The vector by
  *     which to translate.
- * @return {!tdl.math.Matrix4} The translation matrix.
+ * @return {tdl.math.Matrix4} The translation matrix.
  */
 tdl.math.matrix4.translation = function(v) {
   return [
@@ -1982,10 +1974,10 @@ tdl.math.matrix4.translation = function(v) {
 
 /**
  * Modifies the given 4-by-4 matrix by translation by the given vector v.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} v The vector by
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} v The vector by
  *     which to translate.
- * @return {!tdl.math.Matrix4} m once modified.
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.translate = function(m, v) {
   var m00 = m[0*4+0];
@@ -2020,9 +2012,9 @@ tdl.math.matrix4.translate = function(m, v) {
  * Creates a 4-by-4 matrix which scales in each dimension by an amount given by
  * the corresponding entry in the given vector; assumes the vector has three
  * entries.
- * @param {!tdl.math.Vector3} v A vector of
+ * @param {tdl.math.Vector3} v A vector of
  *     three entries specifying the factor by which to scale in each dimension.
- * @return {!tdl.math.Matrix4} The scaling matrix.
+ * @return {tdl.math.Matrix4} The scaling matrix.
  */
 tdl.math.matrix4.scaling = function(v) {
   return [
@@ -2037,10 +2029,10 @@ tdl.math.matrix4.scaling = function(v) {
  * Modifies the given 4-by-4 matrix, scaling in each dimension by an amount
  * given by the corresponding entry in the given vector; assumes the vector has
  * three entries.
- * @param {!tdl.math.Matrix4} m The matrix to be modified.
- * @param {!tdl.math.Vector3} v A vector of three entries specifying the
+ * @param {tdl.math.Matrix4} m The matrix to be modified.
+ * @param {tdl.math.Vector3} v A vector of three entries specifying the
  *     factor by which to scale in each dimension.
- * @return {!tdl.math.Matrix4} m once modified.
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.scale = function(m, v) {
   var v0 = v[0];
@@ -2066,7 +2058,7 @@ tdl.math.matrix4.scale = function(m, v) {
 /**
  * Creates a 4-by-4 matrix which rotates around the x-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} The rotation matrix.
+ * @return {tdl.math.Matrix4} The rotation matrix.
  */
 tdl.math.matrix4.rotationX = function(angle) {
   var c = Math.cos(angle);
@@ -2083,9 +2075,9 @@ tdl.math.matrix4.rotationX = function(angle) {
 /**
  * Modifies the given 4-by-4 matrix by a rotation around the x-axis by the given
  * angle.
- * @param {!tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Matrix4} m The matrix.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} m once modified.
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.rotateX = function(m, angle) {
   var m10 = m[1*4+0];
@@ -2114,7 +2106,7 @@ tdl.math.matrix4.rotateX = function(m, angle) {
 /**
  * Creates a 4-by-4 matrix which rotates around the y-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} The rotation matrix.
+ * @return {tdl.math.Matrix4} The rotation matrix.
  */
 tdl.math.matrix4.rotationY = function(angle) {
   var c = Math.cos(angle);
@@ -2131,9 +2123,9 @@ tdl.math.matrix4.rotationY = function(angle) {
 /**
  * Modifies the given 4-by-4 matrix by a rotation around the y-axis by the given
  * angle.
- * @param {!tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Matrix4} m The matrix.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} m once modified.
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.rotateY = function(m, angle) {
   var m00 = m[0*4+0];
@@ -2162,7 +2154,7 @@ tdl.math.matrix4.rotateY = function(m, angle) {
 /**
  * Creates a 4-by-4 matrix which rotates around the z-axis by the given angle.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} The rotation matrix.
+ * @return {tdl.math.Matrix4} The rotation matrix.
  */
 tdl.math.matrix4.rotationZ = function(angle) {
   var c = Math.cos(angle);
@@ -2179,9 +2171,9 @@ tdl.math.matrix4.rotationZ = function(angle) {
 /**
  * Modifies the given 4-by-4 matrix by a rotation around the z-axis by the given
  * angle.
- * @param {!tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Matrix4} m The matrix.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} m once modified.
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.rotateZ = function(m, angle) {
   var m00 = m[0*4+0];
@@ -2212,8 +2204,8 @@ tdl.math.matrix4.rotateZ = function(m, angle) {
  * vector as angles by which to rotate around the x, y and z axes, returns a
  * a matrix which rotates around the x-axis first, then the y-axis, then the
  * z-axis.
- * @param {!tdl.math.Vector3} v A vector of angles (in radians).
- * @return {!tdl.math.Matrix4} The rotation matrix.
+ * @param {tdl.math.Vector3} v A vector of angles (in radians).
+ * @return {tdl.math.Matrix4} The rotation matrix.
  */
 tdl.math.matrix4.rotationZYX = function(v) {
   var sinx = Math.sin(v[0]);
@@ -2244,9 +2236,9 @@ tdl.math.matrix4.rotationZYX = function(v) {
  * Modifies a 4-by-4 matrix by a rotation.  Interprets the coordinates of the
  * given vector as angles by which to rotate around the x, y and z axes, rotates
  * around the x-axis first, then the y-axis, then the z-axis.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @param {!tdl.math.Vector3} v A vector of angles (in radians).
- * @return {!tdl.math.Matrix4} m once modified.
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @param {tdl.math.Vector3} v A vector of angles (in radians).
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.rotateZYX = function(m, v) {
   var sinX = Math.sin(v[0]);
@@ -2305,10 +2297,10 @@ tdl.math.matrix4.rotateZYX = function(m, v) {
 /**
  * Creates a 4-by-4 matrix which rotates around the given axis by the given
  * angle.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} axis The axis
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} axis The axis
  *     about which to rotate.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} A matrix which rotates angle radians
+ * @return {tdl.math.Matrix4} A matrix which rotates angle radians
  *     around the axis.
  */
 tdl.math.matrix4.axisRotation = function(axis, angle) {
@@ -2346,11 +2338,11 @@ tdl.math.matrix4.axisRotation = function(axis, angle) {
 /**
  * Modifies the given 4-by-4 matrix by rotation around the given axis by the
  * given angle.
- * @param {!tdl.math.Matrix4} m The matrix.
- * @param {(!tdl.math.Vector3|!tdl.math.Vector4)} axis The axis
+ * @param {tdl.math.Matrix4} m The matrix.
+ * @param {(tdl.math.Vector3|tdl.math.Vector4)} axis The axis
  *     about which to rotate.
  * @param {number} angle The angle by which to rotate (in radians).
- * @return {!tdl.math.Matrix4} m once modified.
+ * @return {tdl.math.Matrix4} m once modified.
  */
 tdl.math.matrix4.axisRotate = function(m, axis, angle) {
   var x = axis[0];
