@@ -44,14 +44,15 @@ tdl.primitives = tdl.primitives || {};
 
 /**
  * AttribBuffer manages a TypedArray as an array of vectors.
- *
+ * @constructor
  * @param {number} numComponents Number of components per
  *     vector.
- * @param {(number|!Array.<number>)} numElements Number of
- *        vectors or the data.
+ * @param {(number|number[])} numElements Number of vectors or
+ *        the data.
  * @param {string} opt_type The type of the TypedArray to
  *     create. Default = 'Float32Array'.
- * @param {!Array.<number>} opt_data The data for the array.
+ * @param {number[]|ArrayBufferView} opt_data The data for the
+ *        array.
  */
 tdl.primitives.AttribBuffer = function(
     numComponents, numElements, opt_type) {
@@ -70,14 +71,27 @@ tdl.primitives.AttribBuffer = function(
   this.type = opt_type;
 };
 
+/**
+ * Stride for this AtrribBuffer
+ * @return {number} stride
+ */
 tdl.primitives.AttribBuffer.prototype.stride = function() {
   return 0;
 };
 
+/**
+ * Offset of this AttribBuffer
+ * @returns {number} offset
+ */
 tdl.primitives.AttribBuffer.prototype.offset = function() {
   return 0;
 };
 
+/**
+ * Gets an element from this AttribBuffer
+ * @param number index index of element
+ * @return {number[]} returned element
+ */
 tdl.primitives.AttribBuffer.prototype.getElement = function(index) {
   var offset = index * this.numComponents;
   var value = [];
@@ -87,6 +101,11 @@ tdl.primitives.AttribBuffer.prototype.getElement = function(index) {
   return value;
 };
 
+/**
+ * Sets an element in this AttribBuffer
+ * @param {number} index index of element to set
+ * @param {number[]|ArrayBufferView} value new value for element
+ */
 tdl.primitives.AttribBuffer.prototype.setElement = function(index, value) {
   var offset = index * this.numComponents;
   for (var ii = 0; ii < this.numComponents; ++ii) {
@@ -94,6 +113,13 @@ tdl.primitives.AttribBuffer.prototype.setElement = function(index, value) {
   }
 };
 
+/**
+ * Sets a range of elements
+ * @param {number} index index of starting element
+ * @param {number} count number of elements to set
+ * @param {number[]|ArrayBufferView) value values of new
+ *        elements
+ */
 tdl.primitives.AttribBuffer.prototype.fillRange = function(index, count, value) {
   var offset = index * this.numComponents;
   for (var jj = 0; jj < count; ++jj) {
@@ -103,6 +129,11 @@ tdl.primitives.AttribBuffer.prototype.fillRange = function(index, count, value) 
   }
 };
 
+/**
+ * Clones an AttribBuffer.
+ * @return {tdl.primitives.AttribBuffer} new AttribBuffer that
+ *         is a copy of this one.
+ */
 tdl.primitives.AttribBuffer.prototype.clone = function() {
   var copy = new tdl.primitives.AttribBuffer(
       this.numComponents, this.numElements, this.type);
@@ -110,10 +141,22 @@ tdl.primitives.AttribBuffer.prototype.clone = function() {
   return copy;
 }
 
+/**
+ * Push an element into an AttribBuffer.
+ * AttribBuffers start with a cursor allowed you to
+ * progressively *push* values into them up to their size limit.
+ * @param {number[]|ArrayBufferView} value value of element to
+ *        push.
+ */
 tdl.primitives.AttribBuffer.prototype.push = function(value) {
   this.setElement(this.cursor++, value);
 };
 
+/**
+ * Push an array of elements from another AttribBuffer
+ * @param {tdl.primitives.AttribBuffer} array buffer to push
+ *        elements from.
+ */
 tdl.primitives.AttribBuffer.prototype.pushArray = function(array) {
 //  this.buffer.set(array, this.cursor * this.numComponents);
 //  this.cursor += array.numElements;
@@ -122,6 +165,16 @@ tdl.primitives.AttribBuffer.prototype.pushArray = function(array) {
   }
 };
 
+/**
+ * Push elements from AttribBuffer into this buffer adding
+ * offsets.
+ *
+ * This is mostly used to contactinate index buffers.
+ *
+ * @param {tdl.primtives.AttribBuffer} array buffer to copy from
+ * @param {number[]|ArrayBufferView} offset array of offsets,
+ *        one for each element.
+ */
 tdl.primitives.AttribBuffer.prototype.pushArrayWithOffset =
    function(array, offset) {
   for (var ii = 0; ii < array.numElements; ++ii) {
@@ -135,8 +188,7 @@ tdl.primitives.AttribBuffer.prototype.pushArrayWithOffset =
 
 /**
  * Computes the extents
- * @param {!AttribBuffer} positions The positions
- * @return {!{min: !tdl.math.Vector3, max:!tdl.math.Vector3}}
+ * @return {{min: tdl.math.Vector3, max:tdl.math.Vector3}}
  *     The min and max extents.
  */
 tdl.primitives.AttribBuffer.prototype.computeExtents = function() {
@@ -155,12 +207,11 @@ tdl.primitives.AttribBuffer.prototype.computeExtents = function() {
 };
 
 /**
- * Reorients positions by the given matrix. In other words, it
- * multiplies each vertex by the given matrix.
- * @param {!tdl.primitives.AttribBuffer} array AttribBuffer to
+ * Multiplies elements by a vector.
+ * @param {tdl.primitives.AttribBuffer} array AttribBuffer to
  *     reorient.
- * @param {!tdl.math.Matrix4} matrix Matrix by which to
- *     multiply.
+ * @param {number[]|ArrayBufferView} multiplier vector by
+ *     which to multiply.
  */
 tdl.primitives.mulComponents = function(array, multiplier) {
   var numElements = array.numElements;
@@ -177,9 +228,9 @@ tdl.primitives.mulComponents = function(array, multiplier) {
 /**
  * Reorients positions by the given matrix. In other words, it
  * multiplies each vertex by the given matrix.
- * @param {!tdl.primitives.AttribBuffer} array AttribBuffer to
+ * @param {tdl.primitives.AttribBuffer} array AttribBuffer to
  *     reorient.
- * @param {!tdl.math.Matrix4} matrix Matrix by which to
+ * @param {tdl.math.Matrix4} matrix Matrix by which to
  *     multiply.
  */
 tdl.primitives.reorientPositions = function(array, matrix) {
@@ -195,9 +246,9 @@ tdl.primitives.reorientPositions = function(array, matrix) {
 /**
  * Reorients normals by the inverse-transpose of the given
  * matrix..
- * @param {!tdl.primitives.AttribBuffer} array AttribBuffer to
+ * @param {tdl.primitives.AttribBuffer} array AttribBuffer to
  *     reorient.
- * @param {!tdl.math.Matrix4} matrix Matrix by which to
+ * @param {tdl.math.Matrix4} matrix Matrix by which to
  *     multiply.
  */
 tdl.primitives.reorientNormals = function(array, matrix) {
@@ -212,9 +263,9 @@ tdl.primitives.reorientNormals = function(array, matrix) {
 
 /**
  * Reorients directions by the given matrix..
- * @param {!tdl.primitives.AttribBuffer} array AttribBuffer to
+ * @param {tdl.primitives.AttribBuffer} array AttribBuffer to
  *     reorient.
- * @param {!tdl.math.Matrix4} matrix Matrix by which to
+ * @param {tdl.math.Matrix4} matrix Matrix by which to
  *     multiply.
  */
 tdl.primitives.reorientDirections = function(array, matrix) {
@@ -233,9 +284,9 @@ tdl.primitives.reorientDirections = function(array, matrix) {
  * names that start with 'position', 'normal', 'tangent',
  * 'binormal'
  *
- * @param {!Object.<string, !tdl.primitive.AttribBuffer>} arrays
+ * @param {Object.<string, tdl.primitives.AttribBuffer>} arrays
  *        The arrays to remap.
- * @param {!tdl.math.Matrix4} matrix The matrix to remap by
+ * @param {tdl.math.Matrix4} matrix The matrix to remap by
  */
 tdl.primitives.reorient = function(arrays, matrix) {
   for (var array in arrays) {
@@ -252,12 +303,12 @@ tdl.primitives.reorient = function(arrays, matrix) {
 /**
  * Creates tangents and normals.
  *
- * @param {!AttibArray} positionArray Positions
- * @param {!AttibArray} normalArray Normals
- * @param {!AttibArray} normalMapUVArray UVs for the normal map.
- * @param {!AttibArray} triangles The indicies of the trianlges.
- * @returns {!{tangent: {!AttribArray},
- *     binormal: {!AttribArray}}
+ * @param {tdl.primitives.AttibBuffer} positionArray Positions
+ * @param {tdl.primitives.AttibBuffer} normalArray Normals
+ * @param {tdl.primitives.AttibBuffer} normalMapUVArray UVs for the normal map.
+ * @param {tdl.primitives.AttibBuffer} triangles The indicies of the trianlges.
+ * @return {{tangent: {tdl.primitives.AttribBuffer}, binormal:
+ *           {tdl.primitives.AttribBuffer}}
  */
 tdl.primitives.createTangentsAndBinormals = function(
     positionArray, normalArray, normalMapUVArray, triangles) {
@@ -388,7 +439,7 @@ tdl.primitives.createTangentsAndBinormals = function(
 /**
  * Adds tangents and binormals.
  *
- * @param {!Object.<string,!AttibArray>} arrays Arrays containing position,
+ * @param {Object.<string,tdl.primitives.AttribBuffer>} arrays Arrays containing position,
  *        normal and texCoord.
  */
 tdl.primitives.addTangentsAndBinormals = function(arrays) {
@@ -402,6 +453,13 @@ tdl.primitives.addTangentsAndBinormals = function(arrays) {
   return arrays;
 };
 
+/**
+ * Clones a set of arrays
+ * @param {Object.<string,tdl.primitives.AttribBuffer>} arrays
+ *        Arrays to clone.
+ * @return {Object.<string,tdl.primitives.AttribBuffer>}
+ *        new arrays.
+ */
 tdl.primitives.clone = function(arrays) {
   var newArrays = { };
   for (var array in arrays) {
@@ -413,8 +471,10 @@ tdl.primitives.clone = function(arrays) {
 /**
  * Concats 2 or more sets of arrays. Assumes each set of arrays has arrays that
  * match the other sets.
- * @param {!Array<!Object.<string, !AttribBuffer>>} arrays Arrays to concat
- * @return {!Object.<string, !AttribBuffer>} concatenated result.
+ * @param {Array.<Object.<string, tdl.primitives.AttribBuffer>>}
+ *        arrays Arrays to concat
+ * @return {Object.<string, tdl.primitives.AttribBuffer>}
+ *         concatenated result.
  */
 tdl.primitives.concat = function(arrayOfArrays) {
   var names = {};
@@ -468,14 +528,16 @@ tdl.primitives.concat = function(arrayOfArrays) {
 };
 
 /**
- * Same as tdl.primitives.concat except this one returns an array
- * of arrays if the models have indices. This is because WebGL can only handle
- * 16bit indices (ie, < 65536) So, as it is concatenating, if the data would
- * make indices > 65535 it starts a new set of arrays.
+ * Same as `tdl.primitives.concat` except this one returns an
+ * array of arrays if the models have indices. This is because
+ * WebGL can only handle 16bit indices (ie, < 65536) So, as it
+ * is concatenating, if the data would make indices > 65535 it
+ * starts a new set of arrays.
  *
- * @param {!Array<!Object.<string, !AttribBuffer>>} arrays Arrays to concat
- * @return {!{arrays:{!Array<{!Object.<string, !AttribBuffer>>,
- *     instances:{!Array<{firstVertex:number, numVertices:number, arrayIndex:
+ * @param {Array.<Object.<string, tdl.primitives.AttribBuffer>>}
+ *        arrays Arrays to concat
+ * @return {{arrays:{Object.<string, AttribBuffer>,
+ *     instances:{Array<{firstVertex:number, numVertices:number, arrayIndex:
  *     number}>}} object result.
  */
 //
@@ -518,8 +580,8 @@ tdl.primitives.concatLarge = function(arrayOfArrays) {
 
 /**
  * Applies planar UV mapping in the XZ plane.
- * @param {!AttribBuffer} positions The positions
- * @param {!AttribBuffer} texCoords The texCoords
+ * @param {tdl.primitives.AttribBuffer} positions The positions
+ * @param {tdl.primitives.AttribBuffer} texCoords The texCoords
  */
 tdl.primitives.applyPlanarUVMapping = function(positions, texCoords) {
   // compute the extents
@@ -536,44 +598,21 @@ tdl.primitives.applyPlanarUVMapping = function(positions, texCoords) {
 };
 
 /**
- * Takes a bunch of instances of geometry and converts them
- * to 1 or more geometries that represent all the instances.
- *
- * In other words, if make a cube
- *
- *    var cube = tdl.primitives.createCube(1);
- *
- * And you put 4 of those in an array
- *
- *    var instances = [cube, cube, cube, cube]
- *
- * Then if you call this function it will return a mesh that contains
- * all 4 cubes.  it
- *
- * @author gman (4/19/2011)
- *
- * @param instances
- */
-tdl.primitives.expandInstancesToGeometry = function(instances) {
-
-};
-
-/**
  * Creates sphere vertices.
  * The created sphere has position, normal and uv streams.
  *
  * @param {number} radius radius of the sphere.
  * @param {number} subdivisionsAxis number of steps around the sphere.
  * @param {number} subdivisionsHeight number of vertically on the sphere.
- * @param {number} opt_startLatitudeInRadians where to start the
- *     top of the sphere. Default = 0.
- * @param {number} opt_endLatitudeInRadians Where to end the
+ * @param {number?} opt_startLatitudeInRadians where to start
+ *     the top of the sphere. Default = 0.
+ * @param {number?} opt_endLatitudeInRadians Where to end the
  *     bottom of the sphere. Default = Math.PI.
- * @param {number} opt_startLongitudeInRadians where to start
+ * @param {number?} opt_startLongitudeInRadians where to start
  *     wrapping the sphere. Default = 0.
- * @param {number} opt_endLongitudeInRadians where to end
+ * @param {number?} opt_endLongitudeInRadians where to end
  *     wrapping the sphere. Default = 2 * Math.PI.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created plane vertices.
  */
 tdl.primitives.createSphere = function(
@@ -662,9 +701,10 @@ tdl.primitives.createSphere = function(
  * @param {number} thickness The thickness of the cresent.
  * @param {number} subdivisionsDown number of steps around the sphere.
  * @param {number} subdivisionsThick number of vertically on the sphere.
- * @param {number} opt_startOffset Where to start arc Default 0.
- * @param {number} opt_endOffset Where to end arg Default 1.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @param {number?} opt_startOffset Where to start arc Default
+ *        0.
+ * @param {number?} opt_endOffset Where to end arg Default 1.
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created plane vertices.
  */
 tdl.primitives.createCresent = function(
@@ -763,7 +803,7 @@ tdl.primitives.createCresent = function(
  * The created line has position and normal.
  *
  * @param {Array.<number>} coords coords of the line.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created line vertices.
  */
 tdl.primitives.createLine = function(coords) {
@@ -810,9 +850,9 @@ tdl.primitives.createLine = function(coords) {
  * @param {number} depth Depth of the plane.
  * @param {number} subdivisionsWidth Number of steps across the plane.
  * @param {number} subdivisionsDepth Number of steps down the plane.
- * @param {!o3djs.math.Matrix4} opt_matrix A matrix by which to multiply
- *     all the vertices.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @param {(tdl.math.Matrix4|tdl.fast.Matrix4)?} opt_matrix A
+ *     matrix by which to multiply all the vertices.
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created plane vertices.
  */
 tdl.primitives.createPlane = function(
@@ -874,7 +914,7 @@ tdl.primitives.createPlane = function(
 /**
  * Array of the indices of corners of each face of a cube.
  * @private
- * @type {!Array.<!Array.<number>>}
+ * @type {Array.<Array.<number>>}
  */
 tdl.primitives.CUBE_FACE_INDICES_ = [
   [3, 7, 5, 1], // right
@@ -890,7 +930,7 @@ tdl.primitives.CUBE_FACE_INDICES_ = [
  * cube will be created around the origin. (-size / 2, size / 2)
  *
  * @param {number} size Width, height and depth of the cube.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created plane vertices.
  */
 tdl.primitives.createCube = function(size) {
@@ -963,7 +1003,7 @@ tdl.primitives.createCube = function(size) {
  * the vertex shader to distort using U as an angle for fun effects.
  *
  * @param {number} size Width, height and depth of the cube.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created plane vertices.
  */
 tdl.primitives.createFlaredCube = function(innerSize, outerSize, layerCount) {
@@ -1054,10 +1094,10 @@ tdl.primitives.createFlaredCube = function(innerSize, outerSize, layerCount) {
  *     truncated cone.
  * @param {number} verticalSubdivisions The number of subdivisions down the
  *     truncated cone.
- * @param {boolean} opt_topCap Create top cap. Default = true.
- * @param {boolean} opt_bottomCap Create bottom cap. Default =
+ * @param {boolean?} opt_topCap Create top cap. Default = true.
+ * @param {boolean?} opt_bottomCap Create bottom cap. Default =
  *        true.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created plane vertices.
  */
 tdl.primitives.createTruncatedCone = function(
@@ -1159,10 +1199,10 @@ tdl.primitives.createTruncatedCone = function(
  *     cylinder.
  * @param {number} verticalSubdivisions The number of subdivisions down the
  *     cylinder.
- * @param {boolean} opt_topCap Create top cap. Default = true.
- * @param {boolean} opt_bottomCap Create bottom cap. Default =
+ * @param {boolean?} opt_topCap Create top cap. Default = true.
+ * @param {boolean?} opt_bottomCap Create bottom cap. Default =
  *        true.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created plane vertices.
  */
 tdl.primitives.createCylinder = function(
@@ -1192,9 +1232,11 @@ tdl.primitives.createCylinder = function(
  *     torus.
  * @param {number} bodySubdivisions The number of subdivisions around the
  *     body torus.
- * @param {boolean} opt_startAngle start angle in radians. Default = 0.
- * @param {boolean} opt_endAngle end angle in radians. Default = Math.PI * 2.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @param {boolean?} opt_startAngle start angle in radians.
+ *        Default = 0.
+ * @param {boolean?} opt_endAngle end angle in radians. Default
+ *        = Math.PI * 2.
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created torus vertices.
  */
 tdl.primitives.createTorus = function(
@@ -1288,11 +1330,11 @@ tdl.primitives.createTorus = function(
  * @param {number} radius Radius of the ground plane.
  * @param {number} divisions Number of triangles in the ground plane
  *                 (at least 3).
- * @param {number} opt_stacks Number of radial divisions (default=1).
- * @param {number} opt_innerRadius. Default 0.
- * @param {number} opt_stackPower Power to raise stack size to for decreasing
+ * @param {number?} opt_stacks Number of radial divisions (default=1).
+ * @param {number?} opt_innerRadius. Default 0.
+ * @param {number?} opt_stackPower Power to raise stack size to for decreasing
  *                 width.
- * @return {!Object.<string, !tdl.primitives.AttribBuffer>} The
+ * @return {Object.<string, tdl.primitives.AttribBuffer>} The
  *         created vertices.
  */
 tdl.primitives.createDisc = function(

@@ -127,10 +127,7 @@ tdl.models.Model.prototype.setBuffers = function(arrays, opt_newBuffers) {
 
 tdl.models.Model.prototype.applyUniforms_ = function(opt_uniforms) {
   if (opt_uniforms) {
-    var program = this.program;
-    for (var uniform in opt_uniforms) {
-      program.setUniform(uniform, opt_uniforms[uniform]);
-    }
+    this.program.applyUniforms(opt_uniforms);
   }
 };
 

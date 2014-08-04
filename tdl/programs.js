@@ -45,11 +45,11 @@ define(
       Strings,
       WebGL) {
 
+tdl.provide('tdl.programs');
 /**
  * A module for programs.
  * @namespace
  */
-tdl.provide('tdl.programs');
 tdl.programs = tdl.programs || {};
 
 /**
@@ -83,7 +83,7 @@ tdl.programs.makeProgramId = function(vertexShader, fragmentShader) {
  * Loads a program.
  * @param {string} vertexShader The vertex shader source.
  * @param {string} fragmentShader The fragment shader source.
- * @param {!function(error)) opt_asyncCallback. Called with
+ * @param {function(error)) opt_asyncCallback. Called with
  *        undefined if success or string if failure.
  * @return {tdl.programs.Program} The created program.
  */
@@ -114,7 +114,7 @@ tdl.programs.loadProgram = function(vertexShader, fragmentShader, opt_asyncCallb
  * @constructor
  * @param {string} vertexShader The vertex shader source.
  * @param {string} fragmentShader The fragment shader source.
- * @param {!function(error)) opt_asyncCallback. Called with
+ * @param {function(error)) opt_asyncCallback. Called with
  *        undefined if success or string if failure.
  */
 tdl.programs.Program = function(vertexShader, fragmentShader, opt_asyncCallback) {
@@ -129,10 +129,11 @@ tdl.programs.Program = function(vertexShader, fragmentShader, opt_asyncCallback)
 
   /**
    * Loads a shader.
-   * @param {!WebGLContext} gl The WebGLContext to use.
+   * @private
+   * @param {WebGLRenderingContext} gl The WebGLRenderingContext to use.
    * @param {string} shaderSource The shader source.
    * @param {number} shaderType The type of shader.
-   * @return {!WebGLShader} The created shader.
+   * @return {WebGLShader} The created shader.
    */
   var loadShader = function(gl, shaderSource, shaderType) {
     shaderId = shaderSource + shaderType;
@@ -172,10 +173,11 @@ tdl.programs.Program = function(vertexShader, fragmentShader, opt_asyncCallback)
   /**
    * Loads shaders from script tags, creates a program, attaches the shaders and
    * links.
-   * @param {!WebGLContext} gl The WebGLContext to use.
+   * @private
+   * @param {WebGLRenderingContext} gl The WebGLRenderingContext to use.
    * @param {string} vertexShader The vertex shader.
    * @param {string} fragmentShader The fragment shader.
-   * @return {!WebGLProgram} The created program.
+   * @return {WebGLProgram} The created program.
    */
   var loadProgram = function(gl, vertexShader, fragmentShader) {
     var e;
@@ -201,8 +203,9 @@ tdl.programs.Program = function(vertexShader, fragmentShader, opt_asyncCallback)
 
   /**
    * Links a WebGL program, throws if there are errors.
-   * @param {!WebGLContext} gl The WebGLContext to use.
-   * @param {!WebGLProgram} program The WebGLProgram to link.
+   * @private
+   * @param {WebGLRenderingContext} gl The WebGLRenderingContext to use.
+   * @param {WebGLProgram} program The WebGLProgram to link.
    */
   var linkProgram = function(gl, program) {
     // Link the program
@@ -446,6 +449,9 @@ tdl.programs.init_ = function() {
   }
 };
 
+/**
+ * Uses the current program (calls `gl.useProgram`)
+ */
 tdl.programs.Program.prototype.use = function() {
   gl.useProgram(this.program);
 };
@@ -463,11 +469,28 @@ tdl.programs.Program.prototype.use = function() {
 //  tdl.log(msg + name + ": " + str);
 //}
 
+/**
+ * Sets a uniform to a value
+ * @param {string} uniform name of uniform to set
+ * @param {*} value value that is compatible with type of
+ *        uniform.
+ */
 tdl.programs.Program.prototype.setUniform = function(uniform, value) {
   var func = this.uniform[uniform];
   if (func) {
     //dumpValue("SET UNI:", uniform, value);
     func(value);
+  }
+};
+
+/**
+ * Sets a bunch of uniforms
+ * @param {Object.<string, *>} uniforms uniform name value
+ *        pairs.
+ */
+tdl.programs.Program.prototype.applyUniforms = function(uniforms) {
+  for (var uniform in uniforms) {
+    this.setUniform(uniform, uniforms[uniform]);
   }
 };
 
