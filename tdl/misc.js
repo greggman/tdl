@@ -48,7 +48,7 @@ tdl.misc = tdl.misc || {};
  * JSON requires property names be quoted, js object literal
  * does not.
  *
- * @example:
+ * @example
  * var o = tdl.misc.parseUnquoteJSObjectString('{a:"b",c:123}');
  * @param {string} str js object literal string.
  */

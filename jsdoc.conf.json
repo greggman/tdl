@@ -1,9 +1,8 @@
 {
 	"tags"      : {
-		"allowUnknownTags" : true
+		"allowUnknownTags" : false
 	},
 	"plugins"   : ["plugins/markdown"],
-
 	"templates" : {
 		"cleverLinks"           : false,
 		"monospaceLinks"        : false,

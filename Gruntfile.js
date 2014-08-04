@@ -10,6 +10,7 @@ module.exports = function(grunt) {
           destination: 'docs/gen',
           configure: 'jsdoc.conf.json',
           template: 'node_modules/ink-docstrap/template',
+          private: false,
         },
       },
     },

@@ -46,11 +46,12 @@ tdl.loader = tdl.loader || {};
 
 /**
  * @callback Loader~Finished
+ * @memberOf tdl.loader
  */
 /**
  * A simple Loader class to call some callback when everything has loaded.
  * @constructor
- * @param {Loader~Finished} onFinished Function to call when
+ * @param {tdl.loader.Loader~Finished} onFinished Function to call when
  *        final item has loaded.
  */
 tdl.loader.Loader = function(onFinished)  {
@@ -79,7 +80,7 @@ tdl.loader.Loader = function(onFinished)  {
  * The loader guarantees that myFinishedCallback will be called after
  * all the items have been loaded.
  *
-* @param {Loader~Finished} onFinished Function to call when
+* @param {tdl.loader.Loader~Finished} onFinished Function to call when
 *        final item has loaded.
 * @return {tdl.loader.Loader} A Loader Object.
  */
@@ -114,7 +115,7 @@ tdl.loader.Loader.prototype.loadTextFile = function(url, onTextLoaded) {
 /**
  * Creates a loader that is tracked by this loader so that when the new loader
  * is finished it will be reported to this loader.
- * @param {Loader~Finished} onFinished Function
+ * @param {tdl.loader.Loader~Finished} onFinished Function
  *      to be called when everything loaded with this loader has
  *      finished.
  * @return {tdl.loader.Loader} The new Loader.

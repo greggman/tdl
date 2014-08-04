@@ -36,11 +36,11 @@
  */
 define(['./base-rs', './math', './shader'], function(BaseRS, Maths, Shader) {
 
+tdl.provide('tdl.particles');
 /**
- * A Module with various io functions and classes.
+ * A Module with particle stuff
  * @namespace
  */
-tdl.provide('tdl.particles');
 tdl.particles = tdl.particles || {};
 
 /**
@@ -58,7 +58,7 @@ tdl.particles.ParticleStateIds = {
 /**
  * Vertex and fragment program strings for 2D and 3D particles.
  * @private
- * @type {!Array.<string>}
+ * @type {string[]}
  */
 tdl.particles.SHADER_STRINGS = [
   // 3D (oriented) vertex shader
@@ -248,7 +248,7 @@ tdl.particles.SHADER_STRINGS = [
 /**
  * Corner values.
  * @private
- * @type {!Array.<!Array.<number>>}
+ * @type {Array.<number[]>}
  */
 tdl.particles.CORNERS_ = [
   [-0.5, -0.5],
@@ -257,23 +257,40 @@ tdl.particles.CORNERS_ = [
   [-0.5, +0.5]];
 
 /**
+ * A function that returns the number of seconds elapsed. A
+ * function, returning seconds elapsed, to be the time source
+ * for the emitter.
+ * @callback Particle~Clock
+ * @memberOf tdl.particles
+ * @return {number} the time.
+ */
+
+/**
+ * @callback Particle~Random
+ * @memberOf tdl.particles
+ * @return {number} random number between 0 and 1
+ */
+
+/**
  * Creates a particle system.
+ *
  * You only need one of these to run multiple emitters of different types
  * of particles.
+ *
  * @constructor
- * @param {!WebGLRenderingContext} gl The WebGLRenderingContext
+ * @param {WebGLRenderingContext} gl The WebGLRenderingContext
  *     into which the particles will be rendered.
- * @param {!function(): number} opt_clock A function that returns the
- *     number of seconds elapsed. The "time base" does not matter; it is
- *     corrected for internally in the particle system. If not supplied,
- *     wall clock time defined by the JavaScript Date API will be used.
- * @param {!function(): number} opt_randomFunction A function that returns
- *     a random number between 0.0 and 1.0. This allows you to pass in a
- *     pseudo random function if you need particles that are reproducible.
+ * @param {tdl.particle.Particle~Clock?} opt_clock A function to
+ *        be the clock for the emitter.
+ * @param {tdl.particles.Particle~Random?} opt_randomFunction A function that
+ *     returns a random number between 0.0 and 1.0. This allows
+ *     you to pass in a pseudo random function if you need
+ *     particles that are reproducible.
  */
-tdl.particles.ParticleSystem = function(gl,
-                                          opt_clock,
-                                          opt_randomFunction) {
+tdl.particles.ParticleSystem = function(
+    gl,
+    opt_clock,
+    opt_randomFunction) {
   this.gl = gl;
 
   // Entities which can be drawn -- emitters or OneShots
@@ -324,8 +341,6 @@ tdl.particles.ParticleSystem = function(gl,
     }
   }
   var colorTexture = this.createTextureFromFloats(8, 8, pixels);
-  // Note difference in texture size from O3D sample to avoid NPOT
-  // texture creation
   var rampTexture = this.createTextureFromFloats(2, 1, [1, 1, 1, 1,
                                                         1, 1, 1, 0]);
 
@@ -348,19 +363,19 @@ tdl.particles.ParticleSystem = function(gl,
 
   /**
    * The shaders for particles.
-   * @type {!Array.<!Shader>}
+   * @type {tdl.shader.Shader[]}
    */
   this.shaders = shaders;
 
   /**
    * The default color texture for particles.
-   * @type {!o3d.Texture2D}
+   * @type {tdl.textures.Texture2D}
    */
   this.defaultColorTexture = colorTexture;
 
   /**
    * The default ramp texture for particles.
-   * @type {!o3d.Texture2D}
+   * @type {tdl.textures.Texture2D}
    */
   this.defaultRampTexture = rampTexture;
 };
@@ -376,6 +391,11 @@ tdl.particles.createDefaultClock_ = function(particleSystem) {
 /**
  * Creates an OpenGL texture from an array of floating point values.
  * @private
+ * @param {number} width width in pixels
+ * @param {number} height height in pixels
+ * @param {number[]} pixels pixels in rgba units where each
+ *        value is in the 0 to 1 range.
+ * @param {WebGLTexture?} opt_texture texture to use.
  */
 tdl.particles.ParticleSystem.prototype.createTextureFromFloats = function(width, height, pixels, opt_texture) {
   var gl = this.gl;
@@ -410,33 +430,31 @@ tdl.particles.ParticleSystem.prototype.createTextureFromFloats = function(width,
  * NOTE: For all particle functions you can specific a ParticleSpec as a
  * Javascript object, only specifying the fields that you care about.
  *
- * <pre>
- * emitter.setParameters({
- *   numParticles: 40,
- *   lifeTime: 2,
- *   timeRange: 2,
- *   startSize: 50,
- *   endSize: 90,
- *   positionRange: [10, 10, 10],
- *   velocity:[0, 0, 60], velocityRange: [15, 15, 15],
- *   acceleration: [0, 0, -20],
- *   spinSpeedRange: 4}
- * );
- * </pre>
+ *     emitter.setParameters({
+ *       numParticles: 40,
+ *       lifeTime: 2,
+ *       timeRange: 2,
+ *       startSize: 50,
+ *       endSize: 90,
+ *       positionRange: [10, 10, 10],
+ *       velocity:[0, 0, 60], velocityRange: [15, 15, 15],
+ *       acceleration: [0, 0, -20],
+ *       spinSpeedRange: 4}
+ *     );
  *
  * Many of these parameters are in pairs. For paired paramters each particle
  * specfic value is set like this
  *
- * particle.field = value + Math.random() - 0.5 * valueRange * 2;
+ *     particle.field = value + Math.random() - 0.5 * valueRange * 2;
  *
  * or in English
  *
- * particle.field = value plus or minus valueRange.
+ *     particle.field = value plus or minus valueRange.
  *
  * So for example, if you wanted a value from 10 to 20 you'd pass 15 for value
  * and 5 for valueRange because
  *
- * 15 + or - 5  = (10 to 20)
+ *     15 + or - 5  = (10 to 20)
  *
  * @constructor
  */
@@ -525,37 +543,37 @@ tdl.particles.ParticleSpec = function() {
 
   /**
    * The starting position of a particle in local space.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.position = [0, 0, 0];
 
   /**
    * The starting position range.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.positionRange = [0, 0, 0];
 
   /**
    * The velocity of a paritcle in local space.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.velocity = [0, 0, 0];
 
   /**
    * The velocity range.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.velocityRange = [0, 0, 0];
 
   /**
    * The acceleration of a particle in local space.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.acceleration = [0, 0, 0];
 
   /**
    * The accleration range.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.accelerationRange = [0, 0, 0];
 
@@ -585,25 +603,25 @@ tdl.particles.ParticleSpec = function() {
 
   /**
    * The color multiplier of a particle.
-   * @type {!tdl.math.Vector4}
+   * @type {tdl.math.Vector4}
    */
   this.colorMult = [1, 1, 1, 1];
 
   /**
    * The color multiplier range.
-   * @type {!tdl.math.Vector4}
+   * @type {tdl.math.Vector4}
    */
   this.colorMultRange = [0, 0, 0, 0];
 
   /**
    * The velocity of all paritcles in world space.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.worldVelocity = [0, 0, 0];
 
   /**
    * The acceleration of all paritcles in world space.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.worldAcceleration = [0, 0, 0];
 
@@ -615,20 +633,19 @@ tdl.particles.ParticleSpec = function() {
 
   /**
    * The orientation of a particle. This is only used if billboard is false.
-   * @type {!tdl.quaternions.Quaternion}
+   * @type {tdl.quaternions.Quaternion}
    */
   this.orientation = [0, 0, 0, 1];
 };
 
 /**
  * Creates a particle emitter.
- * @param {!o3d.Texture} opt_texture The texture to use for the particles.
- *     If you don't supply a texture a default is provided.
- * @param {!function(): number} opt_clock
-
- A ParamFloat to be the clock for
- *     the emitter.
- * @return {!tdl.particles.ParticleEmitter} The new emitter.
+ * @param {tdl.textures.Texture?} opt_texture The texture to use
+ *     for the particles. If you don't supply a texture a
+ *     default is provided.
+ * @param {tdl.particles.Particle~Clock?} opt_clock A function to be the clock
+ *        for the emitter.
+ * @return {tdl.particles.ParticleEmitter} The new emitter.
  */
 tdl.particles.ParticleSystem.prototype.createParticleEmitter =
     function(opt_texture, opt_clock) {
@@ -638,23 +655,33 @@ tdl.particles.ParticleSystem.prototype.createParticleEmitter =
 };
 
 /**
+ * A function that is called for each particle to allow it's
+ * parameters to be adjusted per particle. The number is the
+ * index of the particle being created, in other words, if numParticles is
+ * 20 this value will be 0 to 19. The ParticleSpec is a spec for this
+ * particular particle. You can set any per particle value
+ * before returning
+ * @callback Particle~Setup
+ * @memberOf tdl.particles
+ * @param {number} index of particle
+ * @param {tdl.particles.ParticleSpec} spec a particle spec for
+ *        this particle.
+ */
+
+/**
  * Creates a Trail particle emitter.
  * You can use this for jet exhaust, etc...
- * @param {!o3d.Transform} parent Transform to put emitter on.
  * @param {number} maxParticles Maximum number of particles to appear at once.
- * @param {!tdl.particles.ParticleSpec} parameters The parameters used to
+ * @param {tdl.particles.ParticleSpec} parameters The parameters used to
  *     generate particles.
- * @param {!o3d.Texture} opt_texture The texture to use for the particles.
- *     If you don't supply a texture a default is provided.
- * @param {!function(number, !tdl.particles.ParticleSpec): void}
- *     opt_perParticleParamSetter A function that is called for each particle to
- *     allow it's parameters to be adjusted per particle. The number is the
- *     index of the particle being created, in other words, if numParticles is
- *     20 this value will be 0 to 19. The ParticleSpec is a spec for this
- *     particular particle. You can set any per particle value before returning.
- * @param {!function(): number} opt_clock A function to be the clock for
- *     the emitter.
- * @return {!tdl.particles.Trail} A Trail object.
+ * @param {tdl.textures.Texture?} opt_texture The texture to
+ *     use for the particles. If you don't supply a texture a
+ *     default is provided.
+ * @param {tdl.particles.Particle~Setup?} opt_perParticleParamSetter function
+ *        to setup particles
+ * @param {tdl.particles.Particle~Clock?} opt_clock A function to be the clock
+ *        for the emitter.
+ * @return {tdl.particles.Trail} A Trail object.
  */
 tdl.particles.ParticleSystem.prototype.createTrail = function(
     maxParticles,
@@ -679,9 +706,12 @@ tdl.particles.ParticleSystem.prototype.createTrail = function(
  * enabling, array buffer binding, element array buffer binding, the
  * textures bound to texture units 0 and 1, and which is the active
  * texture unit.
- * @param {!Matrix4x4} viewProjection The viewProjection matrix.
- * @param {!Matrix4x4} world The world matrix.
- * @param {!Matrix4x4} viewInverse The viewInverse matrix.
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} viewProjection The
+ *        viewProjection matrix.
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} world The world
+ *        matrix.
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} viewInverse The
+ *        viewInverse matrix.
  */
 tdl.particles.ParticleSystem.prototype.draw = function(viewProjection, world, viewInverse) {
   // Update notion of current time
@@ -723,18 +753,17 @@ tdl.particles.LAST_IDX = 28;
  * A ParticleEmitter
  * @private
  * @constructor
- * @param {!tdl.particles.ParticleSystem} particleSystem The particle system
+ * @param {tdl.particles.ParticleSystem} particleSystem The particle system
  *     to manage this emitter.
- * @param {!o3d.Texture} opt_texture The texture to use for the particles.
- *     If you don't supply a texture a default is provided.
- * @param {!function(): number} opt_clock (optional) A function that
- *     returns the number of seconds elapsed.
- A function, returning
- *     seconds elapsed, to be the time source for the emitter.
+ * @param {tdl.textures.Texture?} opt_texture The texture to use
+ *     for the particles. If you don't supply a texture a
+ *     default is provided.
+ * @param {tdl.particles.Particle~Clock?} opt_clock Clock function.
  */
-tdl.particles.ParticleEmitter = function(particleSystem,
-                                           opt_texture,
-                                           opt_clock) {
+tdl.particles.ParticleEmitter = function(
+    particleSystem,
+    opt_texture,
+    opt_clock) {
   opt_clock = opt_clock || particleSystem.timeSource_;
 
   this.gl = particleSystem.gl;
@@ -764,21 +793,21 @@ tdl.particles.ParticleEmitter = function(particleSystem,
 
   /**
    * The particle system managing this emitter.
-   * @type {!tdl.particles.ParticleSystem}
+   * @type {tdl.particles.ParticleSystem}
    */
   this.particleSystem = particleSystem;
 
   /**
    * A function that is the source for the time for this emitter.
    * @private
-   * @type {!function(): number}
+   * @type {function(): number}
    */
   this.timeSource_ = opt_clock;
 
   /**
    * The translation for this ParticleEmitter. (FIXME: generalize.)
    * @private
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.translation_ = [0, 0, 0];
 
@@ -788,7 +817,7 @@ tdl.particles.ParticleEmitter = function(particleSystem,
 
 /**
  * Sets the world translation for this ParticleEmitter.
- * @param {!tdl.math.Vector3} translation The translation for this emitter.
+ * @param {tdl.math.Vector3} translation The translation for this emitter.
  */
 tdl.particles.ParticleEmitter.prototype.setTranslation = function(x, y, z) {
   this.translation_[0] = x;
@@ -799,7 +828,8 @@ tdl.particles.ParticleEmitter.prototype.setTranslation = function(x, y, z) {
 /**
  * Sets the blend state for the particles.
  * You can use this to set the emitter to draw with BLEND, ADD, SUBTRACT, etc.
- * @param {ParticleStateIds} stateId The state you want.
+ * @param {tdl.particles.ParticleStateIds} stateId The state you
+ *        want.
  */
 tdl.particles.ParticleEmitter.prototype.setState = function(stateId) {
   this.blendFunc_ = this.particleSystem.blendFuncs_[stateId];
@@ -811,17 +841,16 @@ tdl.particles.ParticleEmitter.prototype.setState = function(stateId) {
  * starts it is multiplied by the first color, as it ages to progressed
  * through the colors in the ramp.
  *
- * <pre>
- * particleEmitter.setColorRamp([
- *   1, 0, 0, 1,    // red
- *   0, 1, 0, 1,    // green
- *   1, 0, 1, 0]);  // purple but with zero alpha
- * </pre>
+ *     particleEmitter.setColorRamp([
+ *       1, 0, 0, 1,    // red
+ *       0, 1, 0, 1,    // green
+ *       1, 0, 1, 0,    // purple but with zero alpha
+ *     ]);
  *
  * The code above sets the particle to start red, change to green then
  * fade out while changing to purple.
  *
- * @param {!Array.<number>} colorRamp An array of color values in
+ * @param {number[]} colorRamp An array of color values in
  *     the form RGBA.
  */
 tdl.particles.ParticleEmitter.prototype.setColorRamp = function(colorRamp) {
@@ -829,8 +858,6 @@ tdl.particles.ParticleEmitter.prototype.setColorRamp = function(colorRamp) {
   if (width % 1 != 0) {
     throw 'colorRamp must have multiple of 4 entries';
   }
-
-  var gl = this.gl;
 
   if (this.rampTexture_ == this.particleSystem.defaultRampTexture) {
     this.rampTexture_ = null;
@@ -841,7 +868,7 @@ tdl.particles.ParticleEmitter.prototype.setColorRamp = function(colorRamp) {
 
 /**
  * Validates and adds missing particle parameters.
- * @param {!tdl.particles.ParticleSpec} parameters The parameters to validate.
+ * @param {tdl.particles.ParticleSpec} parameters The parameters to validate.
  */
 tdl.particles.ParticleEmitter.prototype.validateParameters = function(
     parameters) {
@@ -863,14 +890,10 @@ tdl.particles.ParticleEmitter.prototype.validateParameters = function(
  * @private
  * @param {number} firstParticleIndex Index of first particle to create.
  * @param {number} numParticles The number of particles to create.
- * @param {!tdl.particles.ParticleSpec} parameters The parameters for the
+ * @param {tdl.particles.ParticleSpec} parameters The parameters for the
  *     emitters.
- * @param {!function(number, !tdl.particles.ParticleSpec): void}
- *     opt_perParticleParamSetter A function that is called for each particle to
- *     allow it's parameters to be adjusted per particle. The number is the
- *     index of the particle being created, in other words, if numParticles is
- *     20 this value will be 0 to 19. The ParticleSpec is a spec for this
- *     particular particle. You can set any per particle value before returning.
+ * @param {tdl.particles.Particle~Setup?} opt_perParticleParamSetter function
+ *        to setup particles.
  */
 tdl.particles.ParticleEmitter.prototype.createParticles_ = function(
     firstParticleIndex,
@@ -1034,25 +1057,21 @@ tdl.particles.ParticleEmitter.prototype.allocateParticles_ = function(
  * of particle parameters. For each particle a specfic value is
  * set like this
  *
- * particle.field = value + Math.random() - 0.5 * valueRange * 2;
+ *     particle.field = value + Math.random() - 0.5 * valueRange * 2;
  *
  * or in English
  *
- * particle.field = value plus or minus valueRange.
+ *     particle.field = value plus or minus valueRange.
  *
  * So for example, if you wanted a value from 10 to 20 you'd pass 15 for value
  * and 5 for valueRange because
  *
- * 15 + or - 5  = (10 to 20)
+ *     15 + or - 5  = (10 to 20)
  *
- * @param {!tdl.particles.ParticleSpec} parameters The parameters for the
+ * @param {tdl.particles.ParticleSpec} parameters The parameters for the
  *     emitters.
- * @param {!function(number, !tdl.particles.ParticleSpec): void}
- *     opt_perParticleParamSetter A function that is called for each particle to
- *     allow it's parameters to be adjusted per particle. The number is the
- *     index of the particle being created, in other words, if numParticles is
- *     20 this value will be 0 to 19. The ParticleSpec is a spec for this
- *     particular particle. You can set any per particle value before returning.
+ * @param {tdl.particles.Particle~Setup?} opt_perParticleParamSetter function
+ *        to setup particles.
  */
 tdl.particles.ParticleEmitter.prototype.setParameters = function(
     parameters,
@@ -1069,6 +1088,15 @@ tdl.particles.ParticleEmitter.prototype.setParameters = function(
       opt_perParticleParamSetter);
 };
 
+/**
+ * Draws the particles for this ParticleEmitter
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} world The world
+ *        matrix.
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} viewProjection The
+ *        viewProjection matrix.
+ * @param {number} timeOffset time offset to compute state of
+ *        particles.
+ */
 tdl.particles.ParticleEmitter.prototype.draw = function(world, viewProjection, timeOffset) {
   if (!this.createdParticles_) {
     return;
@@ -1180,7 +1208,7 @@ tdl.particles.ParticleEmitter.prototype.draw = function(world, viewProjection, t
 /**
  * Creates a OneShot particle emitter instance.
  * You can use this for dust puffs, explosions, fireworks, etc...
- * @return {!tdl.particles.OneShot} A OneShot object.
+ * @return {tdl.particles.OneShot} A OneShot object.
  */
 tdl.particles.ParticleEmitter.prototype.createOneShot = function() {
   return new tdl.particles.OneShot(this);
@@ -1194,16 +1222,15 @@ tdl.particles.ParticleEmitter.prototype.createOneShot = function() {
  * or more OneShots.
  * @private
  * @constructor
- * @param {!tdl.particles.ParticleEmitter} emitter The emitter to use for the
+ * @param {tdl.particles.ParticleEmitter} emitter The emitter to use for the
  *     one shot.
- * @param {!o3d.Transform} opt_parent The parent for this one shot.
  */
 tdl.particles.OneShot = function(emitter) {
   this.emitter_ = emitter;
 
   /**
    * Translation for OneShot.
-   * @type {!tdl.math.Vector3}
+   * @type {tdl.math.Vector3}
    */
   this.world_ = tdl.fast.matrix4.translation(new Float32Array(16), [0, 0, 0]);
   this.tempWorld_ = tdl.fast.matrix4.translation(new Float32Array(16), [0, 0, 0]);
@@ -1226,7 +1253,7 @@ tdl.particles.OneShot = function(emitter) {
  * Note: You must have set the parent either at creation, with setParent, or by
  * passing in a parent here.
  *
- * @param {!tdl.math.Vector3} opt_position The position of the one shot
+ * @param {tdl.math.Vector3} opt_position The position of the one shot
  *     relative to its parent.
  */
 tdl.particles.OneShot.prototype.trigger = function(opt_world) {
@@ -1241,6 +1268,12 @@ tdl.particles.OneShot.prototype.trigger = function(opt_world) {
  * Draws the oneshot.
  *
  * @private
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} world The world
+ *        matrix.
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} viewProjection The
+ *        viewProjection matrix.
+ * @param {number} timeOffset time offset to compute state of
+ *        particles.
  */
 tdl.particles.OneShot.prototype.draw = function(world, viewProjection, timeOffset) {
   if (this.visible_) {
@@ -1253,22 +1286,18 @@ tdl.particles.OneShot.prototype.draw = function(world, viewProjection, timeOffse
  * A type of emitter to use for particle effects that leave trails like exhaust.
  * @constructor
  * @extends {tdl.particles.ParticleEmitter}
- * @param {!tdl.particles.ParticleSystem} particleSystem The particle system
+ * @param {tdl.particles.ParticleSystem} particleSystem The particle system
  *     to manage this emitter.
- * @param {!o3d.Transform} parent Transform to put emitter on.
  * @param {number} maxParticles Maximum number of particles to appear at once.
- * @param {!tdl.particles.ParticleSpec} parameters The parameters used to
+ * @param {tdl.particles.ParticleSpec} parameters The parameters used to
  *     generate particles.
- * @param {!o3d.Texture} opt_texture The texture to use for the particles.
- *     If you don't supply a texture a default is provided.
- * @param {!function(number, !tdl.particles.ParticleSpec): void}
- *     opt_perParticleParamSetter A function that is called for each particle to
- *     allow it's parameters to be adjusted per particle. The number is the
- *     index of the particle being created, in other words, if numParticles is
- *     20 this value will be 0 to 19. The ParticleSpec is a spec for this
- *     particular particle. You can set any per particle value before returning.
- * @param {!function(): number} opt_clock A function to be the clock for
- *     the emitter.
+ * @param {tdl.textures.Texture?} opt_texture The texture to use
+ *     for the particles. If you don't supply a texture a
+ *     default is provided.
+ * @param {tdl.particles.Particle~Setup?} opt_perParticleParamSetter function
+ *        to setup particles.
+ * @param {tdl.particles.Particle~Clock?} opt_clock A function to be the clock
+ *        for the emitter.
  */
 tdl.particles.Trail = function(
     particleSystem,
@@ -1293,7 +1322,7 @@ tdl.base.inherit(tdl.particles.Trail, tdl.particles.ParticleEmitter);
 
 /**
  * Births particles from this Trail.
- * @param {!tdl.math.Vector3} position Position to birth particles at.
+ * @param {tdl.math.Vector3} position Position to birth particles at.
  */
 tdl.particles.Trail.prototype.birthParticles = function(position) {
   var numParticles = this.parameters.numParticles;
@@ -1315,6 +1344,13 @@ tdl.particles.Trail.prototype.birthParticles = function(position) {
   this.birthIndex_ += numParticles;
 };
 
+/**
+ * Manages OneShots
+ * @constructor
+ * @param {tdl.particles.ParticleEmitter} emitter Emitter to
+ *        use.
+ * @param {number} numOneshots Number of one shots to manage.
+ */
 tdl.particles.OneShotManager = function(emitter, numOneshots) {
   this.numOneshots = numOneshots;
   this.oneshotIndex = 0;
@@ -1324,14 +1360,28 @@ tdl.particles.OneShotManager = function(emitter, numOneshots) {
   }
 };
 
+/**
+ * Starts a one shot
+ * @param {tdl.math.Matrix4|tdl.fast.Matrix4} worldMatrix The
+ *        world matrix to start the one shot
+ */
 tdl.particles.OneShotManager.prototype.startOneShot = function(worldMatrix) {
   this.oneshots[this.oneshotIndex].trigger(worldMatrix);
   this.oneshotIndex = (this.oneshotIndex + 1) % this.numOneshots;
 };
 
+/**
+ * Creates a OneShot manager
+ * @param {tdl.particles.ParticleEmitter} emitter Emitter to
+ *        use.
+ * @param {number} numOneshots Number of one shots to manage.
+ * @returns {tdl.particles.OneShotManager} the created
+ *        OneShotManager
+ */
 tdl.particles.createOneShotManager = function(emitter, numOneshots) {
   return new tdl.particles.OneShotManager(emitter, numOneshots);
 };
+
 
 return tdl.particles;
 });
