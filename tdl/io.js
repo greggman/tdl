@@ -35,11 +35,11 @@
  */
 define(['./base-rs'], function(BaseRS) {
 
+tdl.provide('tdl.io');
 /**
  * A Module with various io functions and classes.
  * @namespace
  */
-tdl.provide('tdl.io');
 tdl.io = tdl.io || {};
 
 /**
@@ -56,8 +56,7 @@ tdl.io.createLoadInfo = function(opt_request) {
 /**
  * A class to help with progress reporting for most loading utilities.
  *
- * Example:
- * <pre>
+ * @example
  * var g_loadInfo = null;
  * g_id = window.setInterval(statusUpdate, 500);
  * g_loadInfo = tdl.scene.loadScene('http://google.com/somescene.js',
@@ -77,10 +76,9 @@ tdl.io.createLoadInfo = function(opt_request) {
  *     document.getElementById('loadstatus').innerHTML = progress.percent;
  *   }
  * }
- * </pre>
  *
  * @constructor
- * @param {XMLHttpRequest} opt_request
+ * @param {XMLHttpRequest?} opt_request
  *     The request to watch.
  * @see tdl.loader.Loader
  */
@@ -113,30 +111,34 @@ tdl.io.LoadInfo.prototype.finish = function() {
 
 /**
  * Gets the total bytes that will be streamed known so far.
+ *
  * If you are only streaming 1 file then this will be the info for that file but
- * if you have queued up many files using an tdl.loader.Loader only a couple of
- * files are streamed at a time meaning that the size is not known for files
- * that have yet started to download.
+ * if you have queued up many files using a `tdl.loader.Loader`
+ * only a couple of files are streamed at a time meaning that
+ * the size is not known for files that have yet started to
+ * download.
  *
  * If you are downloading many files for your application and you want to
  * provide a progress status you have about 4 options
  *
- * 1) Use LoadInfo.getTotalBytesDownloaded() /
- * LoadInfo.getTotalKnownBytesToStreamSoFar() and just be aware the bar will
- * grown and then shrink as new files start to download and their lengths
- * become known.
+ * 1.  Use `LoadInfo.getTotalBytesDownloaded()` /
+ *     `LoadInfo.getTotalKnownBytesToStreamSoFar()` and just be
+ *     aware the bar will grown and then shrink as new files
+ *     start to download and their lengths become known.
  *
- * 2) Use LoadInfo.getTotalRequestsDownloaded() /
- * LoadInfo.getTotalKnownRequestsToStreamSoFar() and be aware the granularity
- * is not all that great since it only reports fully downloaded files. If you
- * are downloading a bunch of small files this might be ok.
+ * 2.  Use `LoadInfo.getTotalRequestsDownloaded()` /
+ *     `LoadInfo.getTotalKnownRequestsToStreamSoFar()` and be
+ *     aware the granularity is not all that great since it only
+ *     reports fully downloaded files. If you are downloading a
+ *     bunch of small files this might be ok.
  *
- * 3) Put all your files in one archive. Then there will be only one file and
- * method 1 will work well.
+ * 3.  Put all your files in one archive. Then there will be
+ *     only one file and method 1 will work well.
  *
- * 4) Figure out the total size in bytes of the files you will download and put
- * that number in your application, then use LoadInfo.getTotalBytesDownloaded()
- * / MY_APPS_TOTAL_BYTES_TO_DOWNLOAD.
+ * 4.  Figure out the total size in bytes of the files you will
+ *     download and put that number in your application, then use
+ *     `LoadInfo.getTotalBytesDownloaded()` /
+ *     `MY_APPS_TOTAL_BYTES_TO_DOWNLOAD`.
  *
  * @return {number} The total number of currently known bytes to be streamed.
  */
@@ -255,7 +257,7 @@ tdl.io.loadTextFileSynchronous = function(url) {
  * @param {string} url The url of the external file.
  * @param {function(string, *): void} callback A callback passed the loaded
  *     string and an exception which will be null on success.
- * @return {!tdl.io.LoadInfo} A LoadInfo to track progress.
+ * @return {tdl.io.LoadInfo} A LoadInfo to track progress.
  */
 tdl.io.loadTextFile = function(url, callback) {
   var error = 'loadTextFile failed to load url "' + url + '"';
@@ -299,7 +301,7 @@ tdl.io.loadTextFile = function(url, callback) {
  * @param {function(string, *): void} callback A callback passed the loaded
  *     ArrayBuffer and an exception which will be null on
  *     success.
- * @return {!tdl.io.LoadInfo} A LoadInfo to track progress.
+ * @return {tdl.io.LoadInfo} A LoadInfo to track progress.
  */
 tdl.io.loadArrayBuffer = function(url, callback) {
   var error = 'loadArrayBuffer failed to load url "' + url + '"';
@@ -340,7 +342,7 @@ tdl.io.loadArrayBuffer = function(url, callback) {
  * @param {string} url The url of the external file.
  * @param {function(jsonObject, *): void} callback A callback passed the loaded
  *     json and an exception which will be null on success.
- * @return {!tdl.io.LoadInfo} A LoadInfo to track progress.
+ * @return {tdl.io.LoadInfo} A LoadInfo to track progress.
  */
 tdl.io.loadJSON = function(url, callback) {
   var error = 'loadJSON failed to load url "' + url + '"';
@@ -390,7 +392,7 @@ tdl.io.loadJSON = function(url, callback) {
  * @param {string} url The url of the external file.
  * @param {function(jsonObject, *): void} callback A callback passed the loaded
  *     json and an exception which will be null on success.
- * @return {!tdl.io.LoadInfo} A LoadInfo to track progress.
+ * @return {tdl.io.LoadInfo} A LoadInfo to track progress.
  */
 tdl.io.sendJSON = function(url, jsonObject, callback) {
   var error = 'sendJSON failed to load url "' + url + '"';
