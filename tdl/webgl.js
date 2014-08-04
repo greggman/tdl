@@ -36,6 +36,10 @@
 define(['./base-rs', './log', './misc'], function(BaseRS, Log, Misc) {
 
 tdl.provide('tdl.webgl');
+/**
+ * A module for webgl.
+ * @namespace
+ */
 tdl.webgl = tdl.webgl || {};
 
 /**
@@ -44,12 +48,19 @@ tdl.webgl = tdl.webgl || {};
  */
 gl = null;
 
+/**
+ * Sets a particle WebGLRenderingContext as the *current*
+ * context.
+ * @param {WebGLRenderingContext} context context to make
+ *        current.
+ */
 tdl.webgl.makeCurrent = function(context) {
   gl = context;
 }
 
 /**
  * Creates the HTLM for a failure message
+ * @private
  * @param {string} canvasContainerId id of container of th
  *        canvas.
  * @return {string} The html.
@@ -66,6 +77,7 @@ tdl.webgl.makeFailHTML = function(msg) {
 
 /**
  * Mesasge for getting a webgl browser
+ * @private
  * @type {string}
  */
 tdl.webgl.GET_A_WEBGL_BROWSER = '' +
@@ -74,6 +86,7 @@ tdl.webgl.GET_A_WEBGL_BROWSER = '' +
 
 /**
  * Mesasge for need better hardware
+ * @private
  * @type {string}
  */
 tdl.webgl.OTHER_PROBLEM = '' +
@@ -82,13 +95,13 @@ tdl.webgl.OTHER_PROBLEM = '' +
 
 /**
  * Creates a webgl context.
- * @param {Element} canvas The canvas element to create a
- *     context from.
- * @param {WebGLContextCreationAttirbutes} opt_attribs Any
+ * @param {HTMLCanvasElement} canvas The canvas element to
+ *     create a context from.
+ * @param {WebGLContextCreationAttirbutes?} opt_attribs Any
  *     creation attributes you want to pass in.
- * @param {function(msg)} opt_onError An function to call
+ * @param {function(msg)?} opt_onError An function to call
  *     if there is an error during creation.
- * @return {!WebGLRenderingContext} The created context.
+ * @return {WebGLRenderingContext} The created context.
  */
 tdl.webgl.setupWebGL = function(canvas, opt_attribs, opt_onError) {
   function handleCreationError(msg) {
@@ -132,9 +145,10 @@ tdl.webgl.setupWebGL = function(canvas, opt_attribs, opt_onError) {
 
 /**
  * Creates a webgl context.
- * @param {!Canvas} canvas The canvas tag to get context
- *     from. If one is not passed in one will be created.
- * @return {!WebGLRenderingContext} The created context.
+ * @param {HTMLCanvasElement?} canvas The canvas tag to get
+ *     context from. If one is not passed in one will be
+ *     created.
+ * @return {WebGLRenderingContext} The created context.
  */
 tdl.webgl.create3DContext = function(canvas, opt_attribs) {
   if (opt_attribs === undefined) {
@@ -180,7 +194,8 @@ tdl.webgl.setupCanvas_ = function(canvas) {
 
 /**
  * Browser prefixes for extensions.
- * @type {!Array.<string>}
+ * @private
+ * @type {Array.<string>}
  */
 tdl.webgl.browserPrefixes_ = [
   "",
@@ -256,7 +271,8 @@ tdl.webgl.handleContextRestored = function(canvas) {
 
 /**
  * Which arguements are enums.
- * @type {!Object.<number, string>}
+ * @private
+ * @type {Object.<number, string>}
  */
 tdl.webgl.glValidEnumContexts = {
 
@@ -337,13 +353,15 @@ tdl.webgl.glValidEnumContexts = {
 
 /**
  * Map of numbers to names.
+ * @private
  * @type {Object}
  */
 tdl.webgl.glEnums = null;
 
 /**
  * Initializes this module. Safe to call more than once.
- * @param {!WebGLRenderingContext} ctx A WebGL context. If
+ * @private
+ * @param {WebGLRenderingContext} ctx A WebGL context. If
  *    you have more than one context it doesn't matter which one
  *    you pass in, it is only used to pull out constants.
  */
@@ -360,6 +378,7 @@ tdl.webgl.init = function(ctx) {
 
 /**
  * Checks the utils have been initialized.
+ * @private
  */
 tdl.webgl.checkInit = function() {
   if (tdl.webgl.glEnums == null) {
@@ -369,6 +388,7 @@ tdl.webgl.checkInit = function() {
 
 /**
  * Returns true or false if value matches any WebGL enum
+ * @private
  * @param {*} value Value to check if it might be an enum.
  * @return {boolean} True if value matches one of the WebGL defined enums
  */
@@ -399,6 +419,7 @@ tdl.webgl.glEnumToString = function(value) {
 /**
  * Returns the string version of a WebGL argument.
  * Attempts to convert enum arguments to strings.
+ * @private
  * @param {string} functionName the name of the WebGL function.
  * @param {number} argumentIndx the index of the argument.
  * @param {*} value The value of the argument.
@@ -443,13 +464,13 @@ tdl.webgl.glFunctionArgsToString = function(functionName, args) {
  * gl.getError after every command and calls a function if the
  * result is not gl.NO_ERROR.
  *
- * @param {!WebGLRenderingContext} ctx The webgl context to
+ * @param {WebGLRenderingContext} ctx The webgl context to
  *        wrap.
- * @param {!function(err, funcName, args): void} opt_onErrorFunc
+ * @param {function(err, funcName, args): void} opt_onErrorFunc
  *        The function to call when gl.getError returns an
  *        error. If not specified the default function calls
  *        console.log with a message.
- * @param {!function(funcName, args): void} opt_onFunc The
+ * @param {function(funcName, args): void} opt_onFunc The
  *        function to call when each webgl function is called.
  *        You can use this to log all calls for example.
  */
@@ -527,7 +548,7 @@ tdl.webgl.makeDebugContext = function(ctx, opt_onErrorFunc, opt_onFunc) {
  * Provides requestAnimationFrame in a cross browser way.
  * @param {function(RequestAnimationEvent): void} callback. Callback that will
  *        be called when a frame is ready.
- * @param {!Element} element Element to request an animation frame for.
+ * @param {Element} element Element to request an animation frame for.
  * @return {number} request id.
  */
 tdl.webgl.requestAnimationFrame = function(callback, element) {
