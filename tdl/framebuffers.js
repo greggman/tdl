@@ -36,26 +36,46 @@
  */
 define(['./base-rs', './textures'], function(BaseRS, Textures) {
 
+tdl.provide('tdl.framebuffers');
 /**
  * A module for textures.
  * @namespace
  */
-tdl.provide('tdl.framebuffers');
 tdl.framebuffers = tdl.framebuffers || {};
 
+/**
+ * Creates a framebuffer
+ * @param {number} width width of framebuffer.
+ * @param {number} height height of framebuffer.
+ * @param {boolean?} opt_depth true = make a depth attachment
+ * @return {tdl.Framebuffer} the created framebuffer.
+ */
 tdl.framebuffers.createFramebuffer = function(width, height, opt_depth) {
   return new tdl.framebuffers.Framebuffer(width, height, opt_depth);
 };
 
+/**
+ * Creates a cubemap framebuffer
+ * @param {number} size size of edge of cube.
+ * @param {boolean?} opt_depth true = make a depth attachment
+ * @return {tdl.CubeFramebuffer} the created framebuffer.
+ */
 tdl.framebuffers.createCubeFramebuffer = function(size, opt_depth) {
   return new tdl.framebuffers.CubeFramebuffer(size, opt_depth);
 };
 
-tdl.framebuffers.BackBuffer = function(canvas) {
+/**
+ * A class to represent the backbuffer (the canvas)
+ * @constructor
+ */
+tdl.framebuffers.BackBuffer = function() {
   this.depth = true;
   this.buffer = null;
 };
 
+/**
+ * Binds the backbuffer as the current render target.
+ */
 tdl.framebuffers.BackBuffer.prototype.bind = function() {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, this.width, this.height);
@@ -77,12 +97,23 @@ tdl.framebuffers.BackBuffer.prototype.__defineGetter__(
 );
 }
 
-// Use this where you need to pass in a framebuffer, but you really
-// mean the backbuffer, so that binding it works as expected.
-tdl.framebuffers.getBackBuffer = function(canvas) {
-  return new tdl.framebuffers.BackBuffer(canvas)
+/**
+ * Get a FrameBuffer for the backbuffer.
+ * Use this where you need to pass in a framebuffer, but you really
+ * mean the backbuffer, so that binding it works as expected.
+ * @return {tdl.BackBuffer} the created BackBuffer.
+ */
+tdl.framebuffers.getBackBuffer = function() {
+  return new tdl.framebuffers.BackBuffer();
 };
 
+/**
+ * Represnets a WebGLFramebuffer
+ * @constructor
+ * @param {number} width width of framebuffer.
+ * @param {number} height height of framebuffer.
+ * @param {boolean?} opt_depth true = create a depth attachment
+ */
 tdl.framebuffers.Framebuffer = function(width, height, opt_depth) {
   this.width = width;
   this.height = height;
@@ -90,21 +121,23 @@ tdl.framebuffers.Framebuffer = function(width, height, opt_depth) {
   this.recoverFromLostContext();
 };
 
+/**
+ * Bind this framebuffer as the current render target.
+ */
 tdl.framebuffers.Framebuffer.prototype.bind = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
   gl.viewport(0, 0, this.width, this.height);
 };
 
-tdl.framebuffers.Framebuffer.unbind = function() {
+/**
+ * Unbinds this framebuffer as the current render target
+ */
+tdl.framebuffers.Framebuffer.prototype.unbind = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   gl.viewport(
       0, 0,
       gl.drawingBufferWidth || gl.canvas.width,
       gl.drawingBufferHeight || gl.canvas.height);
-};
-
-tdl.framebuffers.Framebuffer.prototype.unbind = function() {
-  tdl.framebuffers.Framebuffer.unbind();
 };
 
 tdl.framebuffers.Framebuffer.prototype.recoverFromLostContext = function() {
@@ -172,27 +205,36 @@ tdl.framebuffers.Framebuffer.prototype.initializeTexture = function(tex) {
                 null);             // data
 };
 
+/**
+ * Represnents a Cube Map framebuffer
+ * @constructor
+ * @param {number} size size of edge of cube.
+ * @param {boolean?} opt_depth true = make a depth attachment
+ */
 tdl.framebuffers.CubeFramebuffer = function(size, opt_depth) {
   this.size = size;
   this.depth = opt_depth;
   this.recoverFromLostContext();
 };
 
+/**
+ * Binds a face as the current render target.
+ * @param {number} face The face to use as the render target.
+ */
 tdl.framebuffers.CubeFramebuffer.prototype.bind = function(face) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffers[face]);
   gl.viewport(0, 0, this.size, this.size);
 };
 
-tdl.framebuffers.CubeFramebuffer.unbind = function() {
+/**
+ * Unbinds this framebuffer as the current render target.
+ */
+tdl.framebuffers.CubeFramebuffer.prototype.unbind = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   gl.viewport(
       0, 0,
       gl.drawingBufferWidth || gl.canvas.width,
       gl.drawingBufferHeight || gl.canvas.height);
-};
-
-tdl.framebuffers.CubeFramebuffer.prototype.unbind = function() {
-  tdl.framebuffers.CubeFramebuffer.unbind();
 };
 
 tdl.framebuffers.CubeFramebuffer.prototype.recoverFromLostContext = function() {
@@ -246,6 +288,12 @@ tdl.framebuffers.CubeFramebuffer.prototype.recoverFromLostContext = function() {
   this.texture = tex;
 };
 
+/**
+ * A framebuffer with a Float32RGBA texture.
+ * @param {number} width width of framebuffer.
+ * @param {number} height height of framebuffer.
+ * @param {boolean?} opt_depth true = create a depth attachment
+ */
 tdl.framebuffers.Float32Framebuffer = function(width, height, opt_depth) {
   if (!gl.getExtension("OES_texture_float")) {
     throw("Requires OES_texture_float extension");
