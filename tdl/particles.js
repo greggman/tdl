@@ -1126,7 +1126,7 @@ tdl.particles.ParticleEmitter.prototype.draw = function(world, viewProjection, t
                       tmpWorld);
   if (!this.billboard_) {
     var worldViewProjection = new Float32Array(16);
-    tdl.fast.matrix4.mul.mulMatrixMatrix4(worldViewProjection, tmpWorld, viewProjection);
+    tdl.fast.matrix4.mul(worldViewProjection, tmpWorld, viewProjection);
     gl.uniformMatrix4fv(shader.worldViewProjectionLoc,
                         false,
                         worldViewProjection);
