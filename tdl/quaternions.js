@@ -435,16 +435,19 @@ tdl.quaternions.quaternionToRotation = function(q) {
   var d = qWqW + qXqX + qYqY + qZqZ;
 
   return [
-    [(qWqW + qXqX - qYqY - qZqZ) / d,
+    (qWqW + qXqX - qYqY - qZqZ) / d,
      2 * (qWqZ + qXqY) / d,
-     2 * (qXqZ - qWqY) / d, 0],
-    [2 * (qXqY - qWqZ) / d,
+     2 * (qXqZ - qWqY) / d, 0,
+
+     2 * (qXqY - qWqZ) / d,
      (qWqW - qXqX + qYqY - qZqZ) / d,
-     2 * (qWqX + qYqZ) / d, 0],
-    [2 * (qWqY + qXqZ) / d,
+     2 * (qWqX + qYqZ) / d, 0,
+
+     2 * (qWqY + qXqZ) / d,
      2 * (qYqZ - qWqX) / d,
-     (qWqW - qXqX - qYqY + qZqZ) / d, 0],
-    [0, 0, 0, 1]];
+     (qWqW - qXqX - qYqY + qZqZ) / d, 0,
+
+     0, 0, 0, 1];
 };
 
 /**
@@ -461,11 +464,11 @@ tdl.quaternions.rotationToQuaternion = function(m) {
 
   // Choose u, v, and w such that u is the index of the biggest diagonal entry
   // of m, and u v w is an even permutation of 0 1 and 2.
-  if (m[0][0] > m[1][1] && m[0][0] > m[2][2]) {
+  if (m[0*4+0] > m[1*4+1] && m[0*4+0] > m[2*4+2]) {
     u = 0;
     v = 1;
     w = 2;
-  } else if (m[1][1] > m[0][0] && m[1][1] > m[2][2]) {
+  } else if (m[1*4+1] > m[0*4+0] && m[1*4+1] > m[2*4+2]) {
     u = 1;
     v = 2;
     w = 0;
@@ -475,12 +478,12 @@ tdl.quaternions.rotationToQuaternion = function(m) {
     w = 1;
   }
 
-  var r = Math.sqrt(1 + m[u][u] - m[v][v] - m[w][w]);
+  var r = Math.sqrt(1 + m[u*4+u] - m[v*4+v] - m[w*4+w]);
   var q = [];
   q[u] = 0.5 * r;
-  q[v] = 0.5 * (m[v][u] + m[u][v]) / r;
-  q[w] = 0.5 * (m[u][w] + m[w][u]) / r;
-  q[3] = 0.5 * (m[v][w] - m[w][v]) / r;
+  q[v] = 0.5 * (m[v*4+u] + m[u*4+v]) / r;
+  q[w] = 0.5 * (m[u*4+w] + m[w*4+u]) / r;
+  q[3] = 0.5 * (m[v*4+w] - m[w*4+v]) / r;
 
   return q;
 };
