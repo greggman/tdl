@@ -1,11 +1,10 @@
 {
   "name": "tdl",
-  "version": "0.0.2",
   "authors": [
-    "Gregg Tavares <github@greggman.com>"
+    { "name": "Gregg Tavares", "email": "github@greggman.com", homepage: "http://games.greggman.com" }
   ],
-  "description": "A JavaScript libray for WebGL",
-  "main": "tdl/whatisthisfor.js",
+  "description": "A JavaScript library for WebGL",
+  "main": "tdl/base.js",
   "moduleType": [
     "amd"
   ],
@@ -15,6 +14,7 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/greggman/tdl",
+  "repository": "git://github.com/greggman/tdl.git",
   "ignore": [
     "**/.*",
     "*.md",
