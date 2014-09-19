@@ -2,7 +2,7 @@
   "name": "tdl",
   "version": "0.0.6",
   "authors": [
-    { "name": "Gregg Tavares", "email": "github@greggman.com", homepage: "http://games.greggman.com" }
+    { "name": "Gregg Tavares", "email": "github@greggman.com", "homepage": "http://games.greggman.com" }
   ],
   "description": "A JavaScript library for WebGL",
   "main": "tdl/base.js",
