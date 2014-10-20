@@ -905,7 +905,7 @@ tdl.particles.ParticleEmitter.prototype.createParticles_ = function(
 
   // Set the globals.
   this.billboard_ = parameters.billboard;
-  this.timeRange_ = parameters.timeRange;
+  this.timeRange_ = parameters.timeRange || 99999999;
   this.numFrames_ = parameters.numFrames;
   this.frameDuration_ = parameters.frameDuration;
   this.worldVelocity_ = [ parameters.worldVelocity[0],
