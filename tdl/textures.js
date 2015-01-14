@@ -174,14 +174,6 @@ tdl.textures.Texture.prototype.setParameterIfNotSet_ = function(pname, value) {
   }
 };
 
-tdl.textures.Texture.prototype.recoverFromLostContext = function() {
-  this.texture = gl.createTexture();
-  gl.bindTexture(this.target, this.texture);
-  for (var pname in this.params) {
-    gl.texParameteri(this.target, pname, this.params[pname]);
-  }
-};
-
 tdl.textures.Texture.prototype.setFilteringBasedOnDimensions = function(width, height) {
   if (tdl.textures.isPowerOf2(width) &&
       tdl.textures.isPowerOf2(height)) {
@@ -212,11 +204,6 @@ tdl.textures.SolidTexture.prototype.uploadTexture = function() {
   var pixel = new Uint8Array(this.color);
   gl.texImage2D(
     gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-};
-
-tdl.textures.SolidTexture.prototype.recoverFromLostContext = function() {
-  tdl.textures.Texture.recoverFromLostContext.call(this);
-  this.uploadTexture();
 };
 
 tdl.textures.SolidTexture.prototype.bindToUnit = function(unit) {
@@ -251,11 +238,6 @@ tdl.textures.DepthTexture.prototype.uploadTexture = function() {
   this.setParameter(gl.TEXTURE_MAG_FILTER, gl.NEAREST);
   this.setParameter(gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   this.setParameter(gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-};
-
-tdl.textures.DepthTexture.prototype.recoverFromLostContext = function() {
-  tdl.textures.Texture.recoverFromLostContext.call(this);
-  this.uploadTexture();
 };
 
 tdl.textures.DepthTexture.prototype.bindToUnit = function(unit) {
@@ -298,11 +280,6 @@ tdl.textures.ColorTexture.prototype.uploadTexture = function() {
     gl.TEXTURE_2D, 0, this.format, this.data.width, this.data.height,
     0, this.format, this.type, this.data.pixels);
   this.setFilteringBasedOnDimensions(this.data.width, this.data.height);
-};
-
-tdl.textures.ColorTexture.prototype.recoverFromLostContext = function() {
-  tdl.textures.Texture.recoverFromLostContext.call(this);
-  this.uploadTexture();
 };
 
 tdl.textures.ColorTexture.prototype.bindToUnit = function(unit) {
@@ -394,11 +371,6 @@ tdl.textures.Texture2D.prototype.updateTexture = function() {
   this.uploadTexture();
 };
 
-tdl.textures.Texture2D.prototype.recoverFromLostContext = function() {
-  tdl.textures.Texture.recoverFromLostContext.call(this);
-  this.uploadTexture();
-};
-
 tdl.textures.Texture2D.prototype.bindToUnit = function(unit) {
   gl.activeTexture(gl.TEXTURE0 + unit);
   gl.bindTexture(gl.TEXTURE_2D, this.texture);
@@ -416,9 +388,6 @@ tdl.textures.ExternalTexture = function(type) {
 };
 
 tdl.base.inherit(tdl.textures.ExternalTexture, tdl.textures.Texture);
-
-tdl.textures.ExternalTexture.prototype.recoverFromLostContext = function() {
-};
 
 tdl.textures.ExternalTexture.prototype.bindToUnit = function(unit) {
   gl.activeTexture(gl.TEXTURE0 + unit);
@@ -600,14 +569,6 @@ tdl.textures.CubeMap.prototype.uploadTextures = function() {
   } else {
     this.setParameterIfNotSet_(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   }
-};
-
-/**
- * Recover from lost context.
- */
-tdl.textures.CubeMap.prototype.recoverFromLostContext = function() {
-  tdl.textures.Texture.recoverFromLostContext.call(this);
-  this.uploadTextures();
 };
 
 /**

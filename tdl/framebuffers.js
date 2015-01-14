@@ -118,29 +118,6 @@ tdl.framebuffers.Framebuffer = function(width, height, opt_depth) {
   this.width = width;
   this.height = height;
   this.depth = opt_depth;
-  this.recoverFromLostContext();
-};
-
-/**
- * Bind this framebuffer as the current render target.
- */
-tdl.framebuffers.Framebuffer.prototype.bind = function() {
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
-  gl.viewport(0, 0, this.width, this.height);
-};
-
-/**
- * Unbinds this framebuffer as the current render target
- */
-tdl.framebuffers.Framebuffer.prototype.unbind = function() {
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-  gl.viewport(
-      0, 0,
-      gl.drawingBufferWidth || gl.canvas.width,
-      gl.drawingBufferHeight || gl.canvas.height);
-};
-
-tdl.framebuffers.Framebuffer.prototype.recoverFromLostContext = function() {
   var tex = new tdl.textures.SolidTexture([0,0,0,0]);
   this.initializeTexture(tex);
 
@@ -188,6 +165,25 @@ tdl.framebuffers.Framebuffer.prototype.recoverFromLostContext = function() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 };
 
+/**
+ * Bind this framebuffer as the current render target.
+ */
+tdl.framebuffers.Framebuffer.prototype.bind = function() {
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
+  gl.viewport(0, 0, this.width, this.height);
+};
+
+/**
+ * Unbinds this framebuffer as the current render target
+ */
+tdl.framebuffers.Framebuffer.prototype.unbind = function() {
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(
+      0, 0,
+      gl.drawingBufferWidth || gl.canvas.width,
+      gl.drawingBufferHeight || gl.canvas.height);
+};
+
 tdl.framebuffers.Framebuffer.prototype.initializeTexture = function(tex) {
   gl.bindTexture(gl.TEXTURE_2D, tex.texture);
   tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -214,30 +210,6 @@ tdl.framebuffers.Framebuffer.prototype.initializeTexture = function(tex) {
 tdl.framebuffers.CubeFramebuffer = function(size, opt_depth) {
   this.size = size;
   this.depth = opt_depth;
-  this.recoverFromLostContext();
-};
-
-/**
- * Binds a face as the current render target.
- * @param {number} face The face to use as the render target.
- */
-tdl.framebuffers.CubeFramebuffer.prototype.bind = function(face) {
-  gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffers[face]);
-  gl.viewport(0, 0, this.size, this.size);
-};
-
-/**
- * Unbinds this framebuffer as the current render target.
- */
-tdl.framebuffers.CubeFramebuffer.prototype.unbind = function() {
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-  gl.viewport(
-      0, 0,
-      gl.drawingBufferWidth || gl.canvas.width,
-      gl.drawingBufferHeight || gl.canvas.height);
-};
-
-tdl.framebuffers.CubeFramebuffer.prototype.recoverFromLostContext = function() {
   var tex = new tdl.textures.CubeMap(this.size);
   gl.bindTexture(gl.TEXTURE_CUBE_MAP, tex.texture);
   tex.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -286,6 +258,26 @@ tdl.framebuffers.CubeFramebuffer.prototype.recoverFromLostContext = function() {
   }
   gl.bindRenderbuffer(gl.RENDERBUFFER, null);
   this.texture = tex;
+};
+
+/**
+ * Binds a face as the current render target.
+ * @param {number} face The face to use as the render target.
+ */
+tdl.framebuffers.CubeFramebuffer.prototype.bind = function(face) {
+  gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffers[face]);
+  gl.viewport(0, 0, this.size, this.size);
+};
+
+/**
+ * Unbinds this framebuffer as the current render target.
+ */
+tdl.framebuffers.CubeFramebuffer.prototype.unbind = function() {
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(
+      0, 0,
+      gl.drawingBufferWidth || gl.canvas.width,
+      gl.drawingBufferHeight || gl.canvas.height);
 };
 
 /**
