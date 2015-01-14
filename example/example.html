@@ -28,11 +28,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
 <title>WebGL TDL Example</title>
 <style>
 html, body {
@@ -341,9 +340,7 @@ void main() {
 
 </script>
 <script id="sphereFragmentShader" type="text/something-not-javascript">
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
 uniform vec4 lightColor;
 varying vec4 v_position;
 varying vec2 v_texCoord;
